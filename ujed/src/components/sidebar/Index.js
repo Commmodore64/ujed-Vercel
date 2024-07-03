@@ -3,10 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import LogoutButton from '../LogoutButton';
 import LogoUJED from '../../img/logo-banner-red.png';
 
+
 const Index = () => {
   const location = useLocation();
 
-  // Si estamos en la página HomePage, no mostramos el sidebar
   if (location.pathname === '/') {
     return null;
   }
