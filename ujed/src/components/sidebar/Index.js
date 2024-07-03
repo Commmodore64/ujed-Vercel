@@ -1,13 +1,12 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import LogoutButton from '../LogoutButton';
-import LogoUJED from '../../img/logo-banner-red.png';
-
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import LogoutButton from "../LogoutButton";
+import LogoUJED from "../../img/logo-banner-red.png";
 
 const Index = () => {
   const location = useLocation();
 
-  if (location.pathname === '/') {
+  if (location.pathname === "/") {
     return null;
   }
 
@@ -19,10 +18,28 @@ const Index = () => {
       <nav className="flex-1 border-r border-gray-300">
         <ul className="space-y-4 flex flex-col">
           <li>
-            <Link to="/profile" className="block font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out">Profile</Link>
+            <Link
+              to="/dashboard"
+              className="block font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out"
+            >
+              Inicio
+            </Link>
           </li>
           <li>
-            <Link to="/settings" className="block font-semibold rounded-lg mx-5 ml-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out">Settings</Link>
+            <Link
+              to="/profile"
+              className="block font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out"
+            >
+              Perfil
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/settings"
+              className="block font-semibold rounded-lg mx-5 ml-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out"
+            >
+              Ajustes
+            </Link>
           </li>
           {/* Agrega más enlaces según sea necesario */}
         </ul>

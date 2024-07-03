@@ -28,9 +28,9 @@ const HomePage = () => {
             FAQ
           </a>
           <a href="#" className="text-sm font-medium text-white hover:underline">
-            About
+            Sobre nosotros
           </a>
-          <button onClick={handleLoginClick} className="bg-white text-[#B11830] py-2 px-4 rounded">Login</button>
+          <button onClick={handleLoginClick} className="bg-white text-[#B11830] py-2 px-4 rounded">Iniciar Sesión</button>
         </div>
       </div>
     </header>
@@ -41,7 +41,7 @@ const HomePage = () => {
             Una nueva plataforma para realizar tus pagos de inscripción de manera rápida y segura.
           </p>
           <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-            <button variant="secondary">Contact Us</button>
+            <button variant="secondary">Contactanos</button>
           </div>
       </div>
     </main>
@@ -50,10 +50,10 @@ const HomePage = () => {
         <p className="text-xs text-muted-foreground">&copy; 2024 Acme Inc. All rights reserved.</p>
         <nav className="flex items-center gap-4">
           <Link href="#" className="text-xs text-muted-foreground hover:underline" prefetch={false}>
-            Terms of Service
+            Terminos del servicio
           </Link>
           <Link href="#" className="text-xs text-muted-foreground hover:underline" prefetch={false}>
-            Privacy Policy
+            Política de privacidad
           </Link>
         </nav>
       </div>
