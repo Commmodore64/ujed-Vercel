@@ -1,16 +1,21 @@
 import './App.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import Profile from './components/Profile';
-import LogoutButton from './components/LogoutButton';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './components/HomePage';
+import { Navigate } from 'react-router-dom';
 
 function App() {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
+
   return (
     <div className="App">
-      <h1>React App</h1>
-      <button onClick={() => loginWithRedirect()}>login</button>
-      <Profile />
-      {isAuthenticated && <LogoutButton />}
+      <Router>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <Navigate to="/profile" /> : <HomePage />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
