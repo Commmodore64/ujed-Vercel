@@ -20,10 +20,10 @@ const HomePage = () => {
     <div className="flex flex-col min-h-[100dvh]">
     <header className="bg-[#B11830] px-4 py-6 md:px-6 md:py-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center">
           <img src={LogoPNG} className="h-14" />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-10">
           <a href="#" className="text-sm font-medium text-white hover:underline">
             FAQ
           </a>
@@ -35,22 +35,18 @@ const HomePage = () => {
       </div>
     </header>
     <main className="flex-1 bg-background px-4 py-12 md:px-6 md:py-24">
-      <div className="container">
         <div className="mx-auto max-w-2xl space-y-6 text-center">
           <h1 className="text-4xl font-bold tracking-tighter text-foreground sm:text-5xl md:text-6xl">Bienvenido</h1>
           <p className="text-muted-foreground md:text-xl">
-            Welcome to our modern and innovative home page. Explore our products and services, and get in touch with
-            us for more information.
+            Una nueva plataforma para realizar tus pagos de inscripción de manera rápida y segura.
           </p>
           <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-            <button>Learn More</button>
             <button variant="secondary">Contact Us</button>
           </div>
-        </div>
       </div>
     </main>
     <footer className="bg-muted px-4 py-6 md:px-6 md:py-8">
-      <div className="container flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">&copy; 2024 Acme Inc. All rights reserved.</p>
         <nav className="flex items-center gap-4">
           <Link href="#" className="text-xs text-muted-foreground hover:underline" prefetch={false}>
