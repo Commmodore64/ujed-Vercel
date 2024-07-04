@@ -4,20 +4,51 @@ const connection = require('../db');
 const cors = require('cors');
 router.use(cors());
 
-// Ruta para guardar datos del usuario
+// Ruta para guardar o actualizar datos del alumno
 router.post('/userdata', (req, res) => {
-    const { email } = req.body; // Suponiendo que envías el correo electrónico del usuario desde React
-    console.log('Correo electrónico del usuario:', email);
-  
-    const query = 'INSERT INTO usuarios (correo) VALUES (?)'; // Ajusta según tu esquema de base de datos
-    connection.query(query, [email], (err, results) => {
-      if (err) {
-        console.error('Error al guardar los datos del usuario:', err);
-        res.status(500).json({ error: 'Error al guardar los datos del usuario' });
-        return;
-      }
-      res.status(200).json({ message: 'Datos del usuario guardados correctamente' });
-    });
-  });
+    const { matricula, nombre_completo, telefono, email, fecha_nacimiento } = req.body;
+    console.log('Datos del alumno:', req.body);
 
-  module.exports = router;
+    // Verificar si el correo ya existe en la base de datos
+    connection.query(
+        'SELECT * FROM alumnos WHERE email = ?',
+        [email],
+        (err, results) => {
+            if (err) {
+                console.error('Error al buscar alumno:', err);
+                return res.status(500).json({ error: 'Error interno del servidor' });
+            }
+
+            if (results.length > 0) {
+                // Si el alumno ya existe, actualizar los datos
+                connection.query(
+                    'UPDATE alumnos SET matricula = ?, nombre_completo = ?, telefono = ?, fecha_nacimiento = ? WHERE email = ?',
+                    [matricula, nombre_completo, telefono, fecha_nacimiento, email],
+                    (err, results) => {
+                        if (err) {
+                            console.error('Error al actualizar alumno:', err);
+                            return res.status(500).json({ error: 'Error al actualizar alumno' });
+                        }
+                        res.status(200).json({ message: 'Datos del alumno actualizados correctamente' });
+                    }
+                );
+            } else {
+                // Si el alumno no existe, insertar un nuevo registro
+                connection.query(
+                    'INSERT INTO alumnos (matricula, nombre_completo, telefono, fecha_nacimiento, email) VALUES (?, ?, ?, ?, ?)',
+                    [matricula, nombre_completo, telefono, fecha_nacimiento, email],
+                    console.log("Alumno creado correctamente, datos: ", matricula, nombre_completo, telefono, fecha_nacimiento, email),
+                    (err, results) => {
+                        if (err) {
+                            console.error('Error al insertar nuevo alumno:', err);
+                            return res.status(500).json({ error: 'Error al insertar nuevo alumno' });
+                        }
+                        res.status(200).json({ message: 'Nuevo alumno registrado correctamente' });
+                    }
+                );
+            }
+        }
+    );
+});
+
+module.exports = router;
