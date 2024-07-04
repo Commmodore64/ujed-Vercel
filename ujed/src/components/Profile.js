@@ -5,6 +5,27 @@ import { Navigate } from "react-router-dom";
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
 
+  // Función para enviar datos al servidor
+  const enviarDatos = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/userdata", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: user.email }), // Enviar el correo electrónico del usuario
+      });
+
+      if (response.ok) {
+        console.log("Datos del usuario enviados correctamente");
+      } else {
+        console.error("Error al enviar datos del usuario");
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
+  };
+
   // Si no está autenticado, redirigir al login
   if (!isAuthenticated) {
     return <Navigate to="/" />;
@@ -32,6 +53,13 @@ const Profile = () => {
           </div>
         </div>
       </div>
+            {/* Botón para enviar datos al servidor */}
+            <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+        onClick={enviarDatos}
+      >
+        Guardar Datos
+      </button>
       {/* Línea separadora */}
       <hr className="mt-10 border-gray-400 w-full" />
 
