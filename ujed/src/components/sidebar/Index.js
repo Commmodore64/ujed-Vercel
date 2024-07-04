@@ -44,7 +44,7 @@ const Index = () => {
           {/* Agrega más enlaces según sea necesario */}
         </ul>
       </nav>
-      <div className="mt-auto p-4">
+      <div className="mt-auto p-4 font-semibold">
         <LogoutButton />
       </div>
     </aside>

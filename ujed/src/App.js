@@ -4,6 +4,7 @@ import Profile from "./components/Profile";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./components/HomePage";
 import Sidebar from "./components/sidebar/Index";
+import Dashboard from "./components/dashboard/Index";
 
 function App() {
   const { isAuthenticated } = useAuth0();
@@ -17,9 +18,10 @@ function App() {
             <Routes>
               <Route
                 path="/"
-                element={isAuthenticated ? <Navigate to="/profile" /> : <HomePage />}
+                element={isAuthenticated ? <Navigate to="/dashboard" /> : <HomePage />}
               />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
               {/* Agrega más rutas según sea necesario */}
             </Routes>
