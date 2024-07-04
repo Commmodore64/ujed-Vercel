@@ -49,10 +49,10 @@ const HomePage = () => {
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">&copy; 2024 Acme Inc. All rights reserved.</p>
         <nav className="flex items-center gap-4">
-          <Link href="#" className="text-xs text-muted-foreground hover:underline" prefetch={false}>
+          <Link href="#" className="text-xs text-muted-foreground hover:underline">
             Terminos del servicio
           </Link>
-          <Link href="#" className="text-xs text-muted-foreground hover:underline" prefetch={false}>
+          <Link href="#" className="text-xs text-muted-foreground hover:underline">
             Política de privacidad
           </Link>
         </nav>

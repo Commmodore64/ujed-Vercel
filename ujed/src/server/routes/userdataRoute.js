@@ -6,7 +6,7 @@ router.use(cors());
 
 // Ruta para guardar o actualizar datos del alumno
 router.post('/userdata', (req, res) => {
-    const { matricula, nombre_completo, telefono, email, fecha_nacimiento } = req.body;
+    const { matricula, nombre_completo, telefono, email, fecha_nacimiento, id } = req.body;
     console.log('Datos del alumno:', req.body);
 
     // Verificar si el correo ya existe en la base de datos
@@ -22,8 +22,8 @@ router.post('/userdata', (req, res) => {
             if (results.length > 0) {
                 // Si el alumno ya existe, actualizar los datos
                 connection.query(
-                    'UPDATE alumnos SET matricula = ?, nombre_completo = ?, telefono = ?, fecha_nacimiento = ? WHERE email = ?',
-                    [matricula, nombre_completo, telefono, fecha_nacimiento, email],
+                    'UPDATE alumnos SET matricula = ?, nombre_completo = ?, telefono = ?, fecha_nacimiento = ?, id= ? WHERE email = ?',
+                    [matricula, nombre_completo, telefono, fecha_nacimiento, id,  email],
                     (err, results) => {
                         if (err) {
                             console.error('Error al actualizar alumno:', err);
@@ -35,9 +35,9 @@ router.post('/userdata', (req, res) => {
             } else {
                 // Si el alumno no existe, insertar un nuevo registro
                 connection.query(
-                    'INSERT INTO alumnos (matricula, nombre_completo, telefono, fecha_nacimiento, email) VALUES (?, ?, ?, ?, ?)',
-                    [matricula, nombre_completo, telefono, fecha_nacimiento, email],
-                    console.log("Alumno creado correctamente, datos: ", matricula, nombre_completo, telefono, fecha_nacimiento, email),
+                    'INSERT INTO alumnos (matricula, nombre_completo, telefono, fecha_nacimiento, id, email) VALUES (?, ?, ?, ?, ?, ?)',
+                    [matricula, nombre_completo, telefono, fecha_nacimiento,id, email],
+                    console.log("Alumno creado correctamente, datos: ", matricula, nombre_completo, telefono, fecha_nacimiento,id, email),
                     (err, results) => {
                         if (err) {
                             console.error('Error al insertar nuevo alumno:', err);
