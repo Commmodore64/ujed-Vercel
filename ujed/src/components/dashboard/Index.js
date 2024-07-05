@@ -46,7 +46,7 @@ const Index = () => {
     }
   }, [isAuthenticated]);
 
-  // Si no está autenticado, redirigir al loginn
+  // Si no está autenticado, redirigir al login
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }

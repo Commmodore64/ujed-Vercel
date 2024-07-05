@@ -7,7 +7,7 @@ router.use(cors());
 // Ruta para guardar o actualizar datos del alumno
 router.post('/userdata', (req, res) => {
     const { matricula, nombre_completo, telefono, email, fecha_nacimiento, id } = req.body;
-    console.log('Datos del alumno:', req.body);
+    console.log('Datos del alumno req.body:', req.body);
 
     // Verificar si el correo ya existe en la base de datos
     connection.query(
@@ -20,10 +20,28 @@ router.post('/userdata', (req, res) => {
             }
 
             if (results.length > 0) {
-                // Si el alumno ya existe, actualizar los datos
+                // Alumno encontrado
+                const alumno = results[0];
+                const fecha_nacimientoSQL = new Date(alumno.fecha_nacimiento).toISOString().split('T')[0];
+                console.log("Datos MySQL alumno:", alumno);
+
+                // Verificar si los datos han cambiado
+                if (
+                    alumno.matricula === matricula &&
+                    alumno.nombre_completo === nombre_completo &&
+                    alumno.telefono === telefono &&
+                    fecha_nacimientoSQL === fecha_nacimiento &&
+                    alumno.id === id
+                ) {
+                    console.log('No hubo cambios en los datos del alumno');
+                    return res.status(200).json({ message: 'No hubo cambios en los datos del alumno' });
+                }
+
+                // Si los datos han cambiado, actualizar los datos
+                console.log('Alumno encontrado, actualizando datos');
                 connection.query(
-                    'UPDATE alumnos SET matricula = ?, nombre_completo = ?, telefono = ?, fecha_nacimiento = ?, id= ? WHERE email = ?',
-                    [matricula, nombre_completo, telefono, fecha_nacimiento, id,  email],
+                    'UPDATE alumnos SET matricula = ?, nombre_completo = ?, telefono = ?, fecha_nacimiento = ?, id = ? WHERE email = ?',
+                    [matricula, nombre_completo, telefono, fecha_nacimiento, id, email],
                     (err, results) => {
                         if (err) {
                             console.error('Error al actualizar alumno:', err);
@@ -34,10 +52,10 @@ router.post('/userdata', (req, res) => {
                 );
             } else {
                 // Si el alumno no existe, insertar un nuevo registro
+                console.log('Alumno no encontrado, creando nuevo registro');
                 connection.query(
                     'INSERT INTO alumnos (matricula, nombre_completo, telefono, fecha_nacimiento, id, email) VALUES (?, ?, ?, ?, ?, ?)',
-                    [matricula, nombre_completo, telefono, fecha_nacimiento,id, email],
-                    console.log("Alumno creado correctamente, datos: ", matricula, nombre_completo, telefono, fecha_nacimiento,id, email),
+                    [matricula, nombre_completo, telefono, fecha_nacimiento, id, email],
                     (err, results) => {
                         if (err) {
                             console.error('Error al insertar nuevo alumno:', err);

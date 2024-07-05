@@ -1,8 +1,7 @@
-// Profile.js
-
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
+import { toast, Toaster } from 'sonner';
 
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -10,6 +9,8 @@ const Profile = () => {
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [telefono, setTelefono] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [originalData, setOriginalData] = useState({});
+  const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
     const obtenerDatosAlumno = async () => {
@@ -31,6 +32,12 @@ const Profile = () => {
             setNombreCompleto(data.nombre_completo || "");
             setTelefono(data.telefono || "");
             setFechaNacimiento(data.fecha_nacimiento.split('T')[0]);
+            setOriginalData({
+              matricula: data.matricula || "",
+              nombreCompleto: data.nombre_completo || "",
+              telefono: data.telefono || "",
+              fechaNacimiento: data.fecha_nacimiento.split('T')[0]
+            });
           }
         } else {
           console.error(
@@ -48,7 +55,15 @@ const Profile = () => {
     }
   }, [isAuthenticated]);
 
-  // Función para enviar datos al servidor
+  useEffect(() => {
+    const hasChanged = 
+      matricula !== originalData.matricula ||
+      nombreCompleto !== originalData.nombreCompleto ||
+      telefono !== originalData.telefono ||
+      fechaNacimiento !== originalData.fechaNacimiento;
+    setIsChanged(hasChanged);
+  }, [matricula, nombreCompleto, telefono, fechaNacimiento, originalData]);
+
   const enviarDatos = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/userdata", {
@@ -75,18 +90,25 @@ const Profile = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        toast.info(result.message);
+        setOriginalData({
+          matricula: matricula,
+          nombreCompleto: nombreCompleto,
+          telefono: telefono,
+          fechaNacimiento: fechaNacimiento
+        });
+        setIsChanged(false);
         console.log("Datos del alumno enviados correctamente");
-        // Aquí podrías mostrar un mensaje de éxito o actualizar el estado de tu componente
       } else {
         console.error("Error al enviar datos del alumno");
-        // Manejar el error, mostrar mensaje al usuario, etc.
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+      toast.error("Error al enviar datos del alumno");
     }
   };
 
-  // Si no está autenticado, redirigir al login
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
@@ -113,10 +135,8 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      {/* Línea separadora */}
       <hr className="mt-10 border-gray-400 w-full" />
 
-      {/* Datos del Alumno */}
       <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Alumno</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">
@@ -158,15 +178,15 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      {/* Botón para enviar datos al servidor */}
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-80 rounded-lg mt-4"
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-80 rounded-lg mt-4 ${!isChanged && "opacity-50 cursor-not-allowed"}`}
         onClick={enviarDatos}
+        disabled={!isChanged}
       >
         Guardar Cambios
       </button>
-      {/* Línea separadora */}
       <hr className="mt-10 border-gray-400 w-full" />
+      <Toaster position="top-right" />
     </div>
   );
 };

@@ -21,7 +21,7 @@ const HomePage = () => {
     <header className="bg-[#B11830] px-4 py-6 md:px-6 md:py-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <img src={LogoPNG} className="h-14" />
+          <img src={LogoPNG} className="h-14" alt='UJED Logo'/>
         </div>
         <div className="flex items-center gap-10">
           <a href="#" className="text-sm font-medium text-white hover:underline">

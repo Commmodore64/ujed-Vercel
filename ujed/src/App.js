@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import HomePage from "./components/HomePage";
 import Sidebar from "./components/sidebar/Index";
 import Dashboard from "./components/dashboard/Index";
+import { Toaster } from 'sonner';
 
 function App() {
   const { isAuthenticated } = useAuth0();
@@ -25,6 +26,7 @@ function App() {
               {/* <Route path="/settings" element={<Settings />} /> */}
               {/* Agrega más rutas según sea necesario */}
             </Routes>
+            <Toaster position="top-right" />
           </div>
         </div>
       </div>
