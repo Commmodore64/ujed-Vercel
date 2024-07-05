@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
-import { toast, Toaster } from 'sonner';
+import { toast, Toaster } from "sonner";
+import InputMask from "react-input-mask";
 
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -28,15 +29,15 @@ const Profile = () => {
         if (response.ok) {
           const data = await response.json();
           if (data) {
-            setMatricula(data.matricula || "");
-            setNombreCompleto(data.nombre_completo || "");
-            setTelefono(data.telefono || "");
-            setFechaNacimiento(data.fecha_nacimiento.split('T')[0]);
+            setMatricula(cleanString(data.matricula));
+            setNombreCompleto(cleanString(data.nombre_completo));
+            setTelefono(cleanString(data.telefono));
+            setFechaNacimiento(data.fecha_nacimiento.split("T")[0]);
             setOriginalData({
-              matricula: data.matricula || "",
-              nombreCompleto: data.nombre_completo || "",
-              telefono: data.telefono || "",
-              fechaNacimiento: data.fecha_nacimiento.split('T')[0]
+              matricula: cleanString(data.matricula),
+              nombreCompleto: cleanString(data.nombre_completo),
+              telefono: cleanString(data.telefono),
+              fechaNacimiento: data.fecha_nacimiento.split("T")[0],
             });
           }
         } else {
@@ -56,15 +57,26 @@ const Profile = () => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    const hasChanged = 
-      matricula !== originalData.matricula ||
-      nombreCompleto !== originalData.nombreCompleto ||
-      telefono !== originalData.telefono ||
+    const hasChanged =
+      cleanString(matricula) !== originalData.matricula ||
+      cleanString(nombreCompleto) !== originalData.nombreCompleto ||
+      cleanString(telefono) !== originalData.telefono ||
       fechaNacimiento !== originalData.fechaNacimiento;
     setIsChanged(hasChanged);
   }, [matricula, nombreCompleto, telefono, fechaNacimiento, originalData]);
 
+  const cleanString = (value) => {
+    // Función para limpiar espacios en blanco al inicio y final de una cadena
+    return value.trim();
+  };
+
   const enviarDatos = async () => {
+    // Validar que todos los campos obligatorios estén completos
+    if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento) {
+      toast.error("Por favor completa todos los campos antes de guardar.");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/api/userdata", {
         method: "POST",
@@ -74,29 +86,21 @@ const Profile = () => {
         body: JSON.stringify({
           email: user.email,
           id: user.sub,
-          matricula: matricula,
-          nombre_completo: nombreCompleto,
-          telefono: telefono,
+          matricula: cleanString(matricula),
+          nombre_completo: cleanString(nombreCompleto),
+          telefono: cleanString(telefono),
           fecha_nacimiento: fechaNacimiento,
         }),
-      });
-      console.log("Datos del alumno:", {
-        email: user.email,
-        id: user.sub,
-        matricula: matricula,
-        nombre_completo: nombreCompleto,
-        telefono: telefono,
-        fecha_nacimiento: fechaNacimiento,
       });
 
       if (response.ok) {
         const result = await response.json();
         toast.info(result.message);
         setOriginalData({
-          matricula: matricula,
-          nombreCompleto: nombreCompleto,
-          telefono: telefono,
-          fechaNacimiento: fechaNacimiento
+          matricula: cleanString(matricula),
+          nombreCompleto: cleanString(nombreCompleto),
+          telefono: cleanString(telefono),
+          fechaNacimiento: fechaNacimiento,
         });
         setIsChanged(false);
         console.log("Datos del alumno enviados correctamente");
@@ -150,11 +154,11 @@ const Profile = () => {
         </div>
         <div className="flex flex-col">
           <p className="text-gray-700 mb-2">Número de Teléfono</p>
-          <input
-            type="text"
+          <InputMask
+            mask="9999999999" // Define el formato de 10 dígitos
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black"
+            className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black outline-none"
           />
         </div>
         <div className="flex flex-col">
@@ -179,7 +183,9 @@ const Profile = () => {
         </div>
       </div>
       <button
-        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-80 rounded-lg mt-4 ${!isChanged && "opacity-50 cursor-not-allowed"}`}
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-80 rounded-lg mt-4 ${
+          !isChanged && "opacity-50 cursor-not-allowed"
+        }`}
         onClick={enviarDatos}
         disabled={!isChanged}
       >
