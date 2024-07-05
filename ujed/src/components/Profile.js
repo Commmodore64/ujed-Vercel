@@ -66,17 +66,20 @@ const Profile = () => {
   }, [matricula, nombreCompleto, telefono, fechaNacimiento, originalData]);
 
   const cleanString = (value) => {
-    // Función para limpiar espacios en blanco al inicio y final de una cadena
-    return value.trim();
+    if (typeof value !== 'string') return '';
+    const trimmedValue = value.trim();
+    if (trimmedValue === '') return ''; // Retorna una cadena vacía si está vacío o solo tiene espacios
+    return trimmedValue;
   };
+  
 
   const enviarDatos = async () => {
     // Validar que todos los campos obligatorios estén completos
-    if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento) {
+    if (!cleanString(matricula) || !cleanString(nombreCompleto) || !cleanString(telefono) || !fechaNacimiento) {
       toast.error("Por favor completa todos los campos antes de guardar.");
       return;
     }
-
+  
     try {
       const response = await fetch("http://localhost:5000/api/userdata", {
         method: "POST",
@@ -92,7 +95,7 @@ const Profile = () => {
           fecha_nacimiento: fechaNacimiento,
         }),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         toast.info(result.message);
@@ -112,10 +115,14 @@ const Profile = () => {
       toast.error("Error al enviar datos del alumno");
     }
   };
+  
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
+
+
+  
 
   return (
     <div className="flex flex-col mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black mx-20">
@@ -155,7 +162,7 @@ const Profile = () => {
         <div className="flex flex-col">
           <p className="text-gray-700 mb-2">Número de Teléfono</p>
           <InputMask
-            mask="9999999999" // Define el formato de 10 dígitos
+            mask="9999999999" // ISSUE : Si solo pones un numero, lo manda de todas maneras
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
             className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black outline-none"
