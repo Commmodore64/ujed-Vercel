@@ -125,7 +125,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+    <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
       <h1 className="text-2xl font-semibold mb-8">Perfil de Usuario</h1>
       <div className="flex flex-col lg:flex-row">
         <img
