@@ -4,7 +4,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes'); // Importa las rutas de API de usuarios
 const userdataRoute = require('./routes/userdataRoute'); // Importa las rutas de userdata
 
-app.use(cors()); // Habilita CORS para todas las rutas
+app.use(cors()); // CORS para todas las rutas
     
 // Middleware
 app.use(express.json());

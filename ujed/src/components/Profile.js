@@ -66,20 +66,24 @@ const Profile = () => {
   }, [matricula, nombreCompleto, telefono, fechaNacimiento, originalData]);
 
   const cleanString = (value) => {
-    if (typeof value !== 'string') return '';
+    if (typeof value !== "string") return "";
     const trimmedValue = value.trim();
-    if (trimmedValue === '') return ''; // Retorna una cadena vacía si está vacío o solo tiene espacios
+    if (trimmedValue === "") return ""; // Retorna una cadena vacía si está vacío o con espacios
     return trimmedValue;
   };
-  
 
   const enviarDatos = async () => {
     // Validar que todos los campos obligatorios estén completos
-    if (!cleanString(matricula) || !cleanString(nombreCompleto) || !cleanString(telefono) || !fechaNacimiento) {
+    if (
+      !cleanString(matricula) ||
+      !cleanString(nombreCompleto) ||
+      !cleanString(telefono) ||
+      !fechaNacimiento
+    ) {
       toast.error("Por favor completa todos los campos antes de guardar.");
       return;
     }
-  
+
     try {
       const response = await fetch("http://localhost:5000/api/userdata", {
         method: "POST",
@@ -95,7 +99,7 @@ const Profile = () => {
           fecha_nacimiento: fechaNacimiento,
         }),
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         toast.info(result.message);
@@ -115,41 +119,38 @@ const Profile = () => {
       toast.error("Error al enviar datos del alumno");
     }
   };
-  
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
 
-
-  
-
   return (
-    <div className="flex flex-col mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black mx-20">
+    <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
       <h1 className="text-2xl font-semibold mb-8">Perfil de Usuario</h1>
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
         <img
-          className="rounded-full w-32 h-32 mr-4"
+          className="rounded-full w-32 h-32 mr-4 mb-4 lg:mb-0"
           src={user.picture}
           alt={user.name}
         />
-        <div className="flex flex-col ml-4">
+        <div className="flex flex-col lg:mr-4 mb-4 lg:mb-0">
           <p className="text-gray-700 mb-2">Correo Electrónico</p>
           <div className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black flex items-center">
             <p className="">{user.email}</p>
           </div>
         </div>
-        <div className="flex flex-col ml-4">
+        <div className="flex flex-col">
           <p className="text-gray-700 mb-2">Nombre de usuario</p>
           <div className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black flex items-center">
             <p className="">{user.nickname}</p>
           </div>
         </div>
       </div>
+
       <hr className="mt-10 border-gray-400 w-full" />
 
       <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Alumno</h2>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="flex flex-col">
           <p className="text-gray-700 mb-2">Matrícula</p>
           <input
@@ -162,7 +163,7 @@ const Profile = () => {
         <div className="flex flex-col">
           <p className="text-gray-700 mb-2">Número de Teléfono</p>
           <InputMask
-            mask="9999999999" // ISSUE : Si solo pones un numero, lo manda de todas maneras
+            mask="9999999999" // Define el formato de 10 dígitos
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
             className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black outline-none"
@@ -189,15 +190,19 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <button
-        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-80 rounded-lg mt-4 ${
-          !isChanged && "opacity-50 cursor-not-allowed"
-        }`}
-        onClick={enviarDatos}
-        disabled={!isChanged}
-      >
-        Guardar Cambios
-      </button>
+
+      <div className="flex justify-center lg:justify-start">
+  <button
+    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4 ${
+      !isChanged && "opacity-50 cursor-not-allowed"
+    }`}
+    onClick={enviarDatos}
+    disabled={!isChanged}
+  >
+    Guardar Cambios
+  </button>
+</div>
+
       <hr className="mt-10 border-gray-400 w-full" />
       <Toaster position="top-right" />
     </div>

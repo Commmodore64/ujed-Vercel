@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (min-width: 1024px) {
+  aside {
+    transform: translate-x-0 !important;
+  }
+}
+
 .App {
   text-align: center;
 }

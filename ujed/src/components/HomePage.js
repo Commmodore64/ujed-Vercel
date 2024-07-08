@@ -21,16 +21,16 @@ const HomePage = () => {
     <header className="bg-[#B11830] px-4 py-6 md:px-6 md:py-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <img src={LogoPNG} className="h-14" alt='UJED Logo'/>
+          <img src={LogoPNG} className= "h-8 lg:h-14" alt='UJED Logo'/>
         </div>
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-5 lg:gap-10">
           <a href="#" className="text-sm font-medium text-white hover:underline">
             FAQ
           </a>
           <a href="#" className="text-sm font-medium text-white hover:underline">
             Sobre nosotros
           </a>
-          <button onClick={handleLoginClick} className="bg-white text-[#B11830] py-2 px-4 rounded">Iniciar Sesión</button>
+          <button onClick={handleLoginClick} className="bg-white text-[#B11830] p-2 lg:py-2 px-4 rounded font-semibold">Iniciar Sesión</button>
         </div>
       </div>
     </header>
