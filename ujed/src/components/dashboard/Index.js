@@ -54,7 +54,7 @@ const Index = () => {
   return (
     <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#c06870] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
       <div className="flex flex-col h-auto mt-3 bg-[#f6f8fe] rounded-xl p-5 text-black lg:mx-20 shadow-md font-semibold">
-        <h2 className="text-2xl font-normal justify-start">Bienvenido {nombreCompleto} !</h2>
+        <h2 className="text-2xl font-normal justify-start">Bienvenido <br/> {nombreCompleto} !</h2>
       </div>
     </div>
   );

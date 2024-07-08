@@ -17,6 +17,16 @@ const Index = () => {
     setIsOpen(!isOpen);
   };
 
+  const closeSidebar = () => {
+    setIsOpen(false);
+  };
+
+  const getLinkClass = (path) => {
+    return location.pathname === path
+      ? "text-black bg-gray-300"
+      : "text-black hover:bg-gray-300";
+  };
+
   return (
     <div className="flex">
       <button
@@ -29,6 +39,10 @@ const Index = () => {
         className={`fixed top-0 left-0 w-80 h-full bg-white shadow-lg transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
+        style={{
+          backdropFilter: isOpen ? "blur(8px)" : "none", // Aplica el efecto de vidrio difuminado solo cuando isOpen es true
+          backgroundColor: isOpen ? "rgba(255, 255, 255, 0.8)" : "transparent", // Fondo semi-transparente
+        }}
       >
         <div className="flex flex-col h-full">
           <div className="p-4">
@@ -39,7 +53,10 @@ const Index = () => {
               <li>
                 <Link
                   to="/dashboard"
-                  className="flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out"
+                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 transition duration-300 ease-in-out ${getLinkClass(
+                    "/dashboard"
+                  )}`}
+                  onClick={closeSidebar}
                 >
                   <IoIosHome className="mr-4" size={25} color="#B11830" />
                   Inicio
@@ -48,7 +65,10 @@ const Index = () => {
               <li>
                 <Link
                   to="/payments"
-                  className="flex flex-row font-semibold rounded-lg mx-5 ml-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out"
+                  className={`flex flex-row font-semibold rounded-lg mx-5 ml-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                    "/payments"
+                  )}`}
+                  onClick={closeSidebar}
                 >
                   <IoIosCash className="mr-4" size={24} color="#B11830" />
                   Pagos
@@ -57,7 +77,10 @@ const Index = () => {
               <li>
                 <Link
                   to="/profile"
-                  className="flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out"
+                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                    "/profile"
+                  )}`}
+                  onClick={closeSidebar}
                 >
                   <IoIosSettings className="mr-4" size={25} color="#B11830" />
                   Perfil
@@ -70,6 +93,7 @@ const Index = () => {
             <Link
               to="https://www.ujed.mx/"
               className="flex flex-row font-semibold ml-3 py-2 px-1 text-black"
+              onClick={closeSidebar}
             >
               <IoShare className="mr-4" size={24} color="#B11830" />
               UJED

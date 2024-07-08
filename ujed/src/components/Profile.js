@@ -192,18 +192,18 @@ const Profile = () => {
       </div>
 
       <div className="flex justify-center lg:justify-start">
-  <button
-    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4 ${
-      !isChanged && "opacity-50 cursor-not-allowed"
-    }`}
-    onClick={enviarDatos}
-    disabled={!isChanged}
-  >
-    Guardar Cambios
-  </button>
-</div>
+        <button
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4 ${
+            !isChanged && "opacity-50 cursor-not-allowed"
+          }`}
+          onClick={enviarDatos}
+          disabled={!isChanged}
+        >
+          Guardar Cambios
+        </button>
+      </div>
 
-      <hr className="mt-10 border-gray-400 w-full" />
+      <hr className="mt-5 border-gray-400 w-full" />
       <Toaster position="top-right" />
     </div>
   );
