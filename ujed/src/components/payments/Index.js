@@ -61,7 +61,7 @@ const Index = () => {
                         Número de tarjeta
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         autoComplete="off"
                         data-openpay-card="card_number"
                         className="bg-gray-200 w-full border border-gray-300 p-3 text-lg rounded-xl"
@@ -133,7 +133,7 @@ const Index = () => {
 
                   <div className="flex justify-end px-2">
                     <a
-                      className="inline-block bg-red-600 hover:bg-red-700 text-white text-center text-xl py-2 px-6 rounded-lg cursor-pointer"
+                      className="inline-block bg-red-600 hover:bg-red-700 text-white text-center text-xl py-1.5 px-6 rounded-lg cursor-pointer font-semibold"
                       id="pay-button"
                     >
                       Pagar
