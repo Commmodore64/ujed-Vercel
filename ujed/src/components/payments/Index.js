@@ -20,32 +20,34 @@ const Index = () => {
           <form action="#" method="POST" id="payment-form">
             <input type="hidden" name="token_id" id="token_id" />
             <div className="w-full">
-              <h2 className="bg-gray-200 text-2xl py-7 px-5 rounded-t-xl">
+              <h2 className="bg-gray-200 text-2xl py-7 px-5 rounded-t-xl font-semibold">
                 Tarjeta de crédito o débito
               </h2>
-              <div className="bg-gray-100 p-8 rounded-b-xl">
-                <div className="flex w-full mt-5">
-                  <div className="flex flex-col w-1/3 border-r border-gray-300">
-                    <h4 className="text-md p-2">Tarjetas de crédito</h4>
-                    <img
-                      src={card1}
-                      alt="Tarjetas de crédito"
-                      className="w-48"
-                    />
-                  </div>
-                  <div className="flex flex-col w-2/3 px-5">
-                    <h4 className="text-md p-2">Tarjetas de débito</h4>
-                    <img
-                      src={card2}
-                      alt="Tarjetas de débito"
-                      className="w-[500px]"
-                    />
+              <div className="bg-gray-100 p-5 rounded-b-xl">
+                <div className="bg-gray-100 p-3 rounded-b-xl">
+                  <div className="flex flex-col lg:flex-row w-full mt-5">
+                    <div className="flex flex-col w-full lg:w-1/3 border-r border-gray-300">
+                      <h4 className="text-md p-2 font-semibold text-gray-900">Tarjetas de crédito</h4>
+                      <img
+                        src={card1}
+                        alt="Tarjetas de crédito"
+                        className="w-full xs:w-[300px] sm:w-[400px] md:w-[400px] lg:w-[500px] xl:w-[600px] 2xl:w-[700px]"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full lg:w-2/3 px-5 mt-5 lg:mt-0">
+                      <h4 className="text-md p-2 font-semibold text-gray-900">Tarjetas de débito</h4>
+                      <img
+                        src={card2}
+                        alt="Tarjetas de débito"
+                        className="w-full xs:w-[300px] sm:w-[400px] md:w-[400px] lg:w-[500px] xl:w-[600px] 2xl:w-[700px]"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col mt-5">
                   <div className="flex flex-col lg:flex-row mb-5">
-                    <div className="w-full lg:w-1/2 px-2">
-                      <label className="block text-md mb-2">
+                    <div className="w-full lg:w-1/2 lg:my-0 px-2 my-2">
+                      <label className="block text-md mb-2 font-semibold text-gray-600">
                         Nombre del titular
                       </label>
                       <input
@@ -56,8 +58,8 @@ const Index = () => {
                         className="bg-gray-200 w-full border border-gray-300 p-3 text-lg rounded-xl"
                       />
                     </div>
-                    <div className="w-full lg:w-1/2 px-2">
-                      <label className="block text-md mb-2">
+                    <div className="w-full lg:w-1/2 lg:my-0 px-2 my-2">
+                      <label className="block text-md mb-2 font-semibold text-gray-600">
                         Número de tarjeta
                       </label>
                       <input
@@ -69,32 +71,32 @@ const Index = () => {
                     </div>
                   </div>
                   <div className="flex flex-col lg:flex-row mb-5">
-                    <div className="w-full lg:w-1/2 px-2">
-                      <label className="block text-md mb-2">
+                    <div className="w-full lg:w-1/2 lg:my-0 px-2 my-2">
+                      <label className="block text-md mb-2 font-semibold text-gray-600">
                         Fecha de expiración
                       </label>
                       <div className="flex">
                         <input
-                          type="text"
+                          type="number"
                           placeholder="Mes"
                           data-openpay-card="expiration_month"
                           className="bg-gray-200 w-1/2 border border-gray-300 p-3 text-lg mr-2 rounded-xl"
                         />
                         <input
-                          type="text"
+                          type="number"
                           placeholder="Año"
                           data-openpay-card="expiration_year"
                           className="bg-gray-200 w-1/2 border border-gray-300 p-3 text-lg ml-2 rounded-xl"
                         />
                       </div>
                     </div>
-                    <div className="w-full lg:w-1/2 px-2">
-                      <label className="block text-md mb-2">
+                    <div className="w-full lg:w-1/2 lg:my-0 px-2 my-2">
+                      <label className="block text-md mb-2 font-semibold text-gray-600">
                         Código de seguridad
                       </label>
-                      <div className="flex items-center">
+                      <div className="flex items-center mr-11">
                         <input
-                          type="text"
+                          type="number"
                           placeholder="3 dígitos"
                           autoComplete="off"
                           data-openpay-card="cvv2"
@@ -103,28 +105,27 @@ const Index = () => {
                         <img
                           src={cvv}
                           alt="Código de seguridad"
-                          className="ml-2 h-6"
+                          className="xl:ml-10 h-6 hidden xl:block"
                         />
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between mb-5 px-2">
-                    <div className="flex items-center">
-                      <div
-                        className="w-20 h-10 bg-no-repeat bg-left-bottom"
-                        style={{
-                          backgroundImage: 'url("./openpay.png")',
-                        }}
-                      ></div>
-                      <span className="text-xs ml-3">
+                  <div className="flex items-center justify-between mb-5 px-2 flex-col lg:flex-row lg:items-start">
+                    <div className="flex items-center mb-2 lg:mb-0">
+                      <div className="w-20 h-10 bg-no-repeat bg-left-bottom"></div>
+                      <span className="text-xs ml-3 text-gray-500">
                         Transacciones realizadas vía:
                       </span>
                       <img src={openpay} alt="Openpay" className="ml-2 h-6" />
                     </div>
-                    <div className="flex items-center ml-8">
-                      <div className="border-l border-gray-300 h-12 mx-3"></div>
-                      <img src={security} alt="Seguridad" className="h-10 mr-2" />
-                      <span className="text-xs">
+                    <div className="flex justify-center items-center lg:ml-8">
+                      <div className="border-l border-gray-300 h-12 mx-3 mb-2 lg:mb-0 lg:mx-0"></div>
+                      <img
+                        src={security}
+                        alt="Seguridad"
+                        className="h-10 mx-2"
+                      />
+                      <span className=" text-xs text-gray-500">
                         Tus pagos se realizan de forma segura con encriptación
                         de 256 bits
                       </span>
