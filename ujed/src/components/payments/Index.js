@@ -23,7 +23,7 @@ const Index = () => {
         }
         input[type="number"] {
           -moz-appearance: textfield;
-        }
+        } 
       `}</style>
       <div className="flex flex-col w-full max-w-4xl">
         <div className="flex flex-col w-full ">
