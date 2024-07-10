@@ -15,6 +15,16 @@ const Index = () => {
 
   return (
     <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+      <style jsx="true">{`
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
       <div className="flex flex-col w-full max-w-4xl">
         <div className="flex flex-col w-full ">
           <form action="#" method="POST" id="payment-form">
@@ -27,7 +37,9 @@ const Index = () => {
                 <div className="bg-gray-100 p-3 rounded-b-xl">
                   <div className="flex flex-col lg:flex-row w-full mt-5">
                     <div className="flex flex-col w-full lg:w-1/3 border-r border-gray-300">
-                      <h4 className="text-md p-2 font-semibold text-gray-900">Tarjetas de crédito</h4>
+                      <h4 className="text-md p-2 font-semibold text-gray-900">
+                        Tarjetas de crédito
+                      </h4>
                       <img
                         src={card1}
                         alt="Tarjetas de crédito"
@@ -35,7 +47,9 @@ const Index = () => {
                       />
                     </div>
                     <div className="flex flex-col w-full lg:w-2/3 px-5 mt-5 lg:mt-0">
-                      <h4 className="text-md p-2 font-semibold text-gray-900">Tarjetas de débito</h4>
+                      <h4 className="text-md p-2 font-semibold text-gray-900">
+                        Tarjetas de débito
+                      </h4>
                       <img
                         src={card2}
                         alt="Tarjetas de débito"
