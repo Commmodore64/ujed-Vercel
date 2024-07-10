@@ -46,7 +46,14 @@ const Index = () => {
       >
         <div className="flex flex-col h-full">
           <div className="p-4">
-            <img src={LogoUJED} alt="Logo UJED" className="w-56 mx-auto" />
+            <Link to="/dashboard">
+              <img
+                src={LogoUJED}
+                alt="Logo UJED"
+                className="w-56 mx-auto cursor-pointer"
+                onClick={closeSidebar}
+              />
+            </Link>
           </div>
           <nav className="flex-1 border-r border-gray-300">
             <ul className="space-y-4 flex flex-col">
