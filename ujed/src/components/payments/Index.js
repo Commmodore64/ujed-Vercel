@@ -78,6 +78,7 @@ const Index = () => {
                       </label>
                       <input
                         type="number"
+                        placeholder="16 dígitos"
                         autoComplete="off"
                         data-openpay-card="card_number"
                         className="bg-gray-200 w-full border border-gray-300 p-3 text-lg rounded-xl"

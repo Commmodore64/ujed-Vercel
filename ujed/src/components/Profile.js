@@ -5,13 +5,14 @@ import { toast, Toaster } from "sonner";
 import InputMask from "react-input-mask";
 
 const Profile = () => {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, getIdTokenClaims  } = useAuth0();
   const [matricula, setMatricula] = useState("");
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [telefono, setTelefono] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [originalData, setOriginalData] = useState({});
   const [isChanged, setIsChanged] = useState(false);
+  const [roles, setRoles] = useState([]);
 
   useEffect(() => {
     const obtenerDatosAlumno = async () => {
@@ -124,9 +125,33 @@ const Profile = () => {
     return <Navigate to="/" />;
   }
 
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const tokenClaims = await getIdTokenClaims();
+      const roles = tokenClaims['https://roles.com/roles'];
+      setRoles(roles || []);
+    };
+
+    if (isAuthenticated) {
+      fetchRoles();
+    }
+  }, [isAuthenticated, getIdTokenClaims]);
+
+  if (!isAuthenticated) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
-      <h1 className="text-2xl font-semibold mb-8">Perfil de Usuario</h1>
+      <h1 className="text-2xl font-semibold mb-3">Perfil de Usuario</h1>
+      {roles.includes('admin') && (
+        <div className="flex flex-col">
+          <p className="text-gray-700 mb-2">Rol de Usuario</p>
+          <div className="p-2 border border-gray-300 rounded-lg bg-[#b3b3b3] text-black flex items-center mb-5 w-32">
+            <p className="font-semibold">Administrador</p>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col lg:flex-row">
         <img
           className="rounded-full w-32 h-32 mr-4 mb-4 lg:mb-0"
