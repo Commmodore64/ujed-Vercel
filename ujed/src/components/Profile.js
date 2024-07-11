@@ -3,11 +3,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import InputMask from "react-input-mask";
-
-
+import { RiAdminFill } from "react-icons/ri";
 
 const Profile = () => {
-  const { user, isAuthenticated, getIdTokenClaims  } = useAuth0();
+  const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
   const [matricula, setMatricula] = useState("");
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -130,7 +129,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       const tokenClaims = await getIdTokenClaims();
-      const roles = tokenClaims['https://roles.com/roles'];
+      const roles = tokenClaims["https://roles.com/roles"];
       setRoles(roles || []);
     };
 
@@ -146,11 +145,11 @@ const Profile = () => {
   return (
     <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
       <h1 className="text-2xl font-semibold mb-3">Perfil de Usuario</h1>
-      {roles.includes('admin') && (
+      {roles.includes("admin") && (
         <div className="flex flex-col">
           <p className="text-gray-700 mb-2">Rol de Usuario</p>
           <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center mb-5 w-32">
-            <p className="font-semibold">Administrador</p>
+            <p className="font-semibold">Administrador </p>
           </div>
         </div>
       )}
