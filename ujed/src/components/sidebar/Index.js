@@ -2,12 +2,32 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "../LogoutButton";
 import LogoUJED from "../../img/logo-banner-red.png";
-import { IoIosHome, IoIosSettings, IoIosCash } from "react-icons/io";
+import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie } from "react-icons/io";
 import { IoShare, IoMenu } from "react-icons/io5";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
 
 const Index = () => {
   const location = useLocation();
+  const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
   const [isOpen, setIsOpen] = useState(false);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const tokenClaims = await getIdTokenClaims();
+      const roles = tokenClaims["https://roles.com/roles"];
+      setRoles(roles || []);
+    };
+
+    if (isAuthenticated) {
+      fetchRoles();
+    }
+  }, [isAuthenticated, getIdTokenClaims]);
+
+  if (!isAuthenticated) {
+    return <div>Loading...</div>;
+  }
 
   if (location.pathname === "/") {
     return null;
@@ -93,6 +113,24 @@ const Index = () => {
                   Perfil
                 </Link>
               </li>
+              {roles.includes("admin") && (
+                <li>
+                  <Link
+                    to="/admin"
+                    className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                      "/admin"
+                    )}`}
+                    onClick={closeSidebar}
+                  >
+                    <IoIosPie
+                      className="mr-4"
+                      size={25}
+                      color="#B11830"
+                    />
+                    Administrador
+                  </Link>
+                </li>
+              )}
               {/* Agrega más enlaces según sea necesario */}
             </ul>
           </nav>

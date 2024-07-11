@@ -6,6 +6,7 @@ import HomePage from "./components/HomePage";
 import Sidebar from "./components/sidebar/Index";
 import Dashboard from "./components/dashboard/Index";
 import Payments from "./components/payments/Index";
+import Administrator from "./components/administrator/Index";
 import { Toaster } from 'sonner';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Route path="/profile" element={<Profile />}/>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/payments" element={<Payments />} />
+              <Route path="/admin" element={<Administrator />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
               {/* Agrega más rutas según sea necesario */}
             </Routes>
