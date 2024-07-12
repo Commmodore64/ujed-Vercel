@@ -41,7 +41,7 @@ const HomePage = () => {
             Una nueva plataforma para realizar tus pagos de inscripción de manera rápida y segura.
           </p>
           <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-            <button variant="secondary">Contactanos</button>
+            <Link variant="secondary" to="/dashboard">Realiza tu pago</Link>
           </div>
       </div>
     </main>

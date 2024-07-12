@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MdLastPage } from "react-icons/md";
+import Sidebar from "../sidebar/Index";
 
 const Index = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -46,17 +47,17 @@ const Index = () => {
       obtenerDatosAlumno();
     }
   }, [isAuthenticated]);
-
-  // Si no está autenticado, redirigir al login
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
   return (
-    <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#c06870] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
-      <div className="flex flex-col h-auto mt-3 bg-[#f6f8fe] rounded-xl p-5 text-black lg:mx-20 shadow-md font-semibold">
-        <h2 className="text-2xl font-normal justify-start">Bienvenido <br/> {nombreCompleto} !</h2>
+    <>
+      <Sidebar />
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#c06870] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+        <div className="flex flex-col h-auto mt-3 bg-[#f6f8fe] rounded-xl p-5 text-black lg:mx-20 shadow-md font-semibold">
+          <h2 className="text-2xl font-normal justify-start">
+            Bienvenido {nombreCompleto} !
+          </h2>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -25,14 +25,6 @@ const Index = () => {
     }
   }, [isAuthenticated, getIdTokenClaims]);
 
-  if (!isAuthenticated) {
-    return <div>Loading...</div>;
-  }
-
-  if (location.pathname === "/") {
-    return null;
-  }
-
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -66,7 +58,7 @@ const Index = () => {
       >
         <div className="flex flex-col h-full">
           <div className="p-4">
-            <Link to="/dashboard">
+            <Link to="/">
               <img
                 src={LogoUJED}
                 alt="Logo UJED"
@@ -101,18 +93,20 @@ const Index = () => {
                   Pagos
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/profile"
-                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
-                    "/profile"
-                  )}`}
-                  onClick={closeSidebar}
-                >
-                  <IoIosSettings className="mr-4" size={25} color="#B11830" />
-                  Perfil
-                </Link>
-              </li>
+              {isAuthenticated && (
+                <li>
+                  <Link
+                    to="/profile"
+                    className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                      "/profile"
+                    )}`}
+                    onClick={closeSidebar}
+                  >
+                    <IoIosSettings className="mr-4" size={25} color="#B11830" />
+                    Perfil
+                  </Link>
+                </li>
+              )}
               {roles.includes("admin") && (
                 <li>
                   <Link
@@ -122,11 +116,7 @@ const Index = () => {
                     )}`}
                     onClick={closeSidebar}
                   >
-                    <IoIosPie
-                      className="mr-4"
-                      size={25}
-                      color="#B11830"
-                    />
+                    <IoIosPie className="mr-4" size={25} color="#B11830" />
                     Administrador
                   </Link>
                 </li>
@@ -134,6 +124,7 @@ const Index = () => {
               {/* Agrega más enlaces según sea necesario */}
             </ul>
           </nav>
+
           <div className="mt-auto p-4 font-semibold">
             <Link
               to="https://www.ujed.mx/"
@@ -143,7 +134,7 @@ const Index = () => {
               <IoShare className="mr-4" size={24} color="#B11830" />
               UJED
             </Link>
-            <LogoutButton />
+            {isAuthenticated && <LogoutButton />}
           </div>
         </div>
       </aside>

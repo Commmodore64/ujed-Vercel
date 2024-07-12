@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import InputMask from "react-input-mask";
 import { RiAdminFill } from "react-icons/ri";
+import Sidebar from "./sidebar/Index";
 
 const Profile = () => {
   const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
@@ -143,95 +144,98 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
-      <h1 className="text-2xl font-semibold mb-3">Perfil de Usuario</h1>
-      {roles.includes("admin") && (
-        <div className="flex flex-col">
-          <p className="text-gray-700 mb-2">Rol de Usuario</p>
-          <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center mb-5 w-32">
-            <p className="font-semibold">Administrador </p>
+    <>
+      <Sidebar />
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+        <h1 className="text-2xl font-semibold mb-3">Perfil de Usuario</h1>
+        {roles.includes("admin") && (
+          <div className="flex flex-col">
+            <p className="text-gray-700 mb-2">Rol de Usuario</p>
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center mb-5 w-32">
+              <p className="font-semibold">Administrador </p>
+            </div>
+          </div>
+        )}
+        <div className="flex flex-col lg:flex-row">
+          <img
+            className="rounded-full w-32 h-32 mr-4 mb-4 lg:mb-0"
+            src={user.picture}
+            alt={user.name}
+          />
+          <div className="flex flex-col lg:mr-4 mb-4 lg:mb-0">
+            <p className="text-gray-700 mb-2">Correo Electrónico</p>
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center">
+              <p className="">{user.email}</p>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <p className="text-gray-700 mb-2">Nombre de usuario</p>
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center">
+              <p className="">{user.nickname}</p>
+            </div>
           </div>
         </div>
-      )}
-      <div className="flex flex-col lg:flex-row">
-        <img
-          className="rounded-full w-32 h-32 mr-4 mb-4 lg:mb-0"
-          src={user.picture}
-          alt={user.name}
-        />
-        <div className="flex flex-col lg:mr-4 mb-4 lg:mb-0">
-          <p className="text-gray-700 mb-2">Correo Electrónico</p>
-          <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center">
-            <p className="">{user.email}</p>
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <p className="text-gray-700 mb-2">Nombre de usuario</p>
-          <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center">
-            <p className="">{user.nickname}</p>
-          </div>
-        </div>
-      </div>
 
-      <hr className="mt-10 border-gray-400 w-full" />
+        <hr className="mt-10 border-gray-400 w-full" />
 
-      <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Alumno</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="flex flex-col">
-          <p className="text-gray-700 mb-2">Matrícula</p>
-          <input
-            type="text"
-            value={matricula}
-            onChange={(e) => setMatricula(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black"
-          />
-        </div>
-        <div className="flex flex-col">
-          <p className="text-gray-700 mb-2">Número de Teléfono</p>
-          <InputMask
-            mask="9999999999" // Define el formato de 10 dígitos
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black outline-none"
-          />
-        </div>
-        <div className="flex flex-col">
-          <p className="text-gray-700 mb-2">Nombre Completo</p>
-          <input
-            type="text"
-            value={nombreCompleto}
-            onChange={(e) => setNombreCompleto(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black"
-          />
-        </div>
-        <div className="flex flex-col">
-          <p className="text-gray-700 mb-2">Fecha de Nacimiento</p>
-          <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center">
+        <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Alumno</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <p className="text-gray-700 mb-2">Matrícula</p>
             <input
-              type="date"
-              value={fechaNacimiento}
-              onChange={(e) => setFechaNacimiento(e.target.value)}
-              className="bg-transparent text-black"
+              type="text"
+              value={matricula}
+              onChange={(e) => setMatricula(e.target.value)}
+              className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black"
             />
           </div>
+          <div className="flex flex-col">
+            <p className="text-gray-700 mb-2">Número de Teléfono</p>
+            <InputMask
+              mask="9999999999" // Define el formato de 10 dígitos
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+              className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-gray-700 mb-2">Nombre Completo</p>
+            <input
+              type="text"
+              value={nombreCompleto}
+              onChange={(e) => setNombreCompleto(e.target.value)}
+              className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black"
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-gray-700 mb-2">Fecha de Nacimiento</p>
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-300 text-black flex items-center">
+              <input
+                type="date"
+                value={fechaNacimiento}
+                onChange={(e) => setFechaNacimiento(e.target.value)}
+                className="bg-transparent text-black"
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="flex justify-center lg:justify-start">
-        <button
-          className={`bg-gray-900 hover:bg-[#B11830] transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded-lg mt-4 ${
-            !isChanged && "opacity-50 cursor-not-allowed"
-          }`}
-          onClick={enviarDatos}
-          disabled={!isChanged}
-        >
-          Guardar Cambios
-        </button>
-      </div>
+        <div className="flex justify-center lg:justify-start">
+          <button
+            className={`bg-gray-900 hover:bg-[#B11830] transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded-lg mt-4 ${
+              !isChanged && "opacity-50 cursor-not-allowed"
+            }`}
+            onClick={enviarDatos}
+            disabled={!isChanged}
+          >
+            Guardar Cambios
+          </button>
+        </div>
 
-      <hr className="mt-5 border-gray-400 w-full" />
-      <Toaster position="top-right" />
-    </div>
+        <hr className="mt-5 border-gray-400 w-full" />
+        <Toaster position="top-right" />
+      </div>
+    </>
   );
 };
 

@@ -15,7 +15,6 @@ function App() {
   return (
     <Router>
       <div className="flex h-screen">
-        {isAuthenticated && <Sidebar />}
         <div className="flex-1 bg-white overflow-y-auto">
           <div className="mx-auto">
             <Routes>
