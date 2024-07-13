@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../sidebar/Index";
+import { MdEdit, MdDeleteForever } from "react-icons/md";
 
 const Index = () => {
   const [cursos, setCursos] = useState([]);
@@ -33,6 +34,12 @@ const Index = () => {
     fetchCursos();
   }, []);
 
+  const limpiarCampos = () => {
+    setNombreCurso("");
+    setInfoCurso("");
+    setCursoId(null);
+  };
+
   const handleAgregarCurso = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/cursos", {
@@ -51,9 +58,7 @@ const Index = () => {
         console.log("Curso agregado:", nuevoCurso);
         setCursos([...cursos, nuevoCurso]);
         setShowModal(false); // Cerrar el modal después de agregar el curso
-        // Limpiar los campos del formulario
-        setNombreCurso("");
-        setInfoCurso("");
+        limpiarCampos(); // Limpiar los campos del formulario
       } else {
         console.error("Error al agregar el curso:", response.statusText);
       }
@@ -63,7 +68,6 @@ const Index = () => {
   };
 
   const handleEditarCurso = async (id) => {
-    // Obtener el curso por ID para editar
     try {
       const response = await fetch(`http://localhost:5000/api/cursos/${id}`, {
         method: "GET",
@@ -88,7 +92,6 @@ const Index = () => {
   };
 
   const handleActualizarCurso = async () => {
-    // Actualizar el curso
     try {
       const response = await fetch(`http://localhost:5000/api/cursos/${cursoId}`, {
         method: "PUT",
@@ -105,16 +108,12 @@ const Index = () => {
         const cursoActualizado = await response.json();
         console.log("Curso actualizado:", cursoActualizado);
 
-        // Actualizar el estado de cursos
         const updatedCursos = cursos.map((curso) =>
           curso.id === cursoId ? { ...curso, nombre: cursoActualizado.nombre, info: cursoActualizado.info } : curso
         );
         setCursos(updatedCursos);
         setShowModal(false); // Cerrar el modal después de actualizar el curso
-        // Limpiar los campos del formulario
-        setNombreCurso("");
-        setInfoCurso("");
-        setCursoId(null);
+        limpiarCampos(); // Limpiar los campos del formulario
       } else {
         console.error("Error al actualizar el curso:", response.statusText);
       }
@@ -124,7 +123,6 @@ const Index = () => {
   };
 
   const handleEliminarCurso = async (id) => {
-    // Eliminar el curso por ID
     try {
       const response = await fetch(`http://localhost:5000/api/cursos/${id}`, {
         method: "DELETE",
@@ -132,7 +130,6 @@ const Index = () => {
 
       if (response.ok) {
         console.log("Curso eliminado:", id);
-        // Filtrar cursos para actualizar el estado
         const filteredCursos = cursos.filter((curso) => curso.id !== id);
         setCursos(filteredCursos);
       } else {
@@ -152,7 +149,10 @@ const Index = () => {
           <div className="mb-4">
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                setShowModal(true);
+                limpiarCampos(); // Limpiar los campos al abrir el modal de agregar curso
+              }}
             >
               Agregar Curso
             </button>
@@ -160,7 +160,7 @@ const Index = () => {
           <h2 className="text-lg text-gray-700 font-semibold">Cursos Disponibles</h2>
           <div className="grid grid-cols-1 gap-4">
             {cursos.map((curso) => (
-              <div key={curso.id} className="bg-white p-4 shadow-md rounded-md relative">
+              <div key={curso.id} className="bg-white p-4 shadow-md rounded-md relative mt-3 mx-20">
                 <h2 className="text-lg font-semibold">{curso.nombre}</h2>
                 <p className="text-gray-600">{curso.info}</p>
                 <div className="absolute top-0 right-0 flex space-x-2 mt-1 mr-2">
@@ -168,13 +168,13 @@ const Index = () => {
                     className="text-xs text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
                     onClick={() => handleEditarCurso(curso.id)}
                   >
-                    Editar
+                    <MdEdit size={20} />
                   </button>
                   <button
                     className="text-xs text-white bg-red-500 hover:bg-red-600 py-1 px-2 rounded"
                     onClick={() => handleEliminarCurso(curso.id)}
                   >
-                    Borrar
+                    <MdDeleteForever size={20} />
                   </button>
                 </div>
               </div>
@@ -217,7 +217,7 @@ const Index = () => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md mr-2"
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md mr-5"
                   onClick={() => setShowModal(false)}
                 >
                   Cancelar
