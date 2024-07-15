@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../sidebar/Index";
 import { MdEdit, MdDeleteForever } from "react-icons/md";
+import { useAuth0 } from "@auth0/auth0-react";
+import {toast} from "sonner";
+import { Navigate } from "react-router-dom";
 
 const Index = () => {
+  const { isAuthenticated } = useAuth0();
   const [cursos, setCursos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [nombreCurso, setNombreCurso] = useState("");
   const [infoCurso, setInfoCurso] = useState("");
   const [cursoId, setCursoId] = useState(null); // Estado para almacenar el ID del curso seleccionado para editar
+
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -21,7 +26,7 @@ const Index = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Cursos obtenidos:", data);
+          //console.log("Cursos obtenidos:", data);
           setCursos(data);
         } else {
           console.error("Error al obtener los cursos:", response.statusText);
@@ -56,14 +61,17 @@ const Index = () => {
       if (response.ok) {
         const nuevoCurso = await response.json();
         console.log("Curso agregado:", nuevoCurso);
+        toast.success("Curso agregado correctamente");
         setCursos([...cursos, nuevoCurso]);
         setShowModal(false); // Cerrar el modal después de agregar el curso
         limpiarCampos(); // Limpiar los campos del formulario
       } else {
         console.error("Error al agregar el curso:", response.statusText);
+        toast.error("Error al agregar el curso");
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+      toast.error("Error al agregar el curso");
     }
   };
 
@@ -85,9 +93,11 @@ const Index = () => {
         setShowModal(true);
       } else {
         console.error("Error al obtener el curso para editar:", response.statusText);
+        toast.error("Error al obtener el curso para editar");
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+      toast.error("Error al obtener el curso para editar");
     }
   };
 
@@ -107,7 +117,7 @@ const Index = () => {
       if (response.ok) {
         const cursoActualizado = await response.json();
         console.log("Curso actualizado:", cursoActualizado);
-
+        toast.success("Curso actualizado correctamente");
         const updatedCursos = cursos.map((curso) =>
           curso.id === cursoId ? { ...curso, nombre: cursoActualizado.nombre, info: cursoActualizado.info } : curso
         );
@@ -116,9 +126,11 @@ const Index = () => {
         limpiarCampos(); // Limpiar los campos del formulario
       } else {
         console.error("Error al actualizar el curso:", response.statusText);
+        toast.error("Error al actualizar el curso");
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+      toast.error("Error al actualizar el curso");
     }
   };
 
@@ -130,15 +142,21 @@ const Index = () => {
 
       if (response.ok) {
         console.log("Curso eliminado:", id);
+        toast.info("Curso eliminado correctamente");
         const filteredCursos = cursos.filter((curso) => curso.id !== id);
         setCursos(filteredCursos);
       } else {
         console.error("Error al eliminar el curso:", response.statusText);
+        toast.error("Error al eliminar el curso");
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+      toast.error("Error al eliminar el curso");
     }
   };
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>

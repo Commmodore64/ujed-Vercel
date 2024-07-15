@@ -5,13 +5,15 @@ const connection = require('../db');
 // Crear un nuevo curso
 router.post('/cursos', (req, res) => {
     const { nombre, info } = req.body;
-    const query = 'INSERT INTO cursos (nombre, info) VALUES (?, ?)';
-    connection.query(query, [nombre, info], (err, results) => {
+    const fecha = new Date();
+    const query = 'INSERT INTO cursos (nombre, info, date) VALUES (?, ?, ?)';
+    connection.query(query, [nombre, info, fecha], (err, results) => {
         if (err) {
             console.error('Error al crear el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
         res.status(201).json({ id: results.insertId, nombre, info });
+        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, info});
     });
 });
 

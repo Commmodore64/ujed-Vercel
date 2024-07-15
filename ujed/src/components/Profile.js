@@ -178,7 +178,7 @@ const Profile = () => {
 
         <hr className="mt-10 border-gray-400 w-full" />
 
-        <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Alumno</h2>
+        <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Administrador</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Matrícula</p>
