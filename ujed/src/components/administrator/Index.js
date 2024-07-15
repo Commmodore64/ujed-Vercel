@@ -189,7 +189,7 @@ const Index = () => {
                     <MdEdit size={20} />
                   </button>
                   <button
-                    className="text-xs text-white bg-red-500 hover:bg-red-600 py-1 px-2 rounded"
+                    className="text-xs text-white bg-red-500 hover:bg-red-600 py-1 px-2 rounded "
                     onClick={() => handleEliminarCurso(curso.id)}
                   >
                     <MdDeleteForever size={20} />
