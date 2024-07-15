@@ -63,11 +63,11 @@ const Index = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Cursos obtenidos:", data);
-          console.log(
-            "Fecha de actualización:",
-            data.map((data) => data.date)
-          );
+          //console.log("Cursos obtenidos:", data);
+          //console.log(
+          //   "Fecha de actualización:",
+          //   data.map((data) => data.date)
+          // );
           setCursos(data);
           if (data.length > 0) {
             // Encontrar la fecha más reciente
@@ -85,7 +85,7 @@ const Index = () => {
 
     fetchCursos();
   }, []);
-  console.log("Ultima fecha de actualización:", ultimaFechaActualizacion);
+  //console.log("Ultima fecha de actualización:", ultimaFechaActualizacion);
 
   return (
     <>
@@ -108,7 +108,10 @@ const Index = () => {
               ))}
             </div>
             <div className="flex justify-between mt-3">
-              <Link to="https://www.ujed.mx/facultad-de-enfermeria-y-obstetricia/servicios" className="flex items-center text-sm m-1 mt-1">
+              <Link
+                to="https://www.ujed.mx/facultad-de-enfermeria-y-obstetricia/servicios"
+                className="flex text-gray-900 hover:text-[#B11830] transition duration-300 ease-in-out items-center text-sm m-1 mt-1"
+              >
                 Más información <IoIosArrowForward className="ml-1 text-sm " />
               </Link>
               {ultimaFechaActualizacion && (
@@ -142,7 +145,22 @@ const Index = () => {
             </li>
           </div>
           <div className="flex flex-col h-auto w-full lg:w-2/3 bg-[#f6f8fe] rounded-xl p-5 text-black shadow-sm font-semibold">
-            <h2 className="text-2xl font-normal justify-start">Cuadro 2/3</h2>
+            <h2 className="text-2xl font-bold justify-start">
+              Información general
+            </h2>
+            <p className="text-md text-gray-800 mt-4 mb-1">Dirección:</p>
+            <p className="text-sm text-gray-700 ">
+              Prolongación Blvd. Juan Pablo II 512.
+              <br /> Col. Masié. C.P. 34217.
+              <br />
+              Durango, Dgo. México.
+            </p>
+            <p className="text-md text-gray-800 mt-4 mb-1">Datos de contacto:</p>
+            <p className="text-sm text-gray-700 ">
+              Tel. (618) 827 13 70.
+              <br /> 
+              E-mail: feo@ujed.mx
+            </p>
           </div>
         </div>
       </div>

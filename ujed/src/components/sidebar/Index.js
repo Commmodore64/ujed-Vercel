@@ -134,6 +134,14 @@ const Index = () => {
               <IoShare className="mr-4" size={24} color="#B11830" />
               UJED
             </Link>
+            <Link
+              to="https://faeo.ujed.mx/"
+              className="flex flex-row font-semibold ml-3 py-2 px-1 text-black"
+              onClick={closeSidebar}
+            >
+              <IoShare className="mr-4" size={24} color="#B11830" />
+              FAEO UJED
+            </Link>
             {isAuthenticated && <LogoutButton />}
           </div>
         </div>
