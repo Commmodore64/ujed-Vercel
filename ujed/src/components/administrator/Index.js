@@ -178,12 +178,14 @@ const Index = () => {
           <h2 className="text-lg text-gray-700 font-semibold">Cursos Disponibles</h2>
           <div className="grid grid-cols-1 gap-4">
             {cursos.map((curso) => (
-              <div key={curso.id} className="bg-white p-4 shadow-md rounded-md relative mt-3 mx-20">
+              <div key={curso.id} className="bg-white p-4 shadow-md rounded-md relative mt-3 lg:mx-20">
                 <h2 className="text-lg font-semibold">{curso.nombre}</h2>
-                <p className="text-gray-600">{curso.info}</p>
-                <div className="absolute top-0 right-0 flex space-x-2 mt-1 mr-2">
+                <hr className="my-2" />
+                <p className="font-semibold text-gray-600">Descripción:</p>
+                <p className="text-gray-700 mt-3">{curso.info}</p>
+                <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2 mt-2">
                   <button
-                    className="text-xs text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
+                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
                     onClick={() => handleEditarCurso(curso.id)}
                   >
                     <MdEdit size={20} />
