@@ -3,11 +3,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Profile from "./components/Profile";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./components/HomePage";
-import Sidebar from "./components/sidebar/Index";
 import Dashboard from "./components/dashboard/Index";
 import Payments from "./components/payments/Index";
 import Administrator from "./components/administrator/Index";
 import Template from "./components/payments/Template";
+import CourseInfo from "./components/dashboard/CourseInfo";
 import { Toaster } from 'sonner';
 
 function App() {
@@ -28,6 +28,7 @@ function App() {
               <Route path="/payments" element={<Payments />} />
               <Route path="/admin" element={<Administrator />} />
               <Route path="/template" element={<Template />} />
+              <Route path="/courseinfo" element={<CourseInfo />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
               {/* Agrega más rutas según sea necesario */}
             </Routes>

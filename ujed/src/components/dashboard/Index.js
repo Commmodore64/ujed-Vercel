@@ -109,7 +109,7 @@ const Index = () => {
             </div>
             <div className="flex justify-between mt-3">
               <Link
-                to="https://www.ujed.mx/facultad-de-enfermeria-y-obstetricia/servicios"
+                to="/courseinfo"
                 className="flex text-gray-900 hover:text-[#B11830] transition duration-300 ease-in-out items-center text-sm m-1 mt-1"
               >
                 Más información <IoIosArrowForward className="ml-1 text-sm " />
