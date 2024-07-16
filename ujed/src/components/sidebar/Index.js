@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "../LogoutButton";
 import LogoUJED from "../../img/logo-banner-red.png";
-import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie } from "react-icons/io";
+import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie, IoIosAlbums  } from "react-icons/io";
 import { IoShare, IoMenu } from "react-icons/io5";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
@@ -79,6 +79,18 @@ const Index = () => {
                 >
                   <IoIosHome className="mr-4" size={25} color="#B11830" />
                   Inicio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/courseinfo"
+                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 transition duration-300 ease-in-out ${getLinkClass(
+                    "/courseinfo"
+                  )}`}
+                  onClick={closeSidebar}
+                >
+                  <IoIosAlbums className="mr-4" size={25} color="#B11830" />
+                  Cursos
                 </Link>
               </li>
               <li>

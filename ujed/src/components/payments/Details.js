@@ -32,7 +32,7 @@ const Details = () => {
         </li>
         <li className="mb-2">
           <span className="font-semibold">Curso Seleccionado:</span> <br />{" "}
-          {cursoSeleccionado ||  "No disponible"}
+          {cursoSeleccionado.split("/")[0] ||  "No disponible"}
         </li>
         <li className="mb-2">
           <span className="font-semibold">Costo del curso:</span> <br />{" "}

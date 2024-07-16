@@ -40,18 +40,18 @@ const CourseInfo = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 bg-gray-300 rounded-xl p-8 text-black lg:mx-20 lg:ml-96">
-        <div className="items-center mb-5">
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 bg-gray-200 rounded-xl p-8 text-black lg:mx-20 lg:ml-96">
+        <div className="flex flex-row items-center mb-5">
           <Link to={"/dashboard"} className="text-lg">
             <IoIosArrowBack className="inline-block" />
-            <h1 className="text-2xl font-bold pl-1">Cursos</h1>
           </Link>
+          <h1 className="text-2xl font-bold pl-1">Cursos</h1>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-4">
           {cursos.map((curso) => (
             <div
               key={curso.id}
-              className="rounded-lg border shadow-sm bg-gray-200 text-gray-800 flex flex-col justify-between"
+              className="rounded-lg border shadow-sm bg-gray-100 text-gray-800 flex flex-col justify-between"
             >
               <div className="flex-grow p-6">
                 <h3 className="break-words tracking-tight text-2xl font-bold mb-4">
@@ -72,11 +72,10 @@ const CourseInfo = () => {
           ))}
         </div>
         {ultimaFechaActualizacion && (
-                <p className="text-xs mt-0.5 text-gray-500">
-                  Última actualización:{" "}
-                  {ultimaFechaActualizacion || "No disponible"}
-                </p>
-              )}
+          <p className="text-xs mt-0.5 text-gray-500">
+            Última actualización: {ultimaFechaActualizacion || "No disponible"}
+          </p>
+        )}
       </div>
     </>
   );

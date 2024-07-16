@@ -147,7 +147,7 @@ const Profile = () => {
     <>
       <Sidebar />
       <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-gray-200 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
-        <h1 className="text-2xl font-semibold mb-3">Perfil de Usuario</h1>
+        <h1 className="text-2xl font-bold mb-3">Perfil de Usuario</h1>
         {roles.includes("admin") && (
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Rol de Usuario</p>

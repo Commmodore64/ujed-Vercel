@@ -10,7 +10,7 @@ const Index = () => {
   const [fechaNacimiento, setFechaNacimiento] = useState(localStorage.getItem('fechaNacimiento') || "");
   const [comentarios, setComentarios] = useState(localStorage.getItem('comentarios') || "");
   const [cursoSeleccionado, setCursoSeleccionado] = useState(localStorage.getItem('cursoSeleccionado') || "");
-  const [costoSeleccionado, setCostoSeleccionado] = useState(0);
+  const [costoSeleccionado, setCostoSeleccionado] = useState(localStorage.getItem('costoSeleccionado') || "");
 
   useEffect(() => {
     const fetchCursos = async () => {
