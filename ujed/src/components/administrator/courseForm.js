@@ -4,14 +4,17 @@ import axios from 'axios';
 const CourseForm = ({ course, onSubmit }) => {
   const [nombre, setNombre] = useState('');
   const [info, setInfo] = useState('');
+  const [costo, setCosto] = useState('');
 
   useEffect(() => {
     if (course) {
       setNombre(course.nombre);
       setInfo(course.info);
+      setCost(course.costo);
     } else {
       setNombre('');
       setInfo('');
+      setCosto('');
     }
   }, [course]);
 
@@ -20,9 +23,9 @@ const CourseForm = ({ course, onSubmit }) => {
 
     try {
       if (course) {
-        await axios.put(`/cursos/${course.id}`, { nombre, info });
+        await axios.put(`/cursos/${course.id}`, { nombre, info, costo });
       } else {
-        await axios.post('/cursos', { nombre, info });
+        await axios.post('/cursos', { nombre, info, costo });
       }
       onSubmit();
     } catch (error) {
@@ -51,6 +54,17 @@ const CourseForm = ({ course, onSubmit }) => {
           <textarea
             value={info}
             onChange={(e) => setInfo(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24 resize-none"
+            required
+          />
+        </label>
+      </div>
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Costo:
+          <textarea
+            value={costo}
+            onChange={(e) => setCosto(e.target.value)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24 resize-none"
             required
           />

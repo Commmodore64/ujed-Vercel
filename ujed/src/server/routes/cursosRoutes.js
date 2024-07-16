@@ -4,16 +4,16 @@ const connection = require('../db');
 
 // Crear un nuevo curso
 router.post('/cursos', (req, res) => {
-    const { nombre, info } = req.body;
+    const { nombre, info, costo } = req.body;
     const fecha = new Date();
-    const query = 'INSERT INTO cursos (nombre, info, date) VALUES (?, ?, ?)';
-    connection.query(query, [nombre, info, fecha], (err, results) => {
+    const query = 'INSERT INTO cursos (nombre, info, date, costo) VALUES (?, ?, ?, ?)';
+    connection.query(query, [nombre, info, fecha, costo], (err, results) => {
         if (err) {
             console.error('Error al crear el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
-        res.status(201).json({ id: results.insertId, nombre, info });
-        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, info});
+        res.status(201).json({ id: results.insertId, nombre, info, costo });
+        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, info, costo});
     });
 });
 
@@ -48,9 +48,9 @@ router.get('/cursos/:id', (req, res) => {
 // Actualizar un curso por ID
 router.put('/cursos/:id', (req, res) => {
     const cursoId = req.params.id;
-    const { nombre, info } = req.body;
-    const query = 'UPDATE cursos SET nombre = ?, info = ? WHERE id = ?';
-    connection.query(query, [nombre, info, cursoId], (err, results) => {
+    const { nombre, info, costo } = req.body;
+    const query = 'UPDATE cursos SET nombre = ?, info = ?, costo = ? WHERE id = ?';
+    connection.query(query, [nombre, info, costo, cursoId], (err, results) => {
         if (err) {
             console.error('Error al actualizar el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });

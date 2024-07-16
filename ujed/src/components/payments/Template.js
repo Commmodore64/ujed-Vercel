@@ -11,15 +11,14 @@ import { Link } from "react-router-dom";
 import Details from "./Details";
 
 const Index = () => {
-  // const { isAuthenticated } = useAuth0();
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/" />;
-  // }
+  function pay() {
+    localStorage.clear();
+  }
 
   return (
     <>
       <Sidebar />
-      <div className="flex flex-row mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+      <div className="flex flex-col lg:flex-row mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <style jsx="true">{`
           input[type="number"]::-webkit-inner-spin-button,
           input[type="number"]::-webkit-outer-spin-button {
@@ -125,7 +124,7 @@ const Index = () => {
                           <img
                             src={cvv}
                             alt="Código de seguridad"
-                            className="xl:ml-10 h-6 hidden xl:block"
+                            className="xl:ml-10 h-6 hidden lg:hidden xl:hidden 2xl:block"
                           />
                         </div>
                       </div>
@@ -164,6 +163,7 @@ const Index = () => {
                       <a
                         className="inline-block mx-5 bg-red-600 hover:bg-red-700 text-white text-center text-xl py-1.5 px-6 rounded-lg cursor-pointer font-semibold"
                         id="pay-button"
+                        onClick={() => pay()}
                       >
                         Pagar
                       </a>

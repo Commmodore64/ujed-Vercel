@@ -10,6 +10,7 @@ const Index = () => {
   const [fechaNacimiento, setFechaNacimiento] = useState(localStorage.getItem('fechaNacimiento') || "");
   const [comentarios, setComentarios] = useState(localStorage.getItem('comentarios') || "");
   const [cursoSeleccionado, setCursoSeleccionado] = useState(localStorage.getItem('cursoSeleccionado') || "");
+  const [costoSeleccionado, setCostoSeleccionado] = useState(0);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -42,7 +43,8 @@ const Index = () => {
     localStorage.setItem('fechaNacimiento', fechaNacimiento);
     localStorage.setItem('comentarios', comentarios);
     localStorage.setItem('cursoSeleccionado', cursoSeleccionado);
-  }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado]);
+    localStorage.setItem('costoSeleccionado', costoSeleccionado);
+  }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado, costoSeleccionado]);
 
   return (
     <>
@@ -121,15 +123,18 @@ const Index = () => {
               <select
                 name="cursoSeleccionado"
                 value={cursoSeleccionado}
-                onChange={(e) => setCursoSeleccionado(e.target.value)}
+                onChange={(e) => {
+                  setCursoSeleccionado(e.target.value);
+                  setCostoSeleccionado(e.target.value.split("/")[1]);
+                }}
                 className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               >
                 <option value="" disabled>
                   Selecciona un curso
                 </option>
                 {cursos.map((curso) => (
-                  <option key={curso.id} value={curso.nombre}>
-                    {curso.nombre}
+                  <option key={curso.id} value={curso.nombre + "/" + curso.costo}>
+                    {curso.nombre} - ${curso.costo}
                   </option>
                 ))}
               </select>
@@ -161,6 +166,13 @@ const Index = () => {
             >
               Pago en línea con tarjeta
             </Link>
+            <button
+              type="submit"
+              className="px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              onClick={() => localStorage.clear()}
+            >
+              Limpiar
+            </button>
           </form>
         </div>
       </div>

@@ -12,6 +12,7 @@ const Index = () => {
   const [nombreCurso, setNombreCurso] = useState("");
   const [infoCurso, setInfoCurso] = useState("");
   const [cursoId, setCursoId] = useState(null); // Estado para almacenar el ID del curso seleccionado para editar
+  const [costo, setCosto] = useState("");
 
 
   useEffect(() => {
@@ -55,6 +56,7 @@ const Index = () => {
         body: JSON.stringify({
           nombre: nombreCurso,
           info: infoCurso,
+          costo: costo,
         }),
       });
 
@@ -89,6 +91,7 @@ const Index = () => {
         console.log("Curso obtenido para editar:", curso);
         setNombreCurso(curso.nombre);
         setInfoCurso(curso.info);
+        setCosto(curso.costo);
         setCursoId(id);
         setShowModal(true);
       } else {
@@ -111,6 +114,7 @@ const Index = () => {
         body: JSON.stringify({
           nombre: nombreCurso,
           info: infoCurso,
+          costo: costo,
         }),
       });
 
@@ -119,7 +123,7 @@ const Index = () => {
         console.log("Curso actualizado:", cursoActualizado);
         toast.success("Curso actualizado correctamente");
         const updatedCursos = cursos.map((curso) =>
-          curso.id === cursoId ? { ...curso, nombre: cursoActualizado.nombre, info: cursoActualizado.info } : curso
+          curso.id === cursoId ? { ...curso, nombre: cursoActualizado.nombre, info: cursoActualizado.info, costo: cursoActualizado.costo } : curso
         );
         setCursos(updatedCursos);
         setShowModal(false); // Cerrar el modal después de actualizar el curso
@@ -183,6 +187,8 @@ const Index = () => {
                 <hr className="my-2" />
                 <p className="font-semibold text-gray-600">Descripción:</p>
                 <p className="text-gray-700 mt-3">{curso.info}</p>
+                <p className="font-semibold text-gray-600 mt-3">Costo:</p>
+                <p className="text-gray-700 ">${curso.costo}</p>
                 <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2 mt-2">
                   <button
                     className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
@@ -233,6 +239,20 @@ const Index = () => {
                   onChange={(e) => setInfoCurso(e.target.value)}
                   required
                 ></textarea>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="infoCurso" className="block text-sm font-medium text-gray-700">
+                  Costo del Curso
+                </label>
+                <input
+                  id="costoCurso"
+                  type="number"
+                  placeholder="$"
+                  className="mt-1 p-3 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  value={costo}
+                  onChange={(e) => setCosto(e.target.value)}
+                  required
+                ></input>
               </div>
               <div className="flex justify-end">
                 <button
