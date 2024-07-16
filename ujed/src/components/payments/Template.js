@@ -8,6 +8,7 @@ import openpay from "../../img/card-form/openpay.png";
 import security from "../../img/card-form/security.png";
 import Sidebar from "../sidebar/Index";
 import { Link } from "react-router-dom";
+import Details from "./Details";
 
 const Index = () => {
   // const { isAuthenticated } = useAuth0();
@@ -18,7 +19,7 @@ const Index = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+      <div className="flex flex-row mt-16 lg:mt-28 h-auto m-8 bg-[#D9D9D9] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <style jsx="true">{`
           input[type="number"]::-webkit-inner-spin-button,
           input[type="number"]::-webkit-outer-spin-button {
@@ -173,6 +174,7 @@ const Index = () => {
             </form>
           </div>
         </div>
+        <Details />
       </div>
     </>
   );
