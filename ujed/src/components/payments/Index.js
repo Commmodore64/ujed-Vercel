@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { Link } from "react-router-dom";
+import InputMask from "react-input-mask";
 
 const Index = () => {
   const [cursos, setCursos] = useState([]);
@@ -90,13 +91,12 @@ const Index = () => {
               >
                 Teléfono
               </label>
-              <input
-                type="text"
-                name="telefono"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-              />
+            <InputMask
+              mask="9999999999" // Define el formato de 10 dígitos
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+              className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+            />
             </div>
             <div className="mb-4">
               <label
@@ -156,19 +156,19 @@ const Index = () => {
             </div>
             <button
               type="submit"
-              className="px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className="px-2 lg:px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
             >
               Pago en línea
             </button>
             <Link
               to="/template"
-              className="px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className="px-2 lg:px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
             >
               Pago en línea con tarjeta
             </Link>
             <button
               type="submit"
-              className="px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
               onClick={() => localStorage.clear()}
             >
               Limpiar

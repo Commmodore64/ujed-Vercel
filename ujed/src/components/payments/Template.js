@@ -151,17 +151,17 @@ const Index = () => {
                       </div>
                     </div>
 
-                    <div className="flex justify-end px-2">
+                    <div className="flex justify-end lg:px-2">
                     <Link to="/payments">
                         <button
                           type="submit"
-                          className="inline-block mx-5 bg-blue-600 hover:bg-blue-700 text-white text-center text-xl py-1.5 px-6 rounded-lg cursor-pointer font-semibold"
+                          className="inline-block mx-1 lg:mx-5 bg-blue-600 hover:bg-blue-700 text-white text-center text-xl py-1.5 px-2 lg:px-6 rounded-lg cursor-pointer font-semibold"
                         >
                           Regresar
                         </button>
                       </Link>
                       <a
-                        className="inline-block mx-5 bg-red-600 hover:bg-red-700 text-white text-center text-xl py-1.5 px-6 rounded-lg cursor-pointer font-semibold"
+                        className="inline-block mx-1 lg:mx-5 bg-red-600 hover:bg-red-700 text-white text-center text-xl py-1.5 px-5 lg:px-6 rounded-lg cursor-pointer font-semibold"
                         id="pay-button"
                         onClick={() => pay()}
                       >
