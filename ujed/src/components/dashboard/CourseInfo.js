@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CourseInfo = () => {
   const [cursos, setCursos] = useState([]);
   const [ultimaFechaActualizacion, setUltimaFechaActualizacion] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -37,6 +38,12 @@ const CourseInfo = () => {
     fetchCursos();
   }, []);
 
+  const handleInscribirse = (cursoNombre, costo) => {
+    localStorage.setItem('cursoSeleccionado', cursoNombre);
+    localStorage.setItem('costoSeleccionado', costo);
+    navigate('/payments');
+  };
+
   return (
     <>
       <Sidebar />
@@ -64,7 +71,10 @@ const CourseInfo = () => {
                 <div className="text-sm text-gray-600">por curso</div>
               </div>
               <div className="flex items-center p-6">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 w-full">
+                <button
+                  onClick={() => handleInscribirse(curso.nombre, curso.costo)}
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 w-full"
+                >
                   Inscribirse
                 </button>
               </div>

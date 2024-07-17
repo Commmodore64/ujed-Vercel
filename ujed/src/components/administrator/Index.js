@@ -189,7 +189,7 @@ const Index = () => {
                 <p className="text-gray-700 mt-3">{curso.info}</p>
                 <p className="font-semibold text-gray-600 mt-3">Costo:</p>
                 <p className="text-gray-700 ">${curso.costo}</p>
-                <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2 mt-2">
+                <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2">
                   <button
                     className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
                     onClick={() => handleEditarCurso(curso.id)}
