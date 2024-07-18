@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "../LogoutButton";
 import LogoUJED from "../../img/logo-banner-red.png";
-import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie, IoIosAlbums  } from "react-icons/io";
+import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie, IoIosAlbums } from "react-icons/io";
 import { IoShare, IoMenu } from "react-icons/io5";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect } from "react";
 
 const Index = () => {
   const location = useLocation();
@@ -36,7 +35,7 @@ const Index = () => {
   const getLinkClass = (path) => {
     return location.pathname === path
       ? "text-black bg-gray-300"
-      : "text-black hover:bg-gray-300";
+      : "text-black hover:bg-gray-300 transition-all duration-100 ease-in-out transform hover:scale-105";
   };
 
   return (
@@ -72,7 +71,7 @@ const Index = () => {
               <li>
                 <Link
                   to="/dashboard"
-                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 transition duration-300 ease-in-out ${getLinkClass(
+                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 ${getLinkClass(
                     "/dashboard"
                   )}`}
                   onClick={closeSidebar}
@@ -84,7 +83,7 @@ const Index = () => {
               <li>
                 <Link
                   to="/courseinfo"
-                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 transition duration-300 ease-in-out ${getLinkClass(
+                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 ${getLinkClass(
                     "/courseinfo"
                   )}`}
                   onClick={closeSidebar}
@@ -96,7 +95,7 @@ const Index = () => {
               <li>
                 <Link
                   to="/payments"
-                  className={`flex flex-row font-semibold rounded-lg mx-5 ml-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                  className={`flex flex-row font-semibold rounded-lg mx-5 py-2 px-4 ${getLinkClass(
                     "/payments"
                   )}`}
                   onClick={closeSidebar}
@@ -109,7 +108,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/profile"
-                    className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                    className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 ${getLinkClass(
                       "/profile"
                     )}`}
                     onClick={closeSidebar}
@@ -123,7 +122,7 @@ const Index = () => {
                 <li>
                   <Link
                     to="/admin"
-                    className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 text-black hover:bg-gray-300 transition duration-300 ease-in-out ${getLinkClass(
+                    className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 ${getLinkClass(
                       "/admin"
                     )}`}
                     onClick={closeSidebar}

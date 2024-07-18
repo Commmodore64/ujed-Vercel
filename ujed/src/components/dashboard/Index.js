@@ -162,7 +162,7 @@ const Index = () => {
             <p className="text-md text-gray-800 mt-4 mb-1">Datos de contacto:</p>
             <p className="text-sm text-gray-700 ">
               Tel. (618) 827 13 70.
-              <br /> 
+              <br />
               E-mail: feo@ujed.mx
             </p>
           </div>
