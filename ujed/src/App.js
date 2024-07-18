@@ -9,6 +9,7 @@ import Administrator from "./components/administrator/Index";
 import Template from "./components/payments/Template";
 import CourseInfo from "./components/dashboard/CourseInfo";
 import { Toaster } from 'sonner';
+import { useEffect } from "react";
 
 function App() {
   const { isAuthenticated } = useAuth0();

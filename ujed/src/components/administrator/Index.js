@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../sidebar/Index";
 import { MdEdit, MdDeleteForever } from "react-icons/md";
 import { useAuth0 } from "@auth0/auth0-react";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import { Navigate } from "react-router-dom";
+import CurrencyInput from "react-currency-input-field";
 
 const Index = () => {
   const { isAuthenticated } = useAuth0();
@@ -11,9 +12,8 @@ const Index = () => {
   const [showModal, setShowModal] = useState(false);
   const [nombreCurso, setNombreCurso] = useState("");
   const [infoCurso, setInfoCurso] = useState("");
-  const [cursoId, setCursoId] = useState(null); // Estado para almacenar el ID del curso seleccionado para editar
+  const [cursoId, setCursoId] = useState(null);
   const [costo, setCosto] = useState("");
-
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -27,7 +27,6 @@ const Index = () => {
 
         if (response.ok) {
           const data = await response.json();
-          //console.log("Cursos obtenidos:", data);
           setCursos(data);
         } else {
           console.error("Error al obtener los cursos:", response.statusText);
@@ -62,11 +61,10 @@ const Index = () => {
 
       if (response.ok) {
         const nuevoCurso = await response.json();
-        console.log("Curso agregado:", nuevoCurso);
         toast.success("Curso agregado correctamente");
         setCursos([...cursos, nuevoCurso]);
-        setShowModal(false); // Cerrar el modal después de agregar el curso
-        limpiarCampos(); // Limpiar los campos del formulario
+        setShowModal(false);
+        limpiarCampos();
       } else {
         console.error("Error al agregar el curso:", response.statusText);
         toast.error("Error al agregar el curso");
@@ -88,14 +86,16 @@ const Index = () => {
 
       if (response.ok) {
         const curso = await response.json();
-        console.log("Curso obtenido para editar:", curso);
         setNombreCurso(curso.nombre);
         setInfoCurso(curso.info);
         setCosto(curso.costo);
         setCursoId(id);
         setShowModal(true);
       } else {
-        console.error("Error al obtener el curso para editar:", response.statusText);
+        console.error(
+          "Error al obtener el curso para editar:",
+          response.statusText
+        );
         toast.error("Error al obtener el curso para editar");
       }
     } catch (error) {
@@ -106,28 +106,37 @@ const Index = () => {
 
   const handleActualizarCurso = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/cursos/${cursoId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombre: nombreCurso,
-          info: infoCurso,
-          costo: costo,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/cursos/${cursoId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nombre: nombreCurso,
+            info: infoCurso,
+            costo: costo,
+          }),
+        }
+      );
 
       if (response.ok) {
         const cursoActualizado = await response.json();
-        console.log("Curso actualizado:", cursoActualizado);
         toast.success("Curso actualizado correctamente");
         const updatedCursos = cursos.map((curso) =>
-          curso.id === cursoId ? { ...curso, nombre: cursoActualizado.nombre, info: cursoActualizado.info, costo: cursoActualizado.costo } : curso
+          curso.id === cursoId
+            ? {
+                ...curso,
+                nombre: cursoActualizado.nombre,
+                info: cursoActualizado.info,
+                costo: cursoActualizado.costo,
+              }
+            : curso
         );
         setCursos(updatedCursos);
-        setShowModal(false); // Cerrar el modal después de actualizar el curso
-        limpiarCampos(); // Limpiar los campos del formulario
+        setShowModal(false);
+        limpiarCampos();
       } else {
         console.error("Error al actualizar el curso:", response.statusText);
         toast.error("Error al actualizar el curso");
@@ -145,7 +154,6 @@ const Index = () => {
       });
 
       if (response.ok) {
-        console.log("Curso eliminado:", id);
         toast.info("Curso eliminado correctamente");
         const filteredCursos = cursos.filter((curso) => curso.id !== id);
         setCursos(filteredCursos);
@@ -158,6 +166,7 @@ const Index = () => {
       toast.error("Error al eliminar el curso");
     }
   };
+
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
@@ -173,16 +182,21 @@ const Index = () => {
               className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
               onClick={() => {
                 setShowModal(true);
-                limpiarCampos(); // Limpiar los campos al abrir el modal de agregar curso
+                limpiarCampos();
               }}
             >
               Agregar Curso
             </button>
           </div>
-          <h2 className="text-lg text-gray-700 font-semibold">Cursos Disponibles</h2>
+          <h2 className="text-lg text-gray-700 font-semibold">
+            Cursos Disponibles
+          </h2>
           <div className="grid grid-cols-1 gap-4">
             {cursos.map((curso) => (
-              <div key={curso.id} className="bg-gray-100 p-4 shadow-md rounded-md relative mt-3 lg:mx-20">
+              <div
+                key={curso.id}
+                className="bg-gray-100 p-4 shadow-md rounded-md relative mt-3 lg:mx-20"
+              >
                 <h2 className="text-lg font-semibold">{curso.nombre}</h2>
                 <hr className="my-2" />
                 <p className="font-semibold text-gray-600">Descripción:</p>
@@ -209,14 +223,24 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Modal para agregar o editar curso */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg transform transition-all duration-300">
-            <h2 className="text-xl font-semibold mb-4">{cursoId ? "Editar Curso" : "Agregar Nuevo Curso"}</h2>
-            <form onSubmit={cursoId ? handleActualizarCurso : handleAgregarCurso}>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div
+            className={`bg-white p-8 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out ${
+              showModal ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            }`}
+          >
+            <h2 className="text-xl font-semibold mb-4">
+              {cursoId ? "Editar Curso" : "Agregar Nuevo Curso"}
+            </h2>
+            <form
+              onSubmit={cursoId ? handleActualizarCurso : handleAgregarCurso}
+            >
               <div className="mb-4">
-                <label htmlFor="nombreCurso" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="nombreCurso"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Nombre del Curso
                 </label>
                 <input
@@ -229,7 +253,10 @@ const Index = () => {
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="infoCurso" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="infoCurso"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Información del Curso
                 </label>
                 <textarea
@@ -241,18 +268,26 @@ const Index = () => {
                 ></textarea>
               </div>
               <div className="mb-4">
-                <label htmlFor="infoCurso" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="costoCurso"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Costo del Curso
                 </label>
-                <input
-                  id="costoCurso"
-                  type="number"
-                  placeholder="$"
-                  className="mt-1 p-3 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  value={costo}
-                  onChange={(e) => setCosto(e.target.value)}
-                  required
-                ></input>
+                <div className="flex items-center border border-gray-300 rounded-md shadow-sm">
+                  <span className="inline-flex items-center px-3 bg-gray-50 rounded-l-md text-gray-600 font-semibold sm:text-sm">
+                    $
+                  </span>
+                  <CurrencyInput
+                    id="costoCurso"
+                    className="block w-full px-3 py-2 border-l rounded-r-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    placeholder="0.00"
+                    value={costo}
+                    onChange={(e) => setCosto(e.target.value)}
+                    decimalsLimit={2}
+                    onValueChange={(value, name) => console.log(value, name)}
+                  />
+                </div>
               </div>
               <div className="flex justify-end">
                 <button
