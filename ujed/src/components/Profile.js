@@ -3,7 +3,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import InputMask from "react-input-mask";
-import { RiAdminFill } from "react-icons/ri";
 import Sidebar from "./sidebar/Index";
 
 const Profile = () => {

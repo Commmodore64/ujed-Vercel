@@ -92,7 +92,7 @@ const Index = () => {
                 Teléfono
               </label>
             <InputMask
-              mask="9999999999" // Define el formato de 10 dígitos
+              mask="999-999-9999" // Define el formato de 10 dígitos
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
               className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
@@ -103,7 +103,7 @@ const Index = () => {
                 htmlFor="fechaNacimiento"
                 className="block text-md font-medium text-gray-700"
               >
-                Fecha de Nacimiento
+                Fecha de Nacimiento 
               </label>
               <input
                 type="date"

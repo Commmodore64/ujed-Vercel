@@ -1,6 +1,4 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import card1 from "../../img/card-form/cards1.png";
 import card2 from "../../img/card-form/cards2.png";
 import cvv from "../../img/card-form/cvv.png";

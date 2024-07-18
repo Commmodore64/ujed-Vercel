@@ -48,9 +48,10 @@ router.get('/cursos/:id', (req, res) => {
 // Actualizar un curso por ID
 router.put('/cursos/:id', (req, res) => {
     const cursoId = req.params.id;
+    const fecha = new Date();
     const { nombre, info, costo } = req.body;
-    const query = 'UPDATE cursos SET nombre = ?, info = ?, costo = ? WHERE id = ?';
-    connection.query(query, [nombre, info, costo, cursoId], (err, results) => {
+    const query = 'UPDATE cursos SET nombre = ?, info = ?, date = ?, costo = ? WHERE id = ?';
+    connection.query(query, [nombre, info, fecha, costo, cursoId], (err, results) => {
         if (err) {
             console.error('Error al actualizar el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });
