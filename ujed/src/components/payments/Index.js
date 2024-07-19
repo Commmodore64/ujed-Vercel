@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
+import { toast, Toaster } from "sonner";
 
 const Index = () => {
   const [cursos, setCursos] = useState([]);
@@ -12,6 +13,8 @@ const Index = () => {
   const [comentarios, setComentarios] = useState(localStorage.getItem('comentarios') || "");
   const [cursoSeleccionado, setCursoSeleccionado] = useState(localStorage.getItem('cursoSeleccionado') || "");
   const [costoSeleccionado, setCostoSeleccionado] = useState(localStorage.getItem('costoSeleccionado') || "");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -46,6 +49,22 @@ const Index = () => {
     localStorage.setItem('cursoSeleccionado', cursoSeleccionado);
     localStorage.setItem('costoSeleccionado', costoSeleccionado);
   }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado, costoSeleccionado]);
+
+  const handlePagoEnLinea = (e) => {
+    if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
+      e.preventDefault();
+      toast.error("Por favor, complete todos los campos obligatorios.");
+    }
+  };
+
+  const handlePagoEnLineaConTarjeta = (e) => {
+    e.preventDefault();
+    if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
+      toast.error("Por favor, complete todos los campos obligatorios.");
+    } else {
+      navigate("/template");
+    }
+  };
 
   return (
     <>
@@ -91,12 +110,12 @@ const Index = () => {
               >
                 Teléfono
               </label>
-            <InputMask
-              mask="999-999-9999" // Define el formato de 10 dígitos
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-              className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-            />
+              <InputMask
+                mask="999-999-9999" // Define el formato de 10 dígitos
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+              />
             </div>
             <div className="mb-4">
               <label
@@ -157,12 +176,14 @@ const Index = () => {
             <button
               type="submit"
               className="px-2 lg:px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              onClick={handlePagoEnLinea}
             >
               Pago en línea
             </button>
             <Link
-              to="/template"
+              to="#"
               className="px-2 lg:px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              onClick={handlePagoEnLineaConTarjeta}
             >
               Pago en línea con tarjeta
             </Link>
