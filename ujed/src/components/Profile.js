@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
-import InputMask from "react-input-mask";
+import MaskedInput from 'react-text-mask';
 import Sidebar from "./sidebar/Index";
 
 const Profile = () => {
@@ -56,7 +56,7 @@ const Profile = () => {
     if (isAuthenticated) {
       obtenerDatosAlumno();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   useEffect(() => {
     const hasChanged =
@@ -142,6 +142,10 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
 
+  const phoneMask = [
+    /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/
+  ];
+
   return (
     <>
       <Sidebar />
@@ -190,8 +194,8 @@ const Profile = () => {
           </div>
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Número de Teléfono</p>
-            <InputMask
-              mask="9999999999" // Define el formato de 10 dígitos
+            <MaskedInput
+              mask={phoneMask}
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
               className="p-2 border border-gray-300 bg-gray-100 rounded-lg focus:ring-gray-400 focus:border-gray-400"

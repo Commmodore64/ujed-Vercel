@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { Link, useNavigate } from "react-router-dom";
-import InputMask from "react-input-mask";
+import MaskedInput from 'react-text-mask';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { toast, Toaster } from "sonner";
 
 const Index = () => {
@@ -66,6 +67,10 @@ const Index = () => {
     }
   };
 
+  const phoneMask = [
+    /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/
+  ];
+
   return (
     <>
       <Sidebar />
@@ -110,8 +115,8 @@ const Index = () => {
               >
                 Teléfono
               </label>
-              <InputMask
-                mask="999-999-9999" // Define el formato de 10 dígitos
+              <MaskedInput
+                mask={phoneMask}
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
                 className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
