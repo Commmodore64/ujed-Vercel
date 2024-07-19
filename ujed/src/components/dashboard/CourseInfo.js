@@ -40,7 +40,7 @@ const CourseInfo = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 bg-gray-200 rounded-xl p-8 text-black lg:mx-20 lg:ml-96">
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 rounded-xl p-8 text-black lg:mx-20 lg:ml-96">
         <div className="flex flex-row items-center mb-5">
           <Link to={"/dashboard"} className="text-lg">
             <IoIosArrowBack className="inline-block" />
@@ -51,7 +51,7 @@ const CourseInfo = () => {
           {cursos.map((curso) => (
             <div
               key={curso.id}
-              className="rounded-lg border shadow-sm bg-gray-100 text-gray-800 flex flex-col justify-between"
+              className="rounded-lg border shadow-md bg-gray-50 text-gray-800 flex flex-col justify-between"
             >
               <div className="flex-grow p-6">
                 <h3 className="break-words tracking-tight text-2xl font-bold mb-4">

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import  logo  from "../../img/logo-faeo.png";
 
 const Index = () => {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0(); 
   const [matricula, setMatricula] = useState("");
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [telefono, setTelefono] = useState("");
