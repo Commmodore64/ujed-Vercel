@@ -15,6 +15,7 @@ const Profile = () => {
   const [isChanged, setIsChanged] = useState(false);
   const [roles, setRoles] = useState([]);
 
+  // Hook para obtener datos del alumno
   useEffect(() => {
     const obtenerDatosAlumno = async () => {
       try {
@@ -43,10 +44,7 @@ const Profile = () => {
             });
           }
         } else {
-          console.error(
-            "Error al obtener datos del alumno:",
-            response.statusText
-          );
+          console.error("Error al obtener datos del alumno:", response.statusText);
         }
       } catch (error) {
         console.error("Error en la solicitud:", error);
@@ -58,6 +56,7 @@ const Profile = () => {
     }
   }, [isAuthenticated, user]);
 
+  // Hook para verificar cambios
   useEffect(() => {
     const hasChanged =
       cleanString(matricula) !== originalData.matricula ||
@@ -67,15 +66,32 @@ const Profile = () => {
     setIsChanged(hasChanged);
   }, [matricula, nombreCompleto, telefono, fechaNacimiento, originalData]);
 
+  // Hook para obtener roles
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const tokenClaims = await getIdTokenClaims();
+        const roles = tokenClaims["https://roles.com/roles"];
+        setRoles(roles || []);
+      } catch (error) {
+        console.error("Error al obtener roles:", error);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchRoles();
+    }
+  }, [isAuthenticated, getIdTokenClaims]);
+
+  // Función para limpiar cadenas
   const cleanString = (value) => {
     if (typeof value !== "string") return "";
     const trimmedValue = value.trim();
-    if (trimmedValue === "") return ""; // Retorna una cadena vacía si está vacío o con espacios
-    return trimmedValue;
+    return trimmedValue === "" ? "" : trimmedValue;
   };
 
+  // Función para enviar datos
   const enviarDatos = async () => {
-    // Validar que todos los campos obligatorios estén completos
     if (
       !cleanString(matricula) ||
       !cleanString(nombreCompleto) ||
@@ -126,18 +142,6 @@ const Profile = () => {
     return <Navigate to="/" />;
   }
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      const tokenClaims = await getIdTokenClaims();
-      const roles = tokenClaims["https://roles.com/roles"];
-      setRoles(roles || []);
-    };
-
-    if (isAuthenticated) {
-      fetchRoles();
-    }
-  }, [isAuthenticated, getIdTokenClaims]);
-
   if (!isAuthenticated) {
     return <div>Loading...</div>;
   }
@@ -149,7 +153,7 @@ const Profile = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <h1 className="text-2xl font-bold mb-3">Perfil de Usuario</h1>
         {roles.includes("admin") && (
           <div className="flex flex-col">
