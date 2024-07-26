@@ -74,7 +74,7 @@ const Index = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 bg-gray-200 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div>
           <h1 className="text-2xl font-bold">Inscripción</h1>
           <form className="mt-4">
@@ -90,7 +90,7 @@ const Index = () => {
                 name="nombreCompleto"
                 value={nombreCompleto}
                 onChange={(e) => setNombreCompleto(e.target.value)}
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               />
             </div>
             <div className="mb-4">
@@ -105,7 +105,7 @@ const Index = () => {
                 name="matricula"
                 value={matricula}
                 onChange={(e) => setMatricula(e.target.value)}
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               />
             </div>
             <div className="mb-4">
@@ -119,7 +119,7 @@ const Index = () => {
                 mask={phoneMask}
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               />
             </div>
             <div className="mb-4">
@@ -134,7 +134,7 @@ const Index = () => {
                 name="fechaNacimiento"
                 value={fechaNacimiento}
                 onChange={(e) => setFechaNacimiento(e.target.value)}
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               />
             </div>
             <div className="mb-4">
@@ -151,7 +151,7 @@ const Index = () => {
                   setCursoSeleccionado(e.target.value);
                   setCostoSeleccionado(e.target.value.split("/")[1]);
                 }}
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               >
                 <option value="" disabled>
                   Selecciona un curso
@@ -175,7 +175,7 @@ const Index = () => {
                 value={comentarios}
                 onChange={(e) => setComentarios(e.target.value)}
                 rows="4"
-                className="mt-1 px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               ></textarea>
             </div>
             <button

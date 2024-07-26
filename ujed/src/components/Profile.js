@@ -149,12 +149,12 @@ const Profile = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-gray-200 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
         <h1 className="text-2xl font-bold mb-3">Perfil de Usuario</h1>
         {roles.includes("admin") && (
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Rol de Usuario</p>
-            <div className="p-2 border border-gray-300 rounded-lg bg-gray-100 text-black flex items-center mb-5 w-32">
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-50 text-black flex items-center mb-5 w-32">
               <p className="font-semibold">Administrador </p>
             </div>
           </div>
@@ -167,13 +167,13 @@ const Profile = () => {
           />
           <div className="flex flex-col lg:mr-4 mb-4 lg:mb-0">
             <p className="text-gray-700 mb-2">Correo Electrónico</p>
-            <div className="p-2 border border-gray-300 rounded-lg bg-gray-100 text-black flex items-center">
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-50 text-black flex items-center">
               <p className="">{user.email}</p>
             </div>
           </div>
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Nombre de usuario</p>
-            <div className="p-2 border border-gray-300 rounded-lg bg-gray-100 text-black flex items-center">
+            <div className="p-2 border border-gray-300 rounded-lg bg-gray-50 text-black flex items-center">
               <p className="">{user.nickname}</p>
             </div>
           </div>
@@ -189,7 +189,7 @@ const Profile = () => {
               type="text"
               value={matricula}
               onChange={(e) => setMatricula(e.target.value)}
-              className="p-2 border border-gray-300 bg-gray-100 rounded-lg focus:ring-gray-400 focus:border-gray-400"
+              className="p-2 border border-gray-300 bg-gray-50 rounded-lg focus:ring-gray-400 focus:border-gray-400"
             />
           </div>
           <div className="flex flex-col">
@@ -198,7 +198,7 @@ const Profile = () => {
               mask={phoneMask}
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
-              className="p-2 border border-gray-300 bg-gray-100 rounded-lg focus:ring-gray-400 focus:border-gray-400"
+              className="p-2 border border-gray-300 bg-gray-50 rounded-lg focus:ring-gray-400 focus:border-gray-400"
             />
           </div>
           <div className="flex flex-col">
@@ -207,12 +207,12 @@ const Profile = () => {
               type="text"
               value={nombreCompleto}
               onChange={(e) => setNombreCompleto(e.target.value)}
-              className="p-2 border border-gray-300 bg-gray-100 rounded-lg focus:ring-gray-400 focus:border-gray-400"
+              className="p-2 border border-gray-300 bg-gray-50 rounded-lg focus:ring-gray-400 focus:border-gray-400"
             />
           </div>
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Fecha de Nacimiento</p>
-            <div className="p-2 border border-gray-300 bg-gray-100 rounded-lg focus:ring-gray-400 focus:border-gray-400 flex items-center">
+            <div className="p-2 border border-gray-300 bg-gray-50 rounded-lg focus:ring-gray-400 focus:border-gray-400 flex items-center">
               <input
                 type="date"
                 value={fechaNacimiento}

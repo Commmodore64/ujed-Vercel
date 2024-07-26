@@ -62,7 +62,7 @@ const CourseInfo = () => {
                 </p>
               </div>
               <hr className="border-gray-200 w-full" />
-              <div className="flex items-center p-5">
+              <div className="flex items-center p-5 bg-gray-50">
                 <div className="text-4xl font-bold text-gray-800">
                   ${curso.costo}
                 </div>
@@ -78,7 +78,7 @@ const CourseInfo = () => {
           ))}
         </div>
         {ultimaFechaActualizacion && (
-          <p className="text-xs mt-0.5 text-gray-500">
+          <p className="text-xs mt-5 text-gray-500">
             Última actualización: {ultimaFechaActualizacion || "No disponible"}
           </p>
         )}

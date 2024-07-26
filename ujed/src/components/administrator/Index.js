@@ -174,7 +174,7 @@ const Index = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8 bg-gray-200 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold mb-4">Consultar Cursos</h1>
           <div className="mb-4">
@@ -195,7 +195,7 @@ const Index = () => {
             {cursos.map((curso) => (
               <div
                 key={curso.id}
-                className="bg-gray-100 p-4 shadow-md rounded-md relative mt-3 lg:mx-20"
+                className="bg-gray-50 p-4 shadow-md rounded-md relative mt-3 lg:mx-20"
               >
                 <h2 className="text-lg font-semibold">{curso.nombre}</h2>
                 <hr className="my-2" />
