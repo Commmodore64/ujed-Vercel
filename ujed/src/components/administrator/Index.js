@@ -14,7 +14,6 @@ const Index = () => {
   const [infoCurso, setInfoCurso] = useState("");
   const [cursoId, setCursoId] = useState(null);
   const [costo, setCosto] = useState("");
-  const [isDate, setIsDate] = useState(false);
 
   useEffect(() => {
     const fetchCursos = async () => {
