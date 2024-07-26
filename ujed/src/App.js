@@ -9,7 +9,6 @@ import Administrator from "./components/administrator/Index";
 import Template from "./components/payments/Template";
 import CourseInfo from "./components/dashboard/CourseInfo";
 import { Toaster } from 'sonner';
-import { useEffect } from "react";
 
 function App() {
   const { isAuthenticated } = useAuth0();
@@ -31,7 +30,6 @@ function App() {
               <Route path="/template" element={<Template />} />
               <Route path="/courseinfo" element={<CourseInfo />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
-              {/* Agrega más rutas según sea necesario */}
             </Routes>
             <Toaster position="top-right" />
           </div>
