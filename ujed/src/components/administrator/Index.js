@@ -184,7 +184,7 @@ const Index = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold mb-4">Consultar Cursos</h1>
           <div className="mb-4">

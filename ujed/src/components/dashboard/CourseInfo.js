@@ -40,7 +40,7 @@ const CourseInfo = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 rounded-xl p-8 text-black lg:mx-20 lg:ml-96">
+      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div className="flex flex-row items-center mb-5">
           <Link to={"/dashboard"} className="text-lg">
             <IoIosArrowBack className="inline-block" />

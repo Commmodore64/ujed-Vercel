@@ -149,13 +149,13 @@ const Profile = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8  rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
         <h1 className="text-2xl font-bold mb-3">Perfil de Usuario</h1>
         {roles.includes("admin") && (
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Rol de Usuario</p>
             <div className="p-2 border border-gray-300 rounded-lg bg-gray-50 text-black flex items-center mb-5 w-32">
-              <p className="font-semibold">Administrador </p>
+              <p className="font-semibold">Administrador</p>
             </div>
           </div>
         )}

@@ -74,7 +74,7 @@ const Index = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-28 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
+      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div>
           <h1 className="text-2xl font-bold">Inscripción</h1>
           <form className="mt-4">
