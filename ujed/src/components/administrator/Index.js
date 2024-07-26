@@ -14,6 +14,7 @@ const Index = () => {
   const [infoCurso, setInfoCurso] = useState("");
   const [cursoId, setCursoId] = useState(null);
   const [costo, setCosto] = useState("");
+  const [isDate, setIsDate] = useState(false);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -170,6 +171,15 @@ const Index = () => {
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    const year = date.getUTCFullYear();
+    return `${day}-${month}-${year}`;
+  };
+  
+  
 
   return (
     <>
@@ -203,6 +213,7 @@ const Index = () => {
                 <p className="text-gray-700 mt-3">{curso.info}</p>
                 <p className="font-semibold text-gray-600 mt-3">Costo:</p>
                 <p className="text-gray-700 ">${curso.costo}</p>
+                <p className="text-sm text-gray-500 mt-3"> Fecha de Actualización: {formatDate(curso.date)}</p>
                 <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2">
                   <button
                     className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
