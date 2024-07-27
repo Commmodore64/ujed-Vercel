@@ -28,7 +28,7 @@ const Details = () => {
         </li>
         <li className="mb-2">
           <span className="font-semibold">Comentarios:</span> <br />{" "}
-          {comentarios ||  "No disponible"}
+          {comentarios ||  "Sin comentarios"}
         </li>
         <li className="mb-2">
           <span className="font-semibold">Curso Seleccionado:</span> <br />{" "}

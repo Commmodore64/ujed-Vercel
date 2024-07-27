@@ -62,7 +62,7 @@ const CourseInfo = () => {
                 </p>
               </div>
               <hr className="border-gray-200 w-full" />
-              <div className="flex items-center p-5 bg-gray-50">
+              <div className="flex items-center p-5 bg-[#f8f8f8]">
                 <div className="text-4xl font-bold text-gray-800">
                   ${curso.costo}
                 </div>

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { Link, useNavigate } from "react-router-dom";
 import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 const Index = () => {
   const [cursos, setCursos] = useState([]);
