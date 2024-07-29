@@ -8,10 +8,10 @@ import  logo  from "../../img/logo-faeo.png";
 
 const Index = () => {
   const { user, isAuthenticated } = useAuth0();
-  const [matricula, setMatricula] = useState("");
+  const [, setMatricula] = useState("");
   const [nombreCompleto, setNombreCompleto] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [, setTelefono] = useState("");
+  const [, setFechaNacimiento] = useState("");
   const [cursos, setCursos] = useState([]);
   const [ultimaFechaActualizacion, setUltimaFechaActualizacion] = useState("");
 
@@ -99,7 +99,7 @@ const Index = () => {
         <div className="flex flex-col lg:flex-row w-full mt-3 space-y-4 lg:space-y-0 lg:space-x-4">
           <div className="flex flex-col h-auto w-full lg:w-2/3 bg-[#f6f8fe] rounded-xl p-5 text-black shadow-sm font-semibold">
             <h2 className="text-2xl font-bold justify-start">
-              Bienvenido {nombreCompleto} !
+              Bienvenido {nombreCompleto || ""} !
             </h2>
           </div>
           <div className="flex flex-col h-auto w-full lg:w-1/3 bg-[#f6f8fe] rounded-xl p-5 text-black shadow-sm font-semibold">

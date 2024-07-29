@@ -294,7 +294,6 @@ const Index = () => {
                     placeholder="0.00"
                     value={costo}
                     onChange={(e) => setCosto(e.target.value)}
-                    decimalsLimit={2}
                     onValueChange={(value, name) => console.log(value, name)}
                   />
                 </div>

@@ -66,7 +66,7 @@ const CourseInfo = () => {
                 <div className="text-4xl font-bold text-gray-800">
                   ${curso.costo}
                 </div>
-                <div className="text-sm text-gray-600 ml-2">por curso</div>
+                <div className="text-sm text-gray-500 ml-2">por curso</div>
                 <Link
                   to="/payments"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 w-full"
