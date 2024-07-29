@@ -55,7 +55,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cursos" || "http://192.168.1.141:5000/api/cursos", {
+        const response = await fetch("http://192.168.1.141:5000/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
