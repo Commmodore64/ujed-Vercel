@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas de API
 app.use('/api', userRoutes); // Rutas de API para usuarios bajo /api
 app.use('/api', userdataRoute); // Rutas de API para userdata bajo /api
-app.use('/api', cursosRoutes);
+app.use('/api', cursosRoutes); // Rutas de API para cursos bajo /api
 
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;

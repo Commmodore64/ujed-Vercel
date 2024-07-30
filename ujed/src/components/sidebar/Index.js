@@ -8,7 +8,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const Index = () => {
   const location = useLocation();
-  const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
+  const {isAuthenticated, getIdTokenClaims } = useAuth0();
   const [isOpen, setIsOpen] = useState(false);
   const [roles, setRoles] = useState([]);
 

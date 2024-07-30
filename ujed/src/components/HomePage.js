@@ -47,7 +47,7 @@ const HomePage = () => {
     </main>
     <footer className="bg-muted px-4 py-6 md:px-6 md:py-8">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">&copy; 2024 Acme Inc. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">&copy; 2024 Soluciones Moviles y Comunicaciones SA de CV. All rights reserved.</p>
         <nav className="flex items-center gap-4">
           <Link href="#" className="text-xs text-muted-foreground hover:underline">
             Terminos del servicio
