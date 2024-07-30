@@ -1,5 +1,6 @@
 import React from "react";
 import LogoPNG from "../img/logo-banner.png";
+import bgUJED from "../img/bgUJED.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Details } from "../components/Details";
@@ -80,8 +81,8 @@ const HomePage = () => {
               Bienvenido a la Facultad de Enfermería y Obstetricia
             </h1>
             <p className="text-muted-foreground text-gray-800 md:text-xl">
-              Una nueva plataforma para realizar tus pagos de inscripción y cursos de
-              manera rápida y segura.
+              Una nueva plataforma para realizar tus pagos de inscripción y
+              cursos de manera rápida y segura.
             </p>
             <p className="text-muted-foreground text-gray-700 md:text-lg">
               Inscribete ahora
@@ -150,29 +151,32 @@ const HomePage = () => {
           </h2>
           <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
             <div className="flex flex-col items-center text-center">
-            <MdPayments size={60}/>
+              <MdPayments size={60} />
               <h3 className="text-xl font-bold text-gray-900">Pago rápido</h3>
               <p className="mt-2 text-gray-600">
                 Realiza tus pagos de manera rápida y eficiente.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-            <RiSecurePaymentFill size={60}/>
+              <RiSecurePaymentFill size={60} />
               <h3 className="text-xl font-bold text-gray-900">Seguridad</h3>
               <p className="mt-2 text-gray-600">
                 Tu información está segura con nosotros.
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-            <IoPeople size={60}/>
-              <h3 className="text-xl font-bold text-gray-900">Inscripción sin filas</h3>
+              <IoPeople size={60} />
+              <h3 className="text-xl font-bold text-gray-900">
+                Inscripción sin filas
+              </h3>
               <p className="mt-2 text-gray-600">
                 Olvídate de las filas, inscríbete desde nuestra plataforma.
               </p>
             </div>
           </div>
         </div>
-        <div id="#faq" className=" flex py-20 md:px-0">
+        <hr className="my-5 border-gray-300 w-full" />
+        <div id="#faq" className=" flex pb-20 md:px-0">
           <Details className="mx-auto max-w-2xl space-y-5">
             {items.map((item, index) => (
               <Details.Item
@@ -212,7 +216,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <footer className="bg-muted px-4 py-6 md:px-6 md:py-8">
+      <footer className="bg-[#B11830] text-white  px-4 py-6 md:px-6 md:py-8">
         <div className="flex items-center justify-between">
           <p className="text-xs text-muted-foreground">
             &copy; 2024 Soluciones Moviles y Comunicaciones SA de CV. All rights
