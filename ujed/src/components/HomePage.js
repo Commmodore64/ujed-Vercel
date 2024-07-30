@@ -224,7 +224,7 @@ const HomePage = () => {
           </p>
           <nav className="flex items-center gap-4">
             <Link
-              to="#"
+              to=""
               className="text-xs text-muted-foreground hover:underline"
             >
               Terminos del servicio
