@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "sonner";
 import { Navigate } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
-import { UsersThree } from "phosphor-react";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const Index = () => {
   const { isAuthenticated } = useAuth0();
@@ -360,13 +360,32 @@ text-white py-2 px-4 rounded-md mr-2"
                 inscripciones.map((inscripcion) => (
                   <li
                     key={inscripcion.id}
-                    className="border-b border-gray-200 py-2"
+                    className="border-b border-gray-200 py-2 flex items-center space-x-4"
                   >
-                    <p className="font-semibold">
-                      Nombre: {inscripcion.nombre}
-                    </p>
-                    <p>Fecha de Inscripción: {formatDate(inscripcion.fecha_inscripcion)}</p>
-                    <p>Estado de pago:</p><p className="font-semibold">{inscripcion.estado_pago}</p>
+                    <div>
+                      <p className="font-semibold">Nombre: {inscripcion.nombre}</p>
+                      <p>Fecha de Inscripción: {formatDate(inscripcion.fecha_inscripcion)}</p>
+                      <p className="font-semibold">Estado de pago:</p>
+                      <p
+                        className={`font-semibold flex items-center space-x-2 ${
+                          inscripcion.estado_pago === "Autorizado"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {inscripcion.estado_pago === "Autorizado" ? (
+                          <>
+                            <FaCheckCircle />
+                            <span>{inscripcion.estado_pago}</span>
+                          </>
+                        ) : (
+                          <>
+                            <FaTimesCircle />
+                            <span>{inscripcion.estado_pago}</span>
+                          </>
+                        )}
+                      </p>
+                    </div>
                   </li>
                 ))
               ) : (
