@@ -197,7 +197,7 @@ const Index = () => {
   };
 
   if (!isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/dashboard" />;
   }
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -269,7 +269,7 @@ const Index = () => {
       </div>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
+          <div className="bg-white p-10 rounded-lg shadow-lg">
             <h2
               className="text-xl font-semibold mb-4
 "
@@ -350,7 +350,6 @@ text-white py-2 px-4 rounded-md mr-2"
           </div>
         </div>
       )}
-      php Copiar código
       {showInscripcionesModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
