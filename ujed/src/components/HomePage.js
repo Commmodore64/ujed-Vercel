@@ -1,6 +1,5 @@
 import React from "react";
 import LogoPNG from "../img/logo-banner.png";
-import bgUJED from "../img/bgUJED.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Details } from "../components/Details";
@@ -108,6 +107,44 @@ const HomePage = () => {
               </Link>
             </div>
           </div>
+          <div class="absolute right-6 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <svg
+                viewBox="0 0 558 558"
+                width="558"
+                height="558"
+                fill="none"
+                aria-hidden="true"
+                class="animate-spin-slower"
+              >
+                <defs>
+                  <linearGradient
+                    id=":Rqqnjfala:"
+                    x1="79"
+                    y1="16"
+                    x2="105"
+                    y2="237"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#13B5C8"></stop>
+                    <stop
+                      offset="1"
+                      stop-color="#13B5C8"
+                      stop-opacity="0"
+                    ></stop>
+                  </linearGradient>
+                </defs>
+                <path
+                  opacity=".2"
+                  d="M1 279C1 125.465 125.465 1 279 1s278 124.465 278 278-124.465 278-278 278S1 432.535 1 279Z"
+                  stroke="#13B5C8"
+                ></path>
+                <path
+                  d="M1 279C1 125.465 125.465 1 279 1"
+                  stroke="url(#:Rqqnjfala:)"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
+            </div>
           <div className="hidden lg:w-1/2 mt-16 sm:mt-24 lg:mt-0 lg:flex justify-center lg:justify-end">
             <svg
               viewBox="0 0 366 729"
@@ -175,7 +212,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <hr className="my-5 border-gray-300 w-full" />
+        <hr className="my-10 border-gray-300 w-2/3 mx-auto" />
         <div id="#faq" className=" flex pb-20 md:px-0">
           <Details className="mx-auto max-w-2xl space-y-5">
             {items.map((item, index) => (

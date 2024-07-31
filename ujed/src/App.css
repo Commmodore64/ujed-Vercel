@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slower {
+  animation: spin 4s linear infinite;
+}
+
+
 @media (min-width: 1024px) {
   aside {
     transform: translate-x-0 !important;
