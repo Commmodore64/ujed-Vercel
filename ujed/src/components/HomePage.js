@@ -82,7 +82,7 @@ const HomePage = () => {
         <div className="lg:w-1/2 space-y-6 text-center lg:text-left lg:items-start">
           <h1 className="relative text-4xl font-bold tracking-tighter text-foreground sm:text-5xl md:text-6xl">
             Bienvenido a la Facultad de
-            <span className="ml-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-blue-600 to-yellow-500">
+            <span className="ml-2 bg-clip-text text-transparent bg-gradient-to-r from-[#0066e3] via-blue-600 to-yellow-500">
               Enfermería y Obstetricia
             </span>
           </h1>

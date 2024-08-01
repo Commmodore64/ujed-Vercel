@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "../LogoutButton";
 import LogoUJED from "../../img/logo-banner-red.png";
+import LogoFAEO from "../../img/faeo.png";
 import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie, IoIosAlbums } from "react-icons/io";
 import { IoShare, IoMenu } from "react-icons/io5";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -59,9 +60,9 @@ const Index = () => {
           <div className="p-4">
             <Link to="/">
               <img
-                src={LogoUJED}
+                src={LogoFAEO}
                 alt="Logo UJED"
-                className="w-56 mx-auto cursor-pointer"
+                className="w-32 mx-auto cursor-pointer"
                 onClick={closeSidebar}
               />
             </Link>

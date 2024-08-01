@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link } from "react-router-dom";
-import  logo  from "../../img/logo-faeo.png";
+import  logo  from "../../img/logo-banner-red.png";
 
 const Index = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -92,7 +92,7 @@ const Index = () => {
     <>
       <Sidebar />
       <div className="flex justify-end mr-5">
-        <img src={logo} alt="logo ujed" className="w-14 lg:w-16 mt-2 lg:mt-4" />
+        <img src={logo} alt="logo ujed" className="w-14 lg:w-36 mt-2 lg:mt-4" />
       </div>
       <div className="flex flex-col mt-1 lg:mt-8 h-auto m-4 lg:m-8 bg-[#c06870] rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         {/* Primera fila */}
