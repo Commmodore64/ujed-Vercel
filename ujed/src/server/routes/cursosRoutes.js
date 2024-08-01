@@ -5,17 +5,27 @@ const connection = require('../db');
 // Crear un nuevo curso
 router.post('/cursos', (req, res) => {
     const { nombre, info, costo, vigencia, cupo } = req.body;
+    
+    // Verifica si vigencia está en el formato esperado dd/MM/yyyy
+    const [day, month, year] = vigencia.split('/');
+    if (!day || !month || !year) {
+        return res.status(400).json({ error: 'Formato de fecha incorrecto' });
+    }
+
+    const vigenciaFormat = `${year}-${month}-${day}`;
     const fecha = new Date();
+
     const query = 'INSERT INTO cursos (nombre, info, date, costo, vigencia, cupo) VALUES (?, ?, ?, ?, ?, ?)';
-    connection.query(query, [nombre, info, fecha, costo, vigencia, cupo], (err, results) => {
+    connection.query(query, [nombre, info, fecha, costo, vigenciaFormat, cupo], (err, results) => {
         if (err) {
             console.error('Error al crear el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
-        res.status(201).json({ id: results.insertId, nombre, info, costo, vigencia, cupo });
-        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, info, costo, vigencia, cupo });
+        res.status(201).json({ id: results.insertId, nombre, info, costo, vigencia: vigenciaFormat, cupo });
+        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, info, costo, vigencia: vigenciaFormat, cupo });
     });
 });
+
 
 // Endpoint para obtener todos los cursos
 router.get('/cursos', (req, res) => {
@@ -50,7 +60,10 @@ router.put('/cursos/:id', (req, res) => {
     const cursoId = req.params.id;
     const fecha = new Date();
     const { nombre, info, costo, vigencia, cupo } = req.body;
-    const query = 'UPDATE cursos SET nombre = ?, info = ?, date = ?, costo = ?, vigencia = ?, cupo = ? ,WHERE id = ?';
+
+    console.log('Datos recibidos:', { nombre, info, costo, vigencia, cupo });
+
+    const query = 'UPDATE cursos SET nombre = ?, info = ?, date = ?, costo = ?, vigencia = ?, cupo = ? WHERE id = ?';
     connection.query(query, [nombre, info, fecha, costo, vigencia, cupo, cursoId], (err, results) => {
         if (err) {
             console.error('Error al actualizar el curso:', err);
@@ -59,6 +72,8 @@ router.put('/cursos/:id', (req, res) => {
         res.status(200).json({ id: cursoId, nombre, info });
     });
 });
+
+
 
 // Eliminar un curso por ID
 router.delete('/cursos/:id', (req, res) => {
