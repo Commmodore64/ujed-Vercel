@@ -16,6 +16,8 @@ const Index = () => {
   const [infoCurso, setInfoCurso] = useState("");
   const [cursoId, setCursoId] = useState(null);
   const [costo, setCosto] = useState("");
+  const [vigencia, setVigencia] = useState("");
+  const [cupo, setCupo] = useState("");
   const [inscripciones, setInscripciones] = useState([]);
 
   useEffect(() => {
@@ -85,6 +87,8 @@ const Index = () => {
           nombre: nombreCurso,
           info: infoCurso,
           costo: costo,
+          vigencia: vigencia,
+          cupo: cupo,
         }),
       });
 
@@ -119,6 +123,8 @@ const Index = () => {
         setInfoCurso(curso.info);
         setCosto(curso.costo);
         setCursoId(id);
+        setVigencia(curso.vigencia);
+        setCupo(curso.cupo);
         setShowModal(true);
       } else {
         console.error(
@@ -146,6 +152,8 @@ const Index = () => {
             nombre: nombreCurso,
             info: infoCurso,
             costo: costo,
+            vigencia: vigencia,
+            cupo: cupo,
           }),
         }
       );
@@ -160,6 +168,8 @@ const Index = () => {
                 nombre: cursoActualizado.nombre,
                 info: cursoActualizado.info,
                 costo: cursoActualizado.costo,
+                vigencia: cursoActualizado.vigencia,
+                cupo: cursoActualizado.cupo,
               }
             : curso
         );
@@ -239,6 +249,12 @@ const Index = () => {
                 <p className="text-gray-700 mt-3">{curso.info}</p>
                 <p className="font-semibold text-gray-600 mt-3">Costo:</p>
                 <p className="text-gray-700">${curso.costo}</p>
+                <p className="text-sm text-gray-500 my-3">
+                  Vigencia: {formatDate(curso.vigencia)}
+                </p>
+                <p className="text-sm text-gray-500 my-3">
+                  Cupo: {curso.cupo}
+                </p>
                 <p className="text-sm text-gray-500 my-3">
                   Fecha de Actualización: {formatDate(curso.date)}
                 </p>
@@ -327,6 +343,38 @@ const Index = () => {
                   className="w-full border border-gray-300 rounded-md p-2"
                   prefix="$"
                   decimalsLimit={2}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="vigencia"
+                  className="block text-gray-700 font-semibold mb-2"
+                >
+                  Vigencia
+                </label>
+                <input
+                  type="date"
+                  id="vigencia"
+                  value={vigencia}
+                  onChange={(e) => setVigencia(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="cupo"
+                  className="block text-gray-700 font-semibold mb-2"
+                >
+                  Cupo
+                </label>
+                <input
+                  type="number"
+                  id="cupo"
+                  value={cupo}
+                  onChange={(e) => setCupo(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
                   required
                 />
               </div>

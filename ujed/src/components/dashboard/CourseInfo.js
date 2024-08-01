@@ -53,13 +53,23 @@ const CourseInfo = () => {
               key={curso.id}
               className="rounded-lg border shadow-md bg-gray-50 text-gray-800 flex flex-col justify-between"
             >
-              <div className="flex-grow p-6">
-                <h3 className="break-words tracking-tight text-2xl font-bold mb-4">
-                  {curso.nombre}
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Descripción: {curso.info}
-                </p>
+              <div className="flex flex-col justify-between p-6 h-full">
+                <div>
+                  <h3 className="break-words tracking-tight text-2xl font-bold mb-4">
+                    {curso.nombre}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Descripción: {curso.info}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Vigencia: {curso.vigencia.split('T')[0]}
+                  </p>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Cupo: {curso.cupo}
+                  </p>
+                </div>
               </div>
               <hr className="border-gray-200 w-full" />
               <div className="flex items-center p-5 bg-[#f8f8f8]">

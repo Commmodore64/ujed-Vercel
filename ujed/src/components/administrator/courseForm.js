@@ -5,16 +5,22 @@ const CourseForm = ({ course, onSubmit }) => {
   const [nombre, setNombre] = useState('');
   const [info, setInfo] = useState('');
   const [costo, setCosto] = useState('');
+  const [vigencia, setVigencia] = useState('');
+  const [cupo, setCupo] = useState('');
 
   useEffect(() => {
     if (course) {
       setNombre(course.nombre);
       setInfo(course.info);
       setCost(course.costo);
+      setVigencia(course.vigencia);
+      setCupo(course.cupo);
     } else {
       setNombre('');
       setInfo('');
       setCosto('');
+      setVigencia('');
+      setCupo('');
     }
   }, [course]);
 
@@ -23,9 +29,9 @@ const CourseForm = ({ course, onSubmit }) => {
 
     try {
       if (course) {
-        await axios.put(`/cursos/${course.id}`, { nombre, info, costo });
+        await axios.put(`/cursos/${course.id}`, { nombre, info, costo, vigencia, cupo });
       } else {
-        await axios.post('/cursos', { nombre, info, costo });
+        await axios.post('/cursos', { nombre, info, costo, vigencia, cupo });
       }
       onSubmit();
     } catch (error) {

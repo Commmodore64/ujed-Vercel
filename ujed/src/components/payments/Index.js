@@ -13,6 +13,8 @@ const Index = () => {
   const [comentarios, setComentarios] = useState(localStorage.getItem('comentarios') || "");
   const [cursoSeleccionado, setCursoSeleccionado] = useState(localStorage.getItem('cursoSeleccionado') || "");
   const [costoSeleccionado, setCostoSeleccionado] = useState(localStorage.getItem('costoSeleccionado') || "");
+  const [vigencia, setVigencia] = useState("");
+  const [cupo, setCupo] = useState("");
 
   const navigate = useNavigate();
 
@@ -50,6 +52,16 @@ const Index = () => {
     localStorage.setItem('costoSeleccionado', costoSeleccionado);
   }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado, costoSeleccionado]);
 
+  useEffect(() => {
+    if (cursoSeleccionado) {
+      const selectedCurso = cursos.find(curso => curso.nombre === cursoSeleccionado.split("/")[0]);
+      if (selectedCurso) {
+        setVigencia(selectedCurso.vigencia);
+        setCupo(selectedCurso.cupo);
+      }
+    }
+  }, [cursoSeleccionado, cursos]);
+
   const handlePagoEnLinea = (e) => {
     if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
       e.preventDefault();
@@ -69,6 +81,12 @@ const Index = () => {
   const phoneMask = [
     /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/
   ];
+
+  const isCursoDisponible = () => {
+    const hoy = new Date();
+    const vigenciaDate = new Date(vigencia);
+    return cupo > 0 && hoy <= vigenciaDate;
+  };
 
   return (
     <>
@@ -161,6 +179,12 @@ const Index = () => {
                   </option>
                 ))}
               </select>
+              {cursoSeleccionado && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <p>Vigencia: {new Date(vigencia).toLocaleDateString('es-ES')}</p>
+                  <p>Cupo: {cupo}</p>
+                </div>
+              )}
             </div>
             <div className="mb-4">
               <label
@@ -179,18 +203,19 @@ const Index = () => {
             </div>
             <button
               type="submit"
-              className="px-2 lg:px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${isCursoDisponible() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'}`}
               onClick={handlePagoEnLinea}
+              disabled={!isCursoDisponible()}
             >
               Pago en línea
             </button>
-            <Link
-              to="#"
-              className="px-2 lg:px-4 mx-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            <button
+              className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${isCursoDisponible() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'}`}
               onClick={handlePagoEnLineaConTarjeta}
+              disabled={!isCursoDisponible()}
             >
               Pago en línea con tarjeta
-            </Link>
+            </button>
             <button
               type="submit"
               className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
