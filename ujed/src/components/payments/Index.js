@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { useNavigate } from "react-router-dom";
-import MaskedInput from 'react-text-mask';
+import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
 
 const Index = () => {
   const [cursos, setCursos] = useState([]);
-  const [matricula, setMatricula] = useState(localStorage.getItem('matricula') || "");
-  const [nombreCompleto, setNombreCompleto] = useState(localStorage.getItem('nombreCompleto') || "");
-  const [telefono, setTelefono] = useState(localStorage.getItem('telefono') || "");
-  const [fechaNacimiento, setFechaNacimiento] = useState(localStorage.getItem('fechaNacimiento') || "");
-  const [comentarios, setComentarios] = useState(localStorage.getItem('comentarios') || "");
-  const [cursoSeleccionado, setCursoSeleccionado] = useState(localStorage.getItem('cursoSeleccionado') || "");
-  const [costoSeleccionado, setCostoSeleccionado] = useState(localStorage.getItem('costoSeleccionado') || "");
+  const [matricula, setMatricula] = useState(
+    localStorage.getItem("matricula") || ""
+  );
+  const [nombreCompleto, setNombreCompleto] = useState(
+    localStorage.getItem("nombreCompleto") || ""
+  );
+  const [telefono, setTelefono] = useState(
+    localStorage.getItem("telefono") || ""
+  );
+  const [fechaNacimiento, setFechaNacimiento] = useState(
+    localStorage.getItem("fechaNacimiento") || ""
+  );
+  const [comentarios, setComentarios] = useState(
+    localStorage.getItem("comentarios") || ""
+  );
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(
+    localStorage.getItem("cursoSeleccionado") || ""
+  );
+  const [costoSeleccionado, setCostoSeleccionado] = useState(
+    localStorage.getItem("costoSeleccionado") || ""
+  );
   const [vigencia, setVigencia] = useState("");
   const [cupo, setCupo] = useState("");
   const [useAltID, setUseAltID] = useState(false);
-  const [rfc, setRFC] = useState(localStorage.getItem('rfc') || "");
-  const [curp, setCURP] = useState(localStorage.getItem('curp') || "");
+  const [rfc, setRFC] = useState(localStorage.getItem("rfc") || "");
+  const [curp, setCURP] = useState(localStorage.getItem("curp") || "");
 
   const navigate = useNavigate();
 
@@ -46,20 +60,32 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('matricula', matricula);
-    localStorage.setItem('nombreCompleto', nombreCompleto);
-    localStorage.setItem('telefono', telefono);
-    localStorage.setItem('fechaNacimiento', fechaNacimiento);
-    localStorage.setItem('comentarios', comentarios);
-    localStorage.setItem('cursoSeleccionado', cursoSeleccionado);
-    localStorage.setItem('costoSeleccionado', costoSeleccionado);
-    localStorage.setItem('rfc', rfc);
-    localStorage.setItem('curp', curp);
-  }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado, costoSeleccionado, rfc, curp]);
+    localStorage.setItem("matricula", matricula);
+    localStorage.setItem("nombreCompleto", nombreCompleto);
+    localStorage.setItem("telefono", telefono);
+    localStorage.setItem("fechaNacimiento", fechaNacimiento);
+    localStorage.setItem("comentarios", comentarios);
+    localStorage.setItem("cursoSeleccionado", cursoSeleccionado);
+    localStorage.setItem("costoSeleccionado", costoSeleccionado);
+    localStorage.setItem("rfc", rfc);
+    localStorage.setItem("curp", curp);
+  }, [
+    matricula,
+    nombreCompleto,
+    telefono,
+    fechaNacimiento,
+    comentarios,
+    cursoSeleccionado,
+    costoSeleccionado,
+    rfc,
+    curp,
+  ]);
 
   useEffect(() => {
     if (cursoSeleccionado) {
-      const selectedCurso = cursos.find(curso => curso.nombre === cursoSeleccionado.split("/")[0]);
+      const selectedCurso = cursos.find(
+        (curso) => curso.nombre === cursoSeleccionado.split("/")[0]
+      );
       if (selectedCurso) {
         setVigencia(selectedCurso.vigencia);
         setCupo(selectedCurso.cupo);
@@ -69,7 +95,13 @@ const Index = () => {
 
   const handlePagoEnLinea = (e) => {
     e.preventDefault();
-    if ((!matricula && !rfc && !curp) || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
+    if (
+      (!matricula && !rfc && !curp) ||
+      !nombreCompleto ||
+      !telefono ||
+      !fechaNacimiento ||
+      !cursoSeleccionado
+    ) {
       toast.error("Por favor, complete todos los campos obligatorios.");
     } else if (useAltID && !rfc && !curp) {
       toast.error("Por favor, proporcione RFC o CURP.");
@@ -80,7 +112,13 @@ const Index = () => {
 
   const handlePagoEnLineaConTarjeta = (e) => {
     e.preventDefault();
-    if ((!matricula && !rfc && !curp) || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
+    if (
+      (!matricula && !rfc && !curp) ||
+      !nombreCompleto ||
+      !telefono ||
+      !fechaNacimiento ||
+      !cursoSeleccionado
+    ) {
       toast.error("Por favor, complete todos los campos obligatorios.");
     } else if (useAltID && !rfc && !curp) {
       toast.error("Por favor, proporcione RFC o CURP.");
@@ -104,7 +142,18 @@ const Index = () => {
   };
 
   const phoneMask = [
-    /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/
+    /[1-9]/,
+    /\d/,
+    /\d/,
+    "-",
+    /\d/,
+    /\d/,
+    /\d/,
+    "-",
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/,
   ];
 
   const isCursoDisponible = () => {
@@ -224,7 +273,7 @@ const Index = () => {
                 htmlFor="fechaNacimiento"
                 className="block text-md font-medium text-gray-700"
               >
-                Fecha de Nacimiento 
+                Fecha de Nacimiento
               </label>
               <input
                 type="date"
@@ -254,14 +303,19 @@ const Index = () => {
                   Selecciona un curso
                 </option>
                 {cursos.map((curso) => (
-                  <option key={curso.id} value={curso.nombre + "/" + curso.costo}>
+                  <option
+                    key={curso.id}
+                    value={curso.nombre + "/" + curso.costo}
+                  >
                     {curso.nombre} - ${curso.costo}
                   </option>
                 ))}
               </select>
               {cursoSeleccionado && (
                 <div className="mt-2 text-sm text-gray-600">
-                  <p>Vigencia: {new Date(vigencia).toLocaleDateString('es-ES')}</p>
+                  <p>
+                    Vigencia: {new Date(vigencia).toLocaleDateString("es-ES")}
+                  </p>
                   <p>Cupo: {cupo}</p>
                 </div>
               )}
@@ -283,20 +337,32 @@ const Index = () => {
             </div>
             <div className="flex justify-between">
               <button
+                type="submit"
+                className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${
+                  isCursoDisponible()
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
                 onClick={handlePagoEnLinea}
-                className="bg-gray-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+                disabled={!isCursoDisponible()}
               >
-                Pago en Línea
+                Pago en línea
               </button>
               <button
+                className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${
+                  isCursoDisponible()
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
                 onClick={handlePagoEnLineaConTarjeta}
-                className="bg-green-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                disabled={!isCursoDisponible()}
               >
-                Pago con Tarjeta
+                Pago en línea con tarjeta
               </button>
               <button
+                type="button"
+                className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                 onClick={handleLimpiarCampos}
-                className="bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
               >
                 Limpiar
               </button>
