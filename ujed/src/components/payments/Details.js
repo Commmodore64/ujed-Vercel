@@ -8,13 +8,27 @@ const Details = () => {
   const comentarios = localStorage.getItem("comentarios");
   const cursoSeleccionado = localStorage.getItem("cursoSeleccionado");
   const costoSeleccionado = localStorage.getItem("costoSeleccionado");
+  const rfc = localStorage.getItem("rfc");
+  const curp = localStorage.getItem("curp");
   return (
     <div className="flex flex-col mt-5 lg:mt-0 gap-4 p-3 lg:p-8 bg-gray-200 rounded-xl text-black lg:ml-20">
       <p className="text-lg font-bold">Detalles:</p>
       <ul>
-        <li className="mb-2">
-          <span className="font-semibold">Matrícula:</span> <br /> {matricula ||  "No disponible"}
-        </li>
+        {matricula && (
+          <li className="mb-2">
+            <span className="font-semibold">Matrícula:</span> <br /> {matricula ||  "No disponible"}
+          </li>
+        )}
+        {curp && (
+          <li className="mb-2">
+            <span className="font-semibold">CURP:</span> <br /> {curp ||  "No disponible"}
+          </li>
+        )}
+        {rfc && (
+          <li className="mb-2">
+            <span className="font-semibold">RFC:</span> <br /> {rfc ||  "No disponible"}
+          </li>
+        )}
         <li className="mb-2">
           <span className="font-semibold">Nombre Completo:</span> <br />{" "}
           {nombreCompleto ||  "No disponible"}

@@ -8,6 +8,7 @@ import Payments from "./components/payments/Index";
 import Administrator from "./components/administrator/Index";
 import Template from "./components/payments/Template";
 import CourseInfo from "./components/dashboard/CourseInfo";
+import Queries from "./components/queries/Index";
 import { Toaster } from 'sonner';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
               <Route path="/admin" element={<Administrator />} />
               <Route path="/template" element={<Template />} />
               <Route path="/courseinfo" element={<CourseInfo />} />
+              <Route path="/queries" element={<Queries />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
             </Routes>
             <Toaster position="top-right" />

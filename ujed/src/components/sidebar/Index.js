@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import LogoutButton from "../LogoutButton";
-import LogoUJED from "../../img/logo-banner-red.png";
 import LogoFAEO from "../../img/faeo.png";
 import { IoIosHome, IoIosSettings, IoIosCash, IoIosPie, IoIosAlbums } from "react-icons/io";
+import { FaFileMedical  } from "react-icons/fa";
 import { IoShare, IoMenu } from "react-icons/io5";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -91,6 +91,18 @@ const Index = () => {
                 >
                   <IoIosAlbums className="mr-4" size={25} color="#B11830" />
                   Cursos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/queries"
+                  className={`flex flex-row items-center font-semibold rounded-lg mx-5 py-2 px-4 ${getLinkClass(
+                    "/queries"
+                  )}`}
+                  onClick={closeSidebar}
+                >
+                  <FaFileMedical  className="mr-4" size={25} color="#B11830" />
+                  Consultas
                 </Link>
               </li>
               <li>

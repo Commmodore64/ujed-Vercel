@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MaskedInput from 'react-text-mask';
 import { toast } from "sonner";
 
@@ -15,6 +15,9 @@ const Index = () => {
   const [costoSeleccionado, setCostoSeleccionado] = useState(localStorage.getItem('costoSeleccionado') || "");
   const [vigencia, setVigencia] = useState("");
   const [cupo, setCupo] = useState("");
+  const [useAltID, setUseAltID] = useState(false);
+  const [rfc, setRFC] = useState(localStorage.getItem('rfc') || "");
+  const [curp, setCURP] = useState(localStorage.getItem('curp') || "");
 
   const navigate = useNavigate();
 
@@ -50,7 +53,9 @@ const Index = () => {
     localStorage.setItem('comentarios', comentarios);
     localStorage.setItem('cursoSeleccionado', cursoSeleccionado);
     localStorage.setItem('costoSeleccionado', costoSeleccionado);
-  }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado, costoSeleccionado]);
+    localStorage.setItem('rfc', rfc);
+    localStorage.setItem('curp', curp);
+  }, [matricula, nombreCompleto, telefono, fechaNacimiento, comentarios, cursoSeleccionado, costoSeleccionado, rfc, curp]);
 
   useEffect(() => {
     if (cursoSeleccionado) {
@@ -63,19 +68,39 @@ const Index = () => {
   }, [cursoSeleccionado, cursos]);
 
   const handlePagoEnLinea = (e) => {
-    if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
-      e.preventDefault();
+    e.preventDefault();
+    if ((!matricula && !rfc && !curp) || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
       toast.error("Por favor, complete todos los campos obligatorios.");
+    } else if (useAltID && !rfc && !curp) {
+      toast.error("Por favor, proporcione RFC o CURP.");
+    } else {
+      // Manejar la lógica de pago en línea
     }
   };
 
   const handlePagoEnLineaConTarjeta = (e) => {
     e.preventDefault();
-    if (!matricula || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
+    if ((!matricula && !rfc && !curp) || !nombreCompleto || !telefono || !fechaNacimiento || !cursoSeleccionado) {
       toast.error("Por favor, complete todos los campos obligatorios.");
+    } else if (useAltID && !rfc && !curp) {
+      toast.error("Por favor, proporcione RFC o CURP.");
     } else {
       navigate("/template");
     }
+  };
+
+  const handleLimpiarCampos = () => {
+    setMatricula("");
+    setNombreCompleto("");
+    setTelefono("");
+    setFechaNacimiento("");
+    setComentarios("");
+    setCursoSeleccionado("");
+    setCostoSeleccionado("");
+    setRFC("");
+    setCURP("");
+    setUseAltID(false);
+    toast.success("Campos limpiados.");
   };
 
   const phoneMask = [
@@ -110,21 +135,76 @@ const Index = () => {
                 className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               />
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="matricula"
-                className="block text-md font-medium text-gray-700"
-              >
-                Matricula
-              </label>
-              <input
-                type="text"
-                name="matricula"
-                value={matricula}
-                onChange={(e) => setMatricula(e.target.value)}
-                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-              />
-            </div>
+            {!useAltID ? (
+              <div className="mb-4">
+                <label
+                  htmlFor="matricula"
+                  className="block text-md font-medium text-gray-700"
+                >
+                  Matrícula
+                </label>
+                <input
+                  type="text"
+                  name="matricula"
+                  value={matricula}
+                  onChange={(e) => setMatricula(e.target.value)}
+                  className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                />
+                <p className="mt-2 text-sm text-gray-600">
+                  No cuentas con matrícula?{" "}
+                  <button
+                    type="button"
+                    className="text-blue-500 underline"
+                    onClick={() => setUseAltID(true)}
+                  >
+                    Haz clic aquí
+                  </button>
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-4">
+                  <label
+                    htmlFor="rfc"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    RFC
+                  </label>
+                  <input
+                    type="text"
+                    name="rfc"
+                    value={rfc}
+                    onChange={(e) => setRFC(e.target.value)}
+                    className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="curp"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    CURP
+                  </label>
+                  <input
+                    type="text"
+                    name="curp"
+                    value={curp}
+                    onChange={(e) => setCURP(e.target.value)}
+                    className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                  />
+                </div>
+                <p className="mt-2 text-sm text-gray-600">
+                  Tienes matrícula?{" "}
+                  <button
+                    type="button"
+                    className="text-blue-500 underline"
+                    onClick={() => setUseAltID(false)}
+                  >
+                    Haz clic aquí
+                  </button>
+                </p>
+              </>
+            )}
             <div className="mb-4">
               <label
                 htmlFor="telefono"
@@ -197,32 +277,30 @@ const Index = () => {
                 name="comentarios"
                 value={comentarios}
                 onChange={(e) => setComentarios(e.target.value)}
-                rows="4"
                 className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-              ></textarea>
+                rows="3"
+              />
             </div>
-            <button
-              type="submit"
-              className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${isCursoDisponible() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'}`}
-              onClick={handlePagoEnLinea}
-              disabled={!isCursoDisponible()}
-            >
-              Pago en línea
-            </button>
-            <button
-              className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${isCursoDisponible() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'}`}
-              onClick={handlePagoEnLineaConTarjeta}
-              disabled={!isCursoDisponible()}
-            >
-              Pago en línea con tarjeta
-            </button>
-            <button
-              type="submit"
-              className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-              onClick={() => localStorage.clear()}
-            >
-              Limpiar
-            </button>
+            <div className="flex justify-between">
+              <button
+                onClick={handlePagoEnLinea}
+                className="bg-gray-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
+              >
+                Pago en Línea
+              </button>
+              <button
+                onClick={handlePagoEnLineaConTarjeta}
+                className="bg-green-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+              >
+                Pago con Tarjeta
+              </button>
+              <button
+                onClick={handleLimpiarCampos}
+                className="bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
+              >
+                Limpiar
+              </button>
+            </div>
           </form>
         </div>
       </div>

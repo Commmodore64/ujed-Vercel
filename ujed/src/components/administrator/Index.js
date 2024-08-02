@@ -3,11 +3,12 @@ import Sidebar from "../sidebar/Index";
 import { MdEdit, MdDeleteForever } from "react-icons/md";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "sonner";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const Index = () => {
+  const Navigate = useNavigate();
   const { isAuthenticated } = useAuth0();
   const [cursos, setCursos] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -157,7 +158,7 @@ const Index = () => {
           }),
         }
       );
-
+  
       if (response.ok) {
         const cursoActualizado = await response.json();
         toast.success("Curso actualizado correctamente");
@@ -176,6 +177,13 @@ const Index = () => {
         setCursos(updatedCursos);
         setShowModal(false);
         limpiarCampos();
+        
+        // Recargar la página y luego redirigir
+        window.location.reload();
+        setTimeout(() => {
+          Navigate("/admin");
+        }, 500); // Ajusta el tiempo según sea necesario
+  
       } else {
         console.error("Error al actualizar el curso:", response.statusText);
         toast.error("Error al actualizar el curso");
@@ -185,6 +193,7 @@ const Index = () => {
       toast.error("Error al actualizar el curso");
     }
   };
+  
 
   const handleEliminarCurso = async (id) => {
     try {
