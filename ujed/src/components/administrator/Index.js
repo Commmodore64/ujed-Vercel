@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const Navigate = useNavigate();
@@ -158,7 +159,7 @@ const Index = () => {
           }),
         }
       );
-  
+
       if (response.ok) {
         const cursoActualizado = await response.json();
         toast.success("Curso actualizado correctamente");
@@ -177,13 +178,12 @@ const Index = () => {
         setCursos(updatedCursos);
         setShowModal(false);
         limpiarCampos();
-        
+
         // Recargar la página y luego redirigir
         window.location.reload();
         setTimeout(() => {
           Navigate("/admin");
         }, 500); // Ajusta el tiempo según sea necesario
-  
       } else {
         console.error("Error al actualizar el curso:", response.statusText);
         toast.error("Error al actualizar el curso");
@@ -193,7 +193,6 @@ const Index = () => {
       toast.error("Error al actualizar el curso");
     }
   };
-  
 
   const handleEliminarCurso = async (id) => {
     try {
@@ -242,6 +241,9 @@ const Index = () => {
             >
               Agregar Curso
             </button>
+            <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md ml-4">
+              <Link to="/program">Programas</Link>
+            </button>
           </div>
           <h2 className="text-lg text-gray-700 font-semibold">
             Cursos Disponibles
@@ -261,9 +263,7 @@ const Index = () => {
                 <p className="text-sm text-gray-500 my-3">
                   Vigencia: {formatDate(curso.vigencia)}
                 </p>
-                <p className="text-sm text-gray-500 my-3">
-                  Cupo: {curso.cupo}
-                </p>
+                <p className="text-sm text-gray-500 my-3">Cupo: {curso.cupo}</p>
                 <p className="text-sm text-gray-500 my-3">
                   Fecha de Actualización: {formatDate(curso.date)}
                 </p>
@@ -419,8 +419,13 @@ text-white py-2 px-4 rounded-md mr-2"
                     className="border-b border-gray-200 py-2 flex items-center space-x-4"
                   >
                     <div>
-                      <p className="font-semibold">Nombre: {inscripcion.nombre}</p>
-                      <p>Fecha de Inscripción: {formatDate(inscripcion.fecha_inscripcion)}</p>
+                      <p className="font-semibold">
+                        Nombre: {inscripcion.nombre}
+                      </p>
+                      <p>
+                        Fecha de Inscripción:{" "}
+                        {formatDate(inscripcion.fecha_inscripcion)}
+                      </p>
                       <p className="font-semibold">Estado de pago:</p>
                       <p
                         className={`font-semibold flex items-center space-x-2 ${
