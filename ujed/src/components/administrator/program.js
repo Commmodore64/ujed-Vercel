@@ -175,8 +175,8 @@ const Program = () => {
             Agregar Programa
           </button>
           <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md ml-4">
-              <Link to="/admin">Cursos</Link>
-            </button>
+            <Link to="/admin">Cursos</Link>
+          </button>
 
           {/* Modal de Agregar/Editar Programa */}
           {showModal && (
@@ -193,18 +193,23 @@ const Program = () => {
                   className="border p-2 mb-4 w-full"
                 />
                 <button
-                  className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-                  onClick={
-                    programaId ? handleActualizarPrograma : handleAgregarPrograma
-                  }
-                >
-                  {programaId ? "Actualizar" : "Agregar"}
-                </button>
-                <button
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="bg-gray-500 hover
+text-white
+rounded-md px-4 py-2"
                   onClick={() => setShowModal(false)}
                 >
                   Cancelar
+                </button>
+                <button
+                  className=" text-white bg-blue-500 hover:bg-blue-600
+rounded-md px-4 py-2 ml-2"
+                  onClick={
+                    programaId
+                      ? handleActualizarPrograma
+                      : handleAgregarPrograma
+                  }
+                >
+                  {programaId ? "Actualizar" : "Agregar"}
                 </button>
               </div>
             </div>
@@ -217,19 +222,19 @@ const Program = () => {
                 key={programa.id}
                 className="flex items-center justify-between p-2 border-b"
               >
-                <span>{programa.nombre}</span>
+                <span className="font-semibold">{programa.nombre}</span>
                 <div>
                   <button
                     className="text-sm text-white bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded mr-2"
                     onClick={() => handleEditarPrograma(programa.id)}
                   >
-                    <MdEdit size={20}/>
+                    <MdEdit size={20} />
                   </button>
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded"
                     onClick={() => handleEliminarPrograma(programa.id)}
                   >
-                    <MdDeleteForever size={20}/>
+                    <MdDeleteForever size={20} />
                   </button>
                 </div>
               </li>
