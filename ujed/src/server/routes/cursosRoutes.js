@@ -4,7 +4,7 @@ const connection = require('../db');
 
 // Crear un nuevo curso
 router.post('/cursos', (req, res) => {
-    const { nombre, info, costo, vigencia, cupo } = req.body;
+    const { nombre, programa, info, costo, vigencia, cupo } = req.body;
     
     // Verifica si vigencia está en el formato esperado dd/MM/yyyy
     const [day, month, year] = vigencia.split('/');
@@ -15,14 +15,14 @@ router.post('/cursos', (req, res) => {
     const vigenciaFormat = `${year}-${month}-${day}`;
     const fecha = new Date();
 
-    const query = 'INSERT INTO cursos (nombre, info, date, costo, vigencia, cupo) VALUES (?, ?, ?, ?, ?, ?)';
-    connection.query(query, [nombre, info, fecha, costo, vigenciaFormat, cupo], (err, results) => {
+    const query = 'INSERT INTO cursos (nombre, programa, info, date, costo, vigencia, cupo) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    connection.query(query, [nombre, programa, info, fecha, costo, vigenciaFormat, cupo], (err, results) => {
         if (err) {
             console.error('Error al crear el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
-        res.status(201).json({ id: results.insertId, nombre, info, costo, vigencia: vigenciaFormat, cupo });
-        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, info, costo, vigencia: vigenciaFormat, cupo });
+        res.status(201).json({ id: results.insertId, nombre, programa, info, costo, vigencia: vigenciaFormat, cupo });
+        console.log("Curso creado correctamente, datos: ", { id: results.insertId, nombre, programa, info, costo, vigencia: vigenciaFormat, cupo });
     });
 });
 
@@ -61,10 +61,10 @@ router.put('/cursos/:id', (req, res) => {
     const fecha = new Date();
     const { nombre, info, costo, vigencia, cupo } = req.body;
 
-    console.log('Datos recibidos:', { nombre, info, costo, vigencia, cupo });
+    console.log('Datos recibidos:', { nombre, programa, info, costo, vigencia, cupo });
 
-    const query = 'UPDATE cursos SET nombre = ?, info = ?, date = ?, costo = ?, vigencia = ?, cupo = ? WHERE id = ?';
-    connection.query(query, [nombre, info, fecha, costo, vigencia, cupo, cursoId], (err, results) => {
+    const query = 'UPDATE cursos SET nombre = ?, programa = ?, info = ?, date = ?, costo = ?, vigencia = ?, cupo = ? WHERE id = ?';
+    connection.query(query, [nombre, programa, info, fecha, costo, vigencia, cupo, cursoId], (err, results) => {
         if (err) {
             console.error('Error al actualizar el curso:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });

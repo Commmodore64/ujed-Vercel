@@ -12,6 +12,7 @@
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
+    "express-validator": "^7.1.0",
     "heroicons": "^2.1.5",
     "i": "^0.3.7",
     "keep-react": "^1.4.3",

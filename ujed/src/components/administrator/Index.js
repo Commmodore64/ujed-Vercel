@@ -3,10 +3,9 @@ import Sidebar from "../sidebar/Index";
 import { MdEdit, MdDeleteForever } from "react-icons/md";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 const Index = () => {
   const Navigate = useNavigate();
@@ -15,6 +14,8 @@ const Index = () => {
   const [showModal, setShowModal] = useState(false);
   const [showInscripcionesModal, setShowInscripcionesModal] = useState(false);
   const [nombreCurso, setNombreCurso] = useState("");
+  const [programas, setProgramas] = useState([]);
+  const [programaSeleccionado, setProgramaSeleccionado] = useState("");
   const [infoCurso, setInfoCurso] = useState("");
   const [cursoId, setCursoId] = useState(null);
   const [costo, setCosto] = useState("");
@@ -43,7 +44,28 @@ const Index = () => {
       }
     };
 
+    const fetchProgramas = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/programa", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setProgramas(data);
+        } else {
+          console.error("Error al obtener los programas:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
+
     fetchCursos();
+    fetchProgramas();
   }, []);
 
   const handleInscripciones = async (id) => {
@@ -74,12 +96,25 @@ const Index = () => {
 
   const limpiarCampos = () => {
     setNombreCurso("");
+    setProgramaSeleccionado("");
     setInfoCurso("");
     setCursoId(null);
+    setCosto("");
+    setVigencia("");
+    setCupo("");
+  };
+
+  const formatFecha = (fechaISO) => {
+    const [year, month, day] = fechaISO.split("-");
+    return `${day}/${month}/${year}`;
   };
 
   const handleAgregarCurso = async () => {
     try {
+      // Asume que la fecha está en formato ISO (YYYY-MM-DD)
+      const fechaISO = vigencia;
+      const fechaFormateada = formatFecha(fechaISO);
+
       const response = await fetch("http://localhost:5000/api/cursos", {
         method: "POST",
         headers: {
@@ -87,9 +122,10 @@ const Index = () => {
         },
         body: JSON.stringify({
           nombre: nombreCurso,
+          programa: programaSeleccionado,
           info: infoCurso,
           costo: costo,
-          vigencia: vigencia,
+          vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
           cupo: cupo,
         }),
       });
@@ -122,6 +158,7 @@ const Index = () => {
       if (response.ok) {
         const curso = await response.json();
         setNombreCurso(curso.nombre);
+        setProgramaSeleccionado(curso.programa);
         setInfoCurso(curso.info);
         setCosto(curso.costo);
         setCursoId(id);
@@ -152,6 +189,7 @@ const Index = () => {
           },
           body: JSON.stringify({
             nombre: nombreCurso,
+            programa: programaSeleccionado,
             info: infoCurso,
             costo: costo,
             vigencia: vigencia,
@@ -168,6 +206,7 @@ const Index = () => {
             ? {
                 ...curso,
                 nombre: cursoActualizado.nombre,
+                programa: cursoActualizado.programa,
                 info: cursoActualizado.info,
                 costo: cursoActualizado.costo,
                 vigencia: cursoActualizado.vigencia,
@@ -247,9 +286,6 @@ const Index = () => {
               </button>
             </Link>
           </div>
-          <h2 className="text-lg text-gray-700 font-semibold">
-            Cursos Disponibles
-          </h2>
           <div className="grid grid-cols-1 gap-4">
             {cursos.map((curso) => (
               <div
@@ -296,117 +332,89 @@ const Index = () => {
         </div>
       </div>
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-10 rounded-lg shadow-lg">
-            <h2
-              className="text-xl font-semibold mb-4
-"
-            >
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-auto">
+            <h2 className="text-xl font-bold mb-4">
               {cursoId ? "Editar Curso" : "Agregar Curso"}
             </h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                cursoId ? handleActualizarCurso() : handleAgregarCurso();
-              }}
-            >
-              <div className="mb-4">
-                <label
-                  htmlFor="nombre"
-                  className="block text-gray-700 font-semibold mb-2"
-                >
-                  Nombre del Curso
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  value={nombreCurso}
-                  onChange={(e) => setNombreCurso(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="info"
-                  className="block text-gray-700 font-semibold mb-2"
-                >
-                  Información del Curso
-                </label>
-                <textarea
-                  id="info"
-                  value={infoCurso}
-                  onChange={(e) => setInfoCurso(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="costo"
-                  className="block text-gray-700 font-semibold mb-2"
-                >
-                  Costo
-                </label>
-                <CurrencyInput
-                  id="costo"
-                  value={costo}
-                  onValueChange={(value) => setCosto(value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  prefix="$"
-                  decimalsLimit={2}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="vigencia"
-                  className="block text-gray-700 font-semibold mb-2"
-                >
-                  Vigencia
-                </label>
-                <input
-                  type="date"
-                  id="vigencia"
-                  value={vigencia}
-                  onChange={(e) => setVigencia(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="cupo"
-                  className="block text-gray-700 font-semibold mb-2"
-                >
-                  Cupo
-                </label>
-                <input
-                  type="number"
-                  id="cupo"
-                  value={cupo}
-                  onChange={(e) => setCupo(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  required
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="bg-gray-500 hover
-text-white py-2 px-4 rounded-md mr-2"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-                >
-                  {cursoId ? "Actualizar" : "Agregar"}
-                </button>
-              </div>
-            </form>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">
+                Nombre del Curso
+              </label>
+              <input
+                type="text"
+                className="w-full border border-gray-300 p-2 rounded"
+                value={nombreCurso}
+                onChange={(e) => setNombreCurso(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">
+                Información del Curso
+              </label>
+              <textarea
+                className="w-full border border-gray-300 p-2 rounded"
+                value={infoCurso}
+                onChange={(e) => setInfoCurso(e.target.value)}
+              ></textarea>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">Programa</label>
+              <select
+                className="w-full border border-gray-300 p-2 rounded"
+                value={programaSeleccionado}
+                onChange={(e) => setProgramaSeleccionado(e.target.value)}
+              >
+                <option value="">Seleccione un programa</option>
+                {programas.map((programa) => (
+                  <option key={programa.id} value={programa.nombre}>
+                    {programa.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">Costo</label>
+              <CurrencyInput
+                className="w-full border border-gray-300 p-2 rounded"
+                value={costo}
+                onValueChange={(value) => setCosto(value)}
+                prefix="$"
+                decimalsLimit={2}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">Vigencia</label>
+              <input
+                type="date"
+                className="w-full border border-gray-300 p-2 rounded"
+                value={vigencia}
+                onChange={(e) => setVigencia(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">Cupo</label>
+              <input
+                type="number"
+                className="w-full border border-gray-300 p-2 rounded"
+                value={cupo}
+                onChange={(e) => setCupo(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mr-2"
+                onClick={() => setShowModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                onClick={cursoId ? handleActualizarCurso : handleAgregarCurso}
+              >
+                {cursoId ? "Actualizar" : "Agregar"}
+              </button>
+            </div>
           </div>
         </div>
       )}
