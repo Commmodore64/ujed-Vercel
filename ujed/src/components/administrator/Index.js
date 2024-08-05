@@ -285,6 +285,11 @@ const Index = () => {
                 Programas
               </button>
             </Link>
+            <Link to="/history">
+              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl ml-4">
+                Historial de pagos
+              </button>
+            </Link>
           </div>
           <div className="grid grid-cols-1 gap-4">
             {cursos.map((curso) => (

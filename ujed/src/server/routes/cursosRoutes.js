@@ -59,7 +59,7 @@ router.get('/cursos/:id', (req, res) => {
 router.put('/cursos/:id', (req, res) => {
     const cursoId = req.params.id;
     const fecha = new Date();
-    const { nombre, info, costo, vigencia, cupo } = req.body;
+    const { nombre, programa, info, costo, vigencia, cupo } = req.body;
 
     console.log('Datos recibidos:', { nombre, programa, info, costo, vigencia, cupo });
 
