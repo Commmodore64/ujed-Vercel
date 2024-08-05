@@ -233,7 +233,7 @@ const Index = () => {
           <h1 className="text-2xl font-bold mb-4">Consultar Cursos</h1>
           <div className="mb-4">
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
               onClick={() => {
                 setShowModal(true);
                 limpiarCampos();
@@ -241,9 +241,11 @@ const Index = () => {
             >
               Agregar Curso
             </button>
-            <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md ml-4">
-              <Link to="/program">Programas</Link>
-            </button>
+            <Link to="/program">
+              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl ml-4">
+                Programas
+              </button>
+            </Link>
           </div>
           <h2 className="text-lg text-gray-700 font-semibold">
             Cursos Disponibles
@@ -255,6 +257,7 @@ const Index = () => {
                 className="bg-gray-50 p-4 shadow-md rounded-md relative mt-3 lg:mx-20"
               >
                 <h2 className="text-lg font-semibold">{curso.nombre}</h2>
+                <h3 className="text-sm text-gray-500">{curso.programa}</h3>
                 <hr className="my-2" />
                 <p className="font-semibold text-gray-600">Descripción:</p>
                 <p className="text-gray-700 mt-3">{curso.info}</p>
@@ -268,20 +271,20 @@ const Index = () => {
                   Fecha de Actualización: {formatDate(curso.date)}
                 </p>
                 <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
                   onClick={() => handleInscripciones(curso.id)}
                 >
                   Consultar alumnos inscritos
                 </button>
                 <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2">
                   <button
-                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-1 px-2 rounded"
+                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-3xl"
                     onClick={() => handleEditarCurso(curso.id)}
                   >
                     <MdEdit size={20} />
                   </button>
                   <button
-                    className="text-xs text-white bg-red-500 hover:bg-red-600 py-1 px-2 rounded "
+                    className="text-xs text-white bg-red-500 hover:bg-red-600 py-2 px-3 rounded-3xl "
                     onClick={() => handleEliminarCurso(curso.id)}
                   >
                     <MdDeleteForever size={20} />

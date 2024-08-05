@@ -162,8 +162,7 @@ const Program = () => {
       <Sidebar />
       <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Programas</h1>
-
+          <h1 className="text-2xl font-bold mb-4">Consultar Programas</h1>
           {/* Botón de Agregar Programa */}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-4"
@@ -174,14 +173,18 @@ const Program = () => {
           >
             Agregar Programa
           </button>
+          <Link to="/admin">
           <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md ml-4">
-            <Link to="/admin">Cursos</Link>
+            Cursos
           </button>
-
+          </Link>
+          <h2 className="text-lg text-gray-700 font-semibold">
+            Programas Disponibles
+          </h2>
           {/* Modal de Agregar/Editar Programa */}
           {showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-4 rounded shadow-lg w-96">
+              <div className="bg-white p-4 rounded-lg shadow-lg w-96">
                 <h2 className="text-lg font-bold mb-4">
                   {programaId ? "Actualizar Programa" : "Agregar Programa"}
                 </h2>
@@ -193,9 +196,7 @@ const Program = () => {
                   className="border p-2 mb-4 w-full"
                 />
                 <button
-                  className="bg-gray-500 hover
-text-white
-rounded-md px-4 py-2"
+                  className="bg-gray-500 hover text-white rounded-md px-4 py-2"
                   onClick={() => setShowModal(false)}
                 >
                   Cancelar
@@ -216,11 +217,11 @@ rounded-md px-4 py-2 ml-2"
           )}
 
           {/* Lista de Programas */}
-          <ul className="mt-4">
+          <ul className="mt-8 mx-24">
             {programas.map((programa) => (
               <li
                 key={programa.id}
-                className="flex items-center justify-between p-2 border-b"
+                className="flex items-center justify-between p-4 border-b"
               >
                 <span className="font-semibold">{programa.nombre}</span>
                 <div>
