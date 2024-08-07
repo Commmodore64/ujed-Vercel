@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../sidebar/Index";
 import { Link } from "react-router-dom";
 import { MdEdit, MdDeleteForever } from "react-icons/md";
+import { IoIosArrowBack } from "react-icons/io";
 
 const Program = () => {
   const [programas, setProgramas] = useState([]);
@@ -162,7 +163,12 @@ const Program = () => {
       <Sidebar />
       <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Consultar Programas</h1>
+        <div className="flex flex-row items-center mb-5">
+          <Link to={"/admin"} className="text-lg">
+            <IoIosArrowBack className="inline-block" />
+          </Link>
+          <h1 className="text-2xl font-bold pl-1">Consultar programas</h1>
+        </div>
           {/* Botón de Agregar Programa */}
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl mb-4"

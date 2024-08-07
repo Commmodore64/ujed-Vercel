@@ -470,7 +470,7 @@ const Index = () => {
               )}
             </ul>
             <button
-              className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md mt-5"
+              className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-2xl mt-5"
               onClick={() => setShowInscripcionesModal(false)}
             >
               Cerrar

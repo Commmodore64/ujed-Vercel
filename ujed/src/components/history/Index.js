@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "../sidebar/Index";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -91,7 +93,12 @@ const Index = () => {
       <Sidebar />
       <div className="flex flex-col mt-16 lg:mt-20 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div>
-          <h1 className="text-2xl font-bold">Inscripción</h1>
+          <div className="flex flex-row items-center mb-5">
+            <Link to={"/admin"} className="text-lg">
+              <IoIosArrowBack className="inline-block" />
+            </Link>
+            <h1 className="text-2xl font-bold pl-1">Inscripción</h1>
+          </div>
           <div className="w-full">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
               <div className="flex items-center gap-2 w-full md:w-auto mt-4">
@@ -131,12 +138,8 @@ const Index = () => {
                           index % 2 === 0 ? "bg-blue-100" : "bg-white"
                         }`}
                       >
-                        <td className="px-4 py-2">
-                          {item.nombreCompleto}
-                        </td>
-                        <td className="px-4 py-2">
-                          {item.nombre}
-                        </td>
+                        <td className="px-4 py-2">{item.nombreCompleto}</td>
+                        <td className="px-4 py-2">{item.nombre}</td>
                         <td className="px-4 py-2">
                           {item.fecha_inscripcion.split("T")[0]}
                         </td>

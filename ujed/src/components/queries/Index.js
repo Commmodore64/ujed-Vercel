@@ -17,10 +17,7 @@ const Index = () => {
     policyNumber: "",
     termsAccepted: false,
     consentGiven: false,
-    paymentAmount: 100,
-    cardNumber: "",
-    expirationDate: "",
-    cvv: "",
+    paymentAmount: "",
   });
 
   const navigate = useNavigate();
@@ -35,9 +32,7 @@ const Index = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí enviarías los datos del formulario a tu backend y redirigirías a la pasarela de pago
-    // Por ejemplo:
-    navigate("/template"); // Redirige a la pasarela de pago
+    navigate("/template");
   };
 
   return (
@@ -66,64 +61,7 @@ const Index = () => {
                     className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Fecha de Nacimiento
-                  </label>
-                  <input
-                    type="date"
-                    name="dateOfBirth"
-                    value={formData.dateOfBirth}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Sexo
-                  </label>
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
-                  >
-                    <option value="">Seleccione</option>
-                    <option value="male">Masculino</option>
-                    <option value="female">Femenino</option>
-                    <option value="other">Otro</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Teléfono de Contacto
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Correo Electrónico
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
-                  />
-                </div>
               </div>
-
               {/* Información de la Consulta */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -140,6 +78,19 @@ const Index = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
+                  Monto
+                </label>
+                <input
+                  type="number"
+                  name="paymentAmount"
+                  value={formData.paymentAmount}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              {/* <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Motivo de la Consulta
                 </label>
                 <textarea
@@ -150,7 +101,7 @@ const Index = () => {
                   required
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                 />
-              </div>
+              </div> */}
               {/* Consentimiento y Términos */}
               <div>
                 <input
@@ -181,9 +132,6 @@ const Index = () => {
                   Doy mi consentimiento para el tratamiento de datos personales
                 </label>
               </div>
-
-              
-
               <button
                 type="submit"
                 className="mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700"
