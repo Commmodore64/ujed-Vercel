@@ -165,7 +165,7 @@ const Program = () => {
           <h1 className="text-2xl font-bold mb-4">Consultar Programas</h1>
           {/* Botón de Agregar Programa */}
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mb-4"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl mb-4"
             onClick={() => {
               setShowModal(true);
               limpiarCampos();
@@ -174,7 +174,7 @@ const Program = () => {
             Agregar Programa
           </button>
           <Link to="/admin">
-          <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md ml-4">
+          <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl ml-4">
             Cursos
           </button>
           </Link>
