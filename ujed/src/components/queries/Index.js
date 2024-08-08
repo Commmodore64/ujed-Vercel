@@ -135,7 +135,7 @@ const Index = () => {
               </div>
               <button
                 type="submit"
-                className="mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700"
+                className="mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-2xl shadow-sm hover:bg-blue-700"
               >
                 Generar Ticket
               </button>
