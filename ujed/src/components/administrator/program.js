@@ -163,28 +163,31 @@ const Program = () => {
       <Sidebar />
       <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div className="container mx-auto">
-        <div className="flex flex-row items-center mb-5">
-          <Link to={"/admin"} className="text-lg">
-            <IoIosArrowBack className="inline-block" />
-          </Link>
-          <h1 className="text-2xl font-bold pl-1">Consultar programas</h1>
-        </div>
+          <div className="flex flex-row items-center mb-5">
+            <Link to={"/admin"} className="text-lg">
+              <IoIosArrowBack className="inline-block" />
+            </Link>
+            <h1 className="text-2xl font-bold pl-1">Consultar programas</h1>
+          </div>
           {/* Botón de Agregar Programa */}
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl mb-4"
-            onClick={() => {
-              setShowModal(true);
-              limpiarCampos();
-            }}
-          >
-            Agregar Programa
-          </button>
-          <Link to="/admin">
-          <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl ml-4">
-            Cursos
-          </button>
-          </Link>
-          <h2 className="text-lg text-gray-700 font-semibold">
+          <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl w-full sm:w-auto"
+              onClick={() => {
+                setShowModal(true);
+                limpiarCampos();
+              }}
+            >
+              Agregar Programa
+            </button>
+            <Link to="/admin" className="w-full sm:w-auto">
+              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl w-full sm:w-auto">
+                Cursos
+              </button>
+            </Link>
+          </div>
+
+          <h2 className="text-lg text-gray-700 font-semibold mt-3">
             Programas Disponibles
           </h2>
           {/* Modal de Agregar/Editar Programa */}
@@ -223,22 +226,24 @@ rounded-md px-4 py-2 ml-2"
           )}
 
           {/* Lista de Programas */}
-          <ul className="mt-8 mx-24">
+          <ul className="mt-8 mx-4 sm:mx-24">
             {programas.map((programa) => (
               <li
                 key={programa.id}
-                className="flex items-center justify-between p-4 border-b"
+                className="flex flex-col sm:flex-row items-center justify-between p-4 border-b"
               >
-                <span className="font-semibold">{programa.nombre}</span>
-                <div>
+                <span className="font-semibold text-center sm:text-left w-full sm:w-auto">
+                  {programa.nombre}
+                </span>
+                <div className="flex mt-4 sm:mt-0 w-full sm:w-auto justify-between sm:justify-end">
                   <button
-                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded mr-2"
+                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-2xl"
                     onClick={() => handleEditarPrograma(programa.id)}
                   >
                     <MdEdit size={20} />
                   </button>
                   <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    className="bg-red-500 text-white py-2 px-3 rounded-2xl"
                     onClick={() => handleEliminarPrograma(programa.id)}
                   >
                     <MdDeleteForever size={20} />

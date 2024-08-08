@@ -97,13 +97,13 @@ const Index = () => {
             <Link to={"/admin"} className="text-lg">
               <IoIosArrowBack className="inline-block" />
             </Link>
-            <h1 className="text-2xl font-bold pl-1">Inscripción</h1>
+            <h1 className="text-2xl font-bold pl-1">Historial de inscripciónes</h1>
           </div>
           <div className="w-full">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
               <div className="flex items-center gap-2 w-full md:w-auto mt-4">
                 <input
-                  className="flex h-10 w-96 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 md:flex-none"
+                  className="flex h-10 w-full sm:w-96 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="Buscar..."
                   type="text"
                   value={searchTerm}
@@ -112,38 +112,54 @@ const Index = () => {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <div className="relative w-full overflow-auto">
+              <div className="relative w-full">
                 <table className="caption-bottom text-sm w-full">
-                  <thead className="[&_tr]:border-b">
-                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                  <thead className="hidden sm:table-header-group">
+                    <tr className="border-b transition-colors hover:bg-muted/50">
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                         Nombre Completo
                       </th>
-                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                         Nombre del Curso
                       </th>
-                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                         Fecha de Inscripción
                       </th>
-                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                         Estado de Pago
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="[&_tr:last-child]:border-0">
+                  <tbody className="block sm:table-row-group">
                     {filteredData.map((item, index) => (
                       <tr
                         key={index}
-                        className={`border-b transition-colors hover:bg-blue-50 ${
+                        className={`block sm:table-row border-b transition-colors hover:bg-blue-50 ${
                           index % 2 === 0 ? "bg-blue-100" : "bg-white"
                         }`}
                       >
-                        <td className="px-4 py-2">{item.nombreCompleto}</td>
-                        <td className="px-4 py-2">{item.nombre}</td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2 block sm:table-cell">
+                          <span className="font-bold sm:hidden">
+                            Nombre Completo:{" "}
+                          </span>
+                          {item.nombreCompleto}
+                        </td>
+                        <td className="px-4 py-2 block sm:table-cell">
+                          <span className="font-bold sm:hidden">
+                            Nombre del Curso:{" "}
+                          </span>
+                          {item.nombre}
+                        </td>
+                        <td className="px-4 py-2 block sm:table-cell">
+                          <span className="font-bold sm:hidden">
+                            Fecha de Inscripción:{" "}
+                          </span>
                           {item.fecha_inscripcion.split("T")[0]}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2 block sm:table-cell">
+                          <span className="font-bold sm:hidden">
+                            Estado de Pago:{" "}
+                          </span>
                           <p
                             className={`font-semibold flex items-center space-x-2 ${
                               item.estado_pago === "Autorizado"
@@ -176,25 +192,5 @@ const Index = () => {
     </>
   );
 };
-
-function FilterIcon(props) {
-  return (
-    <svg
-      {...props}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 3c2.755 0 5 2.237 5 5v1a3 3 0 002.4 2.917C20.294 13.65 21 15.237 21 17c0 3.313-2.687 6-6 6H9c-3.313 0-6-2.687-6-6 0-1.763.706-3.35 1.6-4.083A3 3 0 007 9V8c0-2.763 2.237-5 5-5z"
-      ></path>
-    </svg>
-  );
-}
 
 export default Index;

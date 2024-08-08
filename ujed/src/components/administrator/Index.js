@@ -270,9 +270,9 @@ const Index = () => {
       <div className="flex flex-col mt-16 lg:mt-20 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold mb-4">Consultar Cursos</h1>
-          <div className="mb-4">
+          <div className="mb-4 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
+              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl w-full sm:w-auto"
               onClick={() => {
                 setShowModal(true);
                 limpiarCampos();
@@ -280,17 +280,18 @@ const Index = () => {
             >
               Agregar Curso
             </button>
-            <Link to="/program">
-              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl ml-4">
+            <Link to="/program" className="w-full sm:w-auto">
+              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl w-full sm:w-auto">
                 Programas
               </button>
             </Link>
-            <Link to="/history">
-              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl ml-4">
+            <Link to="/history" className="w-full sm:w-auto">
+              <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-3xl w-full sm:w-auto">
                 Historial de pagos
               </button>
             </Link>
           </div>
+
           <div className="grid grid-cols-1 gap-4">
             {cursos.map((curso) => (
               <div
@@ -312,12 +313,12 @@ const Index = () => {
                   Fecha de Actualización: {formatDate(curso.date)}
                 </p>
                 <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
+                  className="flex bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
                   onClick={() => handleInscripciones(curso.id)}
                 >
                   Consultar alumnos inscritos
                 </button>
-                <div className="lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 flex items-center space-x-2">
+                <div className="flex items-center mt-5 lg:absolute lg:top-0 lg:right-0 lg:flex lg:space-x-2 lg:mt-1 lg:mr-2 justify-between">
                   <button
                     className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-3xl"
                     onClick={() => handleEditarCurso(curso.id)}
