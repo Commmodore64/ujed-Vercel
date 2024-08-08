@@ -205,14 +205,13 @@ const Program = () => {
                   className="border p-2 mb-4 w-full"
                 />
                 <button
-                  className="bg-gray-500 hover text-white rounded-md px-4 py-2"
+                  className="bg-gray-500 hover text-white rounded-2xl px-4 py-2"
                   onClick={() => setShowModal(false)}
                 >
                   Cancelar
                 </button>
                 <button
-                  className=" text-white bg-blue-500 hover:bg-blue-600
-rounded-md px-4 py-2 ml-2"
+                  className=" text-white bg-blue-500 hover:bg-blue-600 rounded-2xl px-4 py-2 ml-2"
                   onClick={
                     programaId
                       ? handleActualizarPrograma
@@ -237,7 +236,7 @@ rounded-md px-4 py-2 ml-2"
                 </span>
                 <div className="flex mt-4 sm:mt-0 w-full sm:w-auto justify-between sm:justify-end">
                   <button
-                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-2xl"
+                    className="text-sm text-white bg-blue-500 hover:bg-blue-600 mr-3 py-2 px-3 rounded-2xl"
                     onClick={() => handleEditarPrograma(programa.id)}
                   >
                     <MdEdit size={20} />

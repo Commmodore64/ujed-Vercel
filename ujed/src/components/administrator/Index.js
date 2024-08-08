@@ -409,13 +409,13 @@ const Index = () => {
             </div>
             <div className="flex justify-end">
               <button
-                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mr-2"
+                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-2xl mr-2"
                 onClick={() => setShowModal(false)}
               >
                 Cancelar
               </button>
               <button
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-2xl"
                 onClick={cursoId ? handleActualizarCurso : handleAgregarCurso}
               >
                 {cursoId ? "Actualizar" : "Agregar"}

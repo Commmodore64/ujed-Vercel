@@ -42,7 +42,8 @@ const Index = () => {
         <div>
           <h1 className="text-2xl font-bold">Generar Ticket de Consulta</h1>
           <p className="mt-2 text-md text-gray-600">
-            Completa la información necesaria para generar un ticket de consulta médica.
+            Completa la información necesaria para generar un ticket de consulta
+            médica.
           </p>
           <div className="container mx-auto p-4 mt-5">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -76,17 +77,17 @@ const Index = () => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Monto
-                </label>
+              <div className="mt-1 relative flex items-center">
                 <input
                   type="number"
                   name="paymentAmount"
                   value={formData.paymentAmount}
+                  placeholder="$"
                   onChange={handleChange}
                   required
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 p-2 block w-1/12 border-gray-300 rounded-md shadow-sm"
+                  min="0"
+                  step="0.01"
                 />
               </div>
               {/* <div>
