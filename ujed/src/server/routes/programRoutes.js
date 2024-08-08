@@ -47,7 +47,7 @@ router.get('/programa/:id', (req, res) => {
 });
 
 // Actualizar un programa por ID
-router.put('/programas/:id', (req, res) => {
+router.put('/programa/:id', (req, res) => {
     const programaId = req.params.id;
     const { nombre } = req.body;
 
@@ -59,7 +59,7 @@ router.put('/programas/:id', (req, res) => {
             console.error('Error al actualizar el programa:', err);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
-        res.status(200).json({ id: programaId, nombre, programaId });
+        res.status(200).json({ id: programaId, nombre });
     });
 });
 

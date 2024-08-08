@@ -94,42 +94,43 @@ const Program = () => {
 
   const handleActualizarPrograma = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/programa/${programaId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: nombrePrograma,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const programaActualizado = await response.json();
-        toast.success("Programa actualizado correctamente");
-        const updatedProgramas = programas.map((programa) =>
-          programa.id === programaId
-            ? {
-                ...programa,
-                nombre: programaActualizado.nombre,
-              }
-            : programa
+        const response = await fetch(
+            `http://localhost:5000/api/programa/${programaId}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nombre: nombrePrograma,
+                }),
+            }
         );
-        setProgramas(updatedProgramas);
-        setShowModal(false);
-        limpiarCampos();
-      } else {
-        console.error("Error al actualizar el programa:", response.statusText);
-        toast.error("Error al actualizar el programa");
-      }
+
+        if (response.ok) {
+            const programaActualizado = await response.json();
+            toast.success("Programa actualizado correctamente");
+            const updatedProgramas = programas.map((programa) =>
+                programa.id === programaId
+                    ? {
+                        ...programa,
+                        nombre: programaActualizado.nombre,
+                    }
+                    : programa
+            );
+            setProgramas(updatedProgramas);
+            setShowModal(false);
+            limpiarCampos();
+        } else {
+            console.error("Error al actualizar el programa:", response.statusText);
+            toast.error("Error al actualizar el programa");
+        }
     } catch (error) {
-      console.error("Error en la solicitud:", error);
-      toast.error("Error al actualizar el programa");
+        console.error("Error en la solicitud:", error);
+        toast.error("Error al actualizar el programa");
     }
-  };
+};
+
 
   const handleEliminarPrograma = async (id) => {
     try {
