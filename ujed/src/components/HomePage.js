@@ -97,7 +97,7 @@ const HomePage = () => {
             <div className="relative flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-start">
               <Link
                 to="/dashboard"
-                className="bg-[#0071e3] text-white py-2 px-5 tracking-wide rounded-3xl hover:bg-[#0066e3]"
+                className="bg-[#0071e3] text-white text-lg py-2 px-5 tracking-wide rounded-3xl hover:bg-[#0066e3]"
               >
                 Inscríbete
               </Link>
@@ -109,7 +109,7 @@ const HomePage = () => {
             <div className="relative flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-start">
               <Link
                 to="/courseinfo"
-                className="bg-[#0071e3] text-white py-2 px-8 tracking-wide rounded-3xl hover:bg-[#0066e3]"
+                className="bg-[#0071e3] text-white text-lg py-2 px-8 tracking-wide rounded-3xl hover:bg-[#0066e3]"
               >
                 Cursos
               </Link>

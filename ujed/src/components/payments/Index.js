@@ -3,6 +3,7 @@ import Sidebar from "../sidebar/Index";
 import { useNavigate } from "react-router-dom";
 import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
+import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 
 const Index = () => {
   const [cursos, setCursos] = useState([]);
@@ -32,6 +33,8 @@ const Index = () => {
   const [useAltID, setUseAltID] = useState(false);
   const [rfc, setRFC] = useState(localStorage.getItem("rfc") || "");
   const [curp, setCURP] = useState(localStorage.getItem("curp") || "");
+  const [codigoAcceso, setCodigoAcceso] = useState(""); // Inicializa con cadena vacía
+  const [codigoValido, setCodigoValido] = useState(null);
 
   const navigate = useNavigate();
 
@@ -89,6 +92,7 @@ const Index = () => {
       if (selectedCurso) {
         setVigencia(selectedCurso.vigencia);
         setCupo(selectedCurso.cupo);
+        // No establecer el código de acceso aquí
       }
     }
   }, [cursoSeleccionado, cursos]);
@@ -162,6 +166,49 @@ const Index = () => {
     return cupo > 0 && hoy <= vigenciaDate;
   };
 
+  const validarCodigoAcceso = async () => {
+    try {
+      // Encontrar el ID del curso seleccionado
+      const selectedCurso = cursos.find(
+        (curso) => curso.nombre + "/" + curso.costo === cursoSeleccionado
+      );
+
+      if (!selectedCurso) {
+        setCodigoValido(false);
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/api/validar-codigo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          codigo: codigoAcceso,
+          id: selectedCurso.id,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCodigoValido(data.valido);
+      } else {
+        setCodigoValido(false);
+      }
+    } catch (error) {
+      console.error("Error en la validación del código:", error);
+      setCodigoValido(false);
+    }
+  };
+
+  const mostrarCampoCodigo = () => {
+    // Verifica si el curso seleccionado tiene un código asociado
+    const selectedCurso = cursos.find(
+      (curso) => curso.nombre === cursoSeleccionado.split("/")[0]
+    );
+    return selectedCurso && selectedCurso.codigo;
+  };
+
   return (
     <>
       <Sidebar />
@@ -204,7 +251,11 @@ const Index = () => {
                   <button
                     type="button"
                     className="text-blue-500 underline"
-                    onClick={() => setUseAltID(true)}
+                    onClick={() => {
+                      setUseAltID(true);
+                      localStorage.removeItem("matricula");
+                      setMatricula("");
+                    }}
                   >
                     Haz clic aquí
                   </button>
@@ -243,11 +294,17 @@ const Index = () => {
                   />
                 </div>
                 <p className="mt-2 text-sm text-gray-600">
-                  Tienes matrícula?{" "}
+                  Tienes una matrícula?{" "}
                   <button
                     type="button"
                     className="text-blue-500 underline"
-                    onClick={() => setUseAltID(false)}
+                    onClick={() => {
+                      setUseAltID(false);
+                      localStorage.removeItem("rfc");
+                      localStorage.removeItem("curp");
+                      setRFC("");
+                      setCURP("");
+                    }}
                   >
                     Haz clic aquí
                   </button>
@@ -263,6 +320,9 @@ const Index = () => {
               </label>
               <MaskedInput
                 mask={phoneMask}
+                guide={false}
+                type="text"
+                name="telefono"
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
                 className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
@@ -288,20 +348,15 @@ const Index = () => {
                 htmlFor="cursoSeleccionado"
                 className="block text-md font-medium text-gray-700"
               >
-                Cursos
+                Curso Seleccionado
               </label>
               <select
                 name="cursoSeleccionado"
                 value={cursoSeleccionado}
-                onChange={(e) => {
-                  setCursoSeleccionado(e.target.value);
-                  setCostoSeleccionado(e.target.value.split("/")[1]);
-                }}
+                onChange={(e) => setCursoSeleccionado(e.target.value)}
                 className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               >
-                <option value="" disabled>
-                  Selecciona un curso
-                </option>
+                <option value="">Selecciona un curso</option>
                 {cursos.map((curso) => (
                   <option
                     key={curso.id}
@@ -320,6 +375,34 @@ const Index = () => {
                 </div>
               )}
             </div>
+            <div>
+              {mostrarCampoCodigo() && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="codigoAcceso"
+                    className="block text-md font-medium text-gray-700 mb-2"
+                  >
+                    Código de Acceso
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      name="codigoAcceso"
+                      value={codigoAcceso}
+                      onChange={(e) => setCodigoAcceso(e.target.value)}
+                      onBlur={validarCodigoAcceso}
+                      className="px-4 py-2 w-1/12 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                    />
+                    {codigoValido === false && (
+                      <IoMdClose size={25} className="text-red-600" />
+                    )}
+                    {codigoValido === true && (
+                      <IoMdCheckmark size={25} className="text-green-600" />
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="comentarios"
@@ -331,31 +414,35 @@ const Index = () => {
                 name="comentarios"
                 value={comentarios}
                 onChange={(e) => setComentarios(e.target.value)}
+                rows="4"
                 className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-                rows="3"
               />
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-4">
               <button
                 type="submit"
                 className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${
-                  isCursoDisponible()
-                    ? "bg-blue-500 hover:bg-blue-600"
+                  codigoValido
+                    ? isCursoDisponible()
+                      ? "bg-blue-500 hover:bg-blue-600"
+                      : "bg-gray-400 cursor-not-allowed"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
                 onClick={handlePagoEnLinea}
-                disabled={!isCursoDisponible()}
+                disabled={!codigoValido || !isCursoDisponible()}
               >
                 Pago en línea
               </button>
               <button
                 className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${
-                  isCursoDisponible()
-                    ? "bg-blue-500 hover:bg-blue-600"
+                  codigoValido
+                    ? isCursoDisponible()
+                      ? "bg-blue-500 hover:bg-blue-600"
+                      : "bg-gray-400 cursor-not-allowed"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
                 onClick={handlePagoEnLineaConTarjeta}
-                disabled={!isCursoDisponible()}
+                disabled={!codigoValido || !isCursoDisponible()}
               >
                 Pago en línea con tarjeta
               </button>

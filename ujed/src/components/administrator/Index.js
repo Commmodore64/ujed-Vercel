@@ -21,6 +21,7 @@ const Index = () => {
   const [costo, setCosto] = useState("");
   const [vigencia, setVigencia] = useState("");
   const [cupo, setCupo] = useState("");
+  const [codigo, setCodigo] = useState("");
   const [inscripciones, setInscripciones] = useState([]);
 
   useEffect(() => {
@@ -102,6 +103,7 @@ const Index = () => {
     setCosto("");
     setVigencia("");
     setCupo("");
+    setCodigo("");
   };
 
   const formatFecha = (fechaISO) => {
@@ -127,6 +129,7 @@ const Index = () => {
           costo: costo,
           vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
           cupo: cupo,
+          codigo: codigo,
         }),
       });
 
@@ -164,6 +167,7 @@ const Index = () => {
         setCursoId(id);
         setVigencia(curso.vigencia);
         setCupo(curso.cupo);
+        setCodigo(curso.codigo);
         setShowModal(true);
       } else {
         console.error(
@@ -194,6 +198,7 @@ const Index = () => {
             costo: costo,
             vigencia: vigencia,
             cupo: cupo,
+            codigo: codigo,
           }),
         }
       );
@@ -211,6 +216,7 @@ const Index = () => {
                 costo: cursoActualizado.costo,
                 vigencia: cursoActualizado.vigencia,
                 cupo: cursoActualizado.cupo,
+                codigo: cursoActualizado.codigo,
               }
             : curso
         );
@@ -309,6 +315,7 @@ const Index = () => {
                   Vigencia: {formatDate(curso.vigencia)}
                 </p>
                 <p className="text-sm text-gray-500 my-3">Cupo: {curso.cupo}</p>
+                <p className="text-sm text-gray-500 my-3">Código de acceso: {curso.codigo || "Sin código"}</p>
                 <p className="text-sm text-gray-500 my-3">
                   Fecha de Actualización: {formatDate(curso.date)}
                 </p>
@@ -405,6 +412,15 @@ const Index = () => {
                 className="w-full border border-gray-300 p-2 rounded"
                 value={cupo}
                 onChange={(e) => setCupo(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">Código de acceso</label>
+              <input
+                type="text"
+                className="w-1/5 border border-gray-300 p-2 rounded"
+                value={codigo}
+                onChange={(e) => setCodigo(e.target.value)}
               />
             </div>
             <div className="flex justify-end">
