@@ -1,26 +1,13 @@
 import Sidebar from "../sidebar/Index";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import GenerarPDF from "./pdfGenerator"; // Asegúrate de importar el componente
 
 const Index = () => {
   const [formData, setFormData] = useState({
     patientName: "",
-    dateOfBirth: "",
-    gender: "",
-    phone: "",
-    email: "",
     consultationDate: "",
-    consultationReason: "",
-    symptoms: "",
-    medicalHistory: "",
-    insuranceCompany: "",
-    policyNumber: "",
-    termsAccepted: false,
-    consentGiven: false,
     paymentAmount: "",
   });
-
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,9 +17,21 @@ const Index = () => {
     }));
   };
 
+  const isFormComplete = () => {
+    return (
+      formData.patientName.trim() !== "" &&
+      formData.consultationDate.trim() !== "" &&
+      formData.paymentAmount.trim() !== ""
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/template");
+
+    if (isFormComplete()) {
+      // Aquí llamas a GenerarPDF para descargar el archivo
+      <GenerarPDF formData={formData} />;
+    }
   };
 
   return (
@@ -48,8 +47,8 @@ const Index = () => {
           <div className="container mx-auto p-4 mt-5">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Datos del Paciente */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+              <div>
+                <div className="w-1/2">
                   <label className="block text-sm font-medium text-gray-700">
                     Nombre del Paciente
                   </label>
@@ -58,13 +57,13 @@ const Index = () => {
                     name="patientName"
                     value={formData.patientName}
                     onChange={handleChange}
-                    required
+                    required  
                     className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
               </div>
               {/* Información de la Consulta */}
-              <div>
+              <div className="w-1/2">
                 <label className="block text-sm font-medium text-gray-700">
                   Fecha y Hora de la Consulta
                 </label>
@@ -77,7 +76,10 @@ const Index = () => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                 />
               </div>
-              <div className="mt-1 relative flex items-center">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Monto
+                </label>
                 <input
                   type="number"
                   name="paymentAmount"
@@ -90,54 +92,16 @@ const Index = () => {
                   step="0.01"
                 />
               </div>
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Motivo de la Consulta
-                </label>
-                <textarea
-                  type="text"
-                  name="consultationReason"
-                  value={formData.consultationReason}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
-                />
-              </div> */}
-              {/* Consentimiento y Términos */}
-              <div>
-                <input
-                  type="checkbox"
-                  name="termsAccepted"
-                  checked={formData.termsAccepted}
-                  onChange={handleChange}
-                  required
-                  className="mr-2 p-2"
-                />
-                <label className="text-sm text-gray-700">
-                  Acepto los{" "}
-                  <a href="/terms" className="text-blue-600">
-                    términos y condiciones
-                  </a>
-                </label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="consentGiven"
-                  checked={formData.consentGiven}
-                  onChange={handleChange}
-                  required
-                  className="mr-2 p-2"
-                />
-                <label className="text-sm text-gray-700">
-                  Doy mi consentimiento para el tratamiento de datos personales
-                </label>
-              </div>
               <button
                 type="submit"
-                className="mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-2xl shadow-sm hover:bg-blue-700"
+                className={`mt-6 px-4 py-2 font-semibold rounded-2xl shadow-sm ${
+                  isFormComplete()
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                }`}
+                disabled={!isFormComplete()}
               >
-                Generar Ticket
+                {isFormComplete() && <GenerarPDF formData={formData} /> || "Generar Ticket PDF"}
               </button>
             </form>
           </div>

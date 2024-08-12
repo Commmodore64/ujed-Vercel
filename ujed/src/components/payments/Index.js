@@ -141,6 +141,9 @@ const Index = () => {
     setCostoSeleccionado("");
     setRFC("");
     setCURP("");
+    setCodigoAcceso("");
+    setCursoSeleccionado("");
+    setCodigoValido(null);
     setUseAltID(false);
     toast.success("Campos limpiados.");
   };
@@ -353,7 +356,23 @@ const Index = () => {
               <select
                 name="cursoSeleccionado"
                 value={cursoSeleccionado}
-                onChange={(e) => setCursoSeleccionado(e.target.value)}
+                onChange={(e) => {
+                  const selectedValue = e.target.value;
+                  setCursoSeleccionado(selectedValue);
+
+                  const selectedCurso = cursos.find(
+                    (curso) =>
+                      curso.nombre + "/" + curso.costo === selectedValue
+                  );
+
+                  if (selectedCurso) {
+                    setCostoSeleccionado(selectedCurso.costo);
+                  } else {
+                    setCostoSeleccionado("");
+                  }
+
+                  setCodigoAcceso(""); // Limpiar el campo de código de acceso cuando se cambia el curso
+                }}
                 className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
               >
                 <option value="">Selecciona un curso</option>
@@ -375,6 +394,7 @@ const Index = () => {
                 </div>
               )}
             </div>
+
             <div>
               {mostrarCampoCodigo() && (
                 <div className="mb-4">
@@ -391,7 +411,7 @@ const Index = () => {
                       value={codigoAcceso}
                       onChange={(e) => setCodigoAcceso(e.target.value)}
                       onBlur={validarCodigoAcceso}
-                      className="px-4 py-2 w-1/12 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                      className="px-4 py-2 lg:w-1/12 w-1/4 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
                     />
                     {codigoValido === false && (
                       <IoMdClose size={25} className="text-red-600" />
