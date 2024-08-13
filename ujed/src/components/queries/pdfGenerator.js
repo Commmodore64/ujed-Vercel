@@ -1,6 +1,5 @@
 import React from 'react';
-import logoFaeo from "../../img/logo-faeo.png"
-import { Page, Image, Text, View, Document, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   page: {
@@ -25,10 +24,6 @@ const TicketPDF = ({ formData }) => (
     <Document>
         <Page style={styles.page}>
             <Text style={styles.title}>Ticket de Consulta Médica</Text>
-            {/* <Image
-                style={styles.image}
-                src={logoFaeo}
-            /> */}
             <View style={styles.section}>
                 <Text style={styles.text}>Nombre del Paciente: {formData.patientName}</Text>
                 <Text style={styles.text}>Fecha y Hora de la Consulta: {formData.consultationDate}</Text>
