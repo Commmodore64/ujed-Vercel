@@ -296,6 +296,11 @@ const Index = () => {
                 Historial de pagos
               </button>
             </Link>
+            <Link to="/catalog" className="w-full sm:w-auto">
+              <button className="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-3xl w-full sm:w-auto">
+                Catálogo de conceptos
+              </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 gap-4">
