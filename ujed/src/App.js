@@ -11,6 +11,7 @@ import CourseInfo from "./components/dashboard/CourseInfo";
 import Queries from "./components/queries/Index";
 import Program from "./components/administrator/program";
 import History from "./components/history/Index";
+import Catalog from "./components/administrator/catalog";
 import { Toaster } from 'sonner';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="/queries" element={<Queries />} />
               <Route path="/program" element={<Program />} />
               <Route path="/history" element={<History />} />
+              <Route path="/catalog" element={<Catalog />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
             </Routes>
             <Toaster position="top-right" />

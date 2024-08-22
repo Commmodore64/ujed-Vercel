@@ -317,7 +317,7 @@ const Index = () => {
                 <p className="text-sm text-gray-500 my-3">Cupo: {curso.cupo}</p>
                 <p className="text-sm text-gray-500 my-3">Código de acceso: {curso.codigo || "Sin código"}</p>
                 <p className="text-sm text-gray-500 my-3">
-                  Fecha de Actualización: {formatDate(curso.date)}
+                  Fecha de Actualización: {formatDate(curso.date)}  
                 </p>
                 <button
                   className="flex bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
@@ -453,7 +453,7 @@ const Index = () => {
                   >
                     <div>
                       <p className="font-semibold">
-                        Nombre: {inscripcion.nombre}
+                        Nombre: {inscripciones.nombre}
                       </p>
                       <p>
                         Fecha de Inscripción:{" "}
