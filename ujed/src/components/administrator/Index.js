@@ -307,7 +307,7 @@ const Index = () => {
             {cursos.map((curso) => (
               <div
                 key={curso.id}
-                className="bg-gray-50 p-4 shadow-md rounded-md relative mt-3 lg:mx-20"
+                className="bg-gray-100 p-4 shadow-md rounded-md relative mt-3 lg:mx-20"
               >
                 <h2 className="text-lg font-semibold">{curso.nombre}</h2>
                 <h3 className="text-sm text-gray-500">{curso.programa}</h3>
