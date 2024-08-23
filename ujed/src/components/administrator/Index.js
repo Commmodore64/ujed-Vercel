@@ -23,6 +23,8 @@ const Index = () => {
   const [cupo, setCupo] = useState("");
   const [codigo, setCodigo] = useState("");
   const [inscripciones, setInscripciones] = useState([]);
+  const [catalogos, setCatalogos] = useState([]);
+  const [catalogoSeleccionado, setCatalogoSeleccionado] = useState("");
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -64,9 +66,29 @@ const Index = () => {
         console.error("Error en la solicitud:", error);
       }
     };
+    const fetchCatalogo = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/catalogo", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCatalogos(data);
+        } else {
+          console.error("Error al obtener los catalogos:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
 
     fetchCursos();
     fetchProgramas();
+    fetchCatalogo();
   }, []);
 
   const handleInscripciones = async (id) => {
@@ -130,6 +152,7 @@ const Index = () => {
           vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
           cupo: cupo,
           codigo: codigo,
+          catalogo: catalogoSeleccionado,
         }),
       });
 
@@ -169,6 +192,7 @@ const Index = () => {
         setCupo(curso.cupo);
         setCodigo(curso.codigo);
         setShowModal(true);
+        setCatalogoSeleccionado(curso.catalogo);
       } else {
         console.error(
           "Error al obtener el curso para editar:",
@@ -199,6 +223,7 @@ const Index = () => {
             vigencia: vigencia,
             cupo: cupo,
             codigo: codigo,
+            catalogo: catalogoSeleccionado,
           }),
         }
       );
@@ -217,6 +242,7 @@ const Index = () => {
                 vigencia: cursoActualizado.vigencia,
                 cupo: cursoActualizado.cupo,
                 codigo: cursoActualizado.codigo,
+                catalogo: cursoActualizado.catalogo,
               }
             : curso
         );
@@ -324,6 +350,9 @@ const Index = () => {
                 <p className="text-sm text-gray-500 my-3">
                   Fecha de Actualización: {formatDate(curso.date)}  
                 </p>
+                <p className="text-sm text-gray-500 my-3">
+                  Concepto de pago: {curso.catalogo}
+                </p>
                 <button
                   className="flex bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
                   onClick={() => handleInscripciones(curso.id)}
@@ -387,6 +416,21 @@ const Index = () => {
                 {programas.map((programa) => (
                   <option key={programa.id} value={programa.nombre}>
                     {programa.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">Catalogo de conceptos</label>
+              <select
+                className="w-full border border-gray-300 p-2 rounded"
+                value={catalogoSeleccionado}
+                onChange={(e) => setCatalogoSeleccionado(e.target.value)}
+              >
+                <option value="">Seleccione un programa</option>
+                {catalogos.map((catalogo) => (
+                  <option key={catalogo.id} value={catalogo.concepto}>
+                    {catalogo.concepto}
                   </option>
                 ))}
               </select>
