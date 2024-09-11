@@ -11,7 +11,7 @@ const Details = () => {
   const rfc = localStorage.getItem("rfc");
   const curp = localStorage.getItem("curp");
   return (
-    <div className="flex flex-col mt-5 lg:mt-0 gap-4 p-3 lg:p-8 bg-gray-200 rounded-xl text-black lg:ml-20">
+    <div className="flex flex-col mt-5 lg:mt-0 gap-4 p-3 lg:p-8 bg-gray-200 rounded-xl text-black">
       <p className="text-lg font-bold">Detalles:</p>
       <ul>
         {matricula && (
@@ -53,6 +53,9 @@ const Details = () => {
           ${costoSeleccionado ||  "No disponible"}
         </li>
       </ul>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+        Pagar
+      </button>
     </div>
   );
 };

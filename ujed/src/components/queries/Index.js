@@ -57,7 +57,7 @@ const Index = () => {
                     name="patientName"
                     value={formData.patientName}
                     onChange={handleChange}
-                    required  
+                    required 
                     className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   />
                 </div>

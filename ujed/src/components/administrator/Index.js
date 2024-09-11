@@ -351,7 +351,7 @@ const Index = () => {
                   Fecha de Actualización: {formatDate(curso.date)}  
                 </p>
                 <p className="text-sm text-gray-500 my-3">
-                  Concepto de pago: {curso.catalogo}
+                  Concepto de pago: {curso.catalogo || "Sin concepto"}
                 </p>
                 <button
                   className="flex bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
@@ -502,7 +502,7 @@ const Index = () => {
                   >
                     <div>
                       <p className="font-semibold">
-                        Nombre: {inscripciones.nombre}
+                        Nombre: {inscripcion.nombre || "No disponible"}
                       </p>
                       <p>
                         Fecha de Inscripción:{" "}

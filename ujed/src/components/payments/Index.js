@@ -5,6 +5,7 @@ import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
 import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 
+
 const Index = () => {
   const [cursos, setCursos] = useState([]);
   const [matricula, setMatricula] = useState(
@@ -35,6 +36,7 @@ const Index = () => {
   const [curp, setCURP] = useState(localStorage.getItem("curp") || "");
   const [codigoAcceso, setCodigoAcceso] = useState(""); // Inicializa con cadena vacía
   const [codigoValido, setCodigoValido] = useState(null);
+  const [catalogo, setCatalogo] = useState("");
 
   const navigate = useNavigate();
 
@@ -92,6 +94,7 @@ const Index = () => {
       if (selectedCurso) {
         setVigencia(selectedCurso.vigencia);
         setCupo(selectedCurso.cupo);
+        setCatalogo(selectedCurso.catalogo);
         // No establecer el código de acceso aquí
       }
     }
@@ -114,22 +117,66 @@ const Index = () => {
     }
   };
 
-  const handlePagoEnLineaConTarjeta = (e) => {
-    e.preventDefault();
-    if (
-      (!matricula && !rfc && !curp) ||
-      !nombreCompleto ||
-      !telefono ||
-      !fechaNacimiento ||
-      !cursoSeleccionado
-    ) {
-      toast.error("Por favor, complete todos los campos obligatorios.");
-    } else if (useAltID && !rfc && !curp) {
-      toast.error("Por favor, proporcione RFC o CURP.");
-    } else {
-      navigate("/template");
+const handlePagoEnLineaConTarjeta = async (e) => {
+  e.preventDefault();
+  
+  // Validación de campos obligatorios
+  if (
+    (!matricula && !rfc && !curp) ||
+    !nombreCompleto ||
+    !telefono ||
+    !fechaNacimiento ||
+    !cursoSeleccionado
+  ) {
+    toast.error("Por favor, complete todos los campos obligatorios.");
+    return;
+  } else if (useAltID && !rfc && !curp) {
+    toast.error("Por favor, proporcione RFC o CURP.");
+    return;
+  }
+
+  try {
+    // Crear el objeto con la información necesaria para la solicitud
+    const response = await fetch("http://localhost:5000/api/create-checkout", {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+      curso: cursoSeleccionado.split("/")[0],
+      amount: costoSeleccionado,
+      currency: "MXN",
+      newDescription: catalogo,
+      order_id: "order_" + nombreCompleto + "_" + new Date().toISOString().split('T')[0],
+      send_email: false,
+      customer: {
+        name: nombreCompleto,
+        phone_number: telefono,
+        email: "email@email.com",
+      },
+      redirect_url: "http://localhost:5000/api/verify-transaction"
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error en la solicitud: ' + response.statusText);
     }
-  };
+
+    const data = await response.json();
+
+    if (data.checkout_link) {
+      // Redirigir al usuario a la URL de checkout
+      window.location.href = data.checkout_link;
+    } else {
+      toast.error("No se recibió el enlace de pago.");
+    }
+  } catch (error) {
+    console.error("Error al crear la sesión de pago:", error);
+    toast.error("Ocurrió un error al procesar el pago.");
+  }
+};
+
+  
 
   const handleLimpiarCampos = () => {
     setMatricula("");

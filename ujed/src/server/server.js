@@ -8,6 +8,7 @@ const inscripcionesRoutes = require('./routes/inscripcionesRoutes');
 const programRoutes = require('./routes/programRoutes');
 const codigoRoutes = require('./routes/codigoRoutes');
 const catalogoRoutes = require('./routes/catalogoRoutes');
+const payRoutes = require('./routes/payRoutes');
 
 app.use(cors()); // CORS para todas las rutas
     
@@ -23,6 +24,7 @@ app.use('/api', inscripcionesRoutes); // Rutas de API para inscripciones bajo /a
 app.use('/api', programRoutes); // Rutas de API para programRoutes bajo /api
 app.use('/api', codigoRoutes); // Rutas de API para codigoRoutes bajo /api
 app.use('/api', catalogoRoutes); // Rutas de API para catalogoRoutes bajo /api
+app.use('/api', payRoutes); // Rutas de API para payRoutes bajo /api
 
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;

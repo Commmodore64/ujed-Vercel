@@ -13,6 +13,8 @@ import Program from "./components/administrator/program";
 import History from "./components/history/Index";
 import Catalog from "./components/administrator/catalog";
 import { Toaster } from 'sonner';
+import { Buffer } from 'buffer';
+import process from 'process';
 
 function App() {
   const { isAuthenticated } = useAuth0();
