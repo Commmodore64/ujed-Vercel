@@ -346,9 +346,11 @@ const Index = () => {
                   Vigencia: {formatDate(curso.vigencia)}
                 </p>
                 <p className="text-sm text-gray-500 my-3">Cupo: {curso.cupo}</p>
-                <p className="text-sm text-gray-500 my-3">Código de acceso: {curso.codigo || "Sin código"}</p>
                 <p className="text-sm text-gray-500 my-3">
-                  Fecha de Actualización: {formatDate(curso.date)}  
+                  Código de acceso: {curso.codigo || "Sin código"}
+                </p>
+                <p className="text-sm text-gray-500 my-3">
+                  Fecha de Actualización: {formatDate(curso.date)}
                 </p>
                 <p className="text-sm text-gray-500 my-3">
                   Concepto de pago: {curso.catalogo || "Sin concepto"}
@@ -421,7 +423,9 @@ const Index = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="block mb-2 text-gray-600">Catalogo de conceptos</label>
+              <label className="block mb-2 text-gray-600">
+                Catalogo de conceptos
+              </label>
               <select
                 className="w-full border border-gray-300 p-2 rounded"
                 value={catalogoSeleccionado}
@@ -464,7 +468,9 @@ const Index = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block mb-2 text-gray-600">Código de acceso</label>
+              <label className="block mb-2 text-gray-600">
+                Código de acceso
+              </label>
               <input
                 type="text"
                 className="w-1/5 border border-gray-300 p-2 rounded"
@@ -494,53 +500,64 @@ const Index = () => {
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
             <h2 className="text-xl font-semibold mb-4">Alumnos Inscritos</h2>
             <ul>
-              {inscripciones.length > 0 ? (
-                inscripciones.map((inscripcion) => (
-                  <li
-                    key={inscripcion.id}
-                    className="border-b border-gray-200 py-2 flex items-center space-x-4"
-                  >
-                    <div>
-                      <p className="font-semibold">
-                        Nombre: {inscripcion.nombre || "No disponible"}
-                      </p>
-                      <p>
-                        Fecha de Inscripción:{" "}
-                        {formatDate(inscripcion.fecha_inscripcion)}
-                      </p>
-                      <p className="font-semibold">Estado de pago:</p>
-                      <p
-                        className={`font-semibold flex items-center space-x-2 ${
-                          inscripcion.estado_pago === "Autorizado"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {inscripcion.estado_pago === "Autorizado" ? (
-                          <>
-                            <FaCheckCircle />
-                            <span>{inscripcion.estado_pago}</span>
-                          </>
-                        ) : (
-                          <>
-                            <FaTimesCircle />
-                            <span>{inscripcion.estado_pago}</span>
-                          </>
-                        )}
-                      </p>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <p className="text-gray-500">No hay inscripciones.</p>
-              )}
-            </ul>
-            <button
+              {showInscripcionesModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                  <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                    <h2 className="text-xl font-semibold mb-4">
+                      Alumnos Inscritos
+                    </h2>
+                    <ul>
+                      {inscripciones.length > 0 ? (
+                        inscripciones.map((inscripcion) => (
+                          <li
+                            key={inscripcion.id}
+                            className="border-b border-gray-200 py-2 flex items-center space-x-4"
+                          >
+                            <div>
+                              <p className="font-semibold">
+                                Nombre: {inscripcion.nombre || "No disponible"}
+                              </p>
+                              <p>
+                                Fecha de Inscripción:{" "}
+                                {formatDate(inscripcion.fecha_inscripcion)}
+                              </p>
+                              <p className="font-semibold">Estado de pago:</p>
+                              <p
+                                className={`font-semibold flex items-center space-x-2 ${
+                                  inscripcion.estado_pago === "Autorizado"
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                                }`}
+                              >
+                                {inscripcion.estado_pago === "Autorizado" ? (
+                                  <>
+                                    <FaCheckCircle />
+                                    <span>{inscripcion.estado_pago}</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <FaTimesCircle />
+                                    <span>{inscripcion.estado_pago}</span>
+                                  </>
+                                )}
+                              </p>
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <p className="text-gray-500">No hay inscripciones.</p>
+                      )}
+                                        <button
               className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-2xl mt-5"
               onClick={() => setShowInscripcionesModal(false)}
             >
               Cerrar
             </button>
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </ul>
           </div>
         </div>
       )}

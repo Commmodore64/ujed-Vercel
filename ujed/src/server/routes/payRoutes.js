@@ -119,7 +119,6 @@ router.post('/create-checkout', async (req, res) => {
   }
 });
 // Nueva ruta para verificar una transacción y guardarla en la base de datos
-// Nueva ruta para verificar una transacción y guardarla en la base de datos
 router.get('/verify-transaction', (req, res) => {
   const transactionId = req.query.id;
 
@@ -188,11 +187,22 @@ router.get('/verify-transaction', (req, res) => {
                 return res.status(500).json({ error: 'Error al actualizar la inscripción' });
               }
 
-              console.log(`Pago autorizado y inscripción actualizada para ${holderName}`);
-              res.status(200).json({
-                success: true,
-                message: `Pago autorizado para ${holderName}, guardado en la base de datos e inscripción actualizada`,
-                data: transactionData,
+              // Restar un cupo al curso correspondiente
+              const updateCupoQuery = `
+                UPDATE cursos
+                SET cupo = cupo - 1
+                WHERE id = ?
+              `;
+              db.query(updateCupoQuery, [descriptionNumber], (err, result) => {
+                if (err) {
+                  console.error('Error al actualizar el cupo del curso:', err);
+                  return res.status(500).json({ error: 'Error al actualizar el cupo del curso' });
+                }
+
+                console.log(`Cupo actualizado y reducido en 1 para el curso con ID ${descriptionNumber}`);
+                
+                // Redirigir a la raíz del proyecto
+                res.redirect('http://localhost:3000');
               });
             });
           });
@@ -217,6 +227,7 @@ router.get('/verify-transaction', (req, res) => {
 
   request.end();
 });
+
 
 
 

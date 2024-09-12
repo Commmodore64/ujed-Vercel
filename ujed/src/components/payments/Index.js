@@ -95,10 +95,26 @@ const Index = () => {
         setVigencia(selectedCurso.vigencia);
         setCupo(selectedCurso.cupo);
         setCatalogo(selectedCurso.catalogo);
-        // No establecer el código de acceso aquí
+  
+        if (selectedCurso.codigo) {
+          setCodigoValido(false); // Reinicia la validez del código
+        } else {
+          setCodigoAcceso(""); // Limpia el código si no es necesario
+          setCodigoValido(true); // No se necesita código, automáticamente válido
+        }
       }
     }
   }, [cursoSeleccionado, cursos]);
+  useEffect(() => {
+    if (mostrarCampoCodigo() && codigoAcceso !== "") {
+      validarCodigoAcceso();
+    } else {
+      setCodigoValido(mostrarCampoCodigo() ? false : true); // Si no hay campo de código, el código es válido
+    }
+  }, [codigoAcceso, cursoSeleccionado]);
+  
+  
+  
 
   const handlePagoEnLinea = (e) => {
     e.preventDefault();
@@ -147,7 +163,7 @@ const handlePagoEnLineaConTarjeta = async (e) => {
       amount: costoSeleccionado,
       currency: "MXN",
       newDescription: catalogo,
-      order_id: "order_" + nombreCompleto + "_" + new Date().toISOString().split('T')[0],
+      order_id: "order_" + nombreCompleto + "_" + new Date().toLocaleString().replace(/[/\\:*?"<>|,\s]/g, '').replace(/(a\.m\.|p\.m\.)/g, ''),
       send_email: false,
       customer: {
         name: nombreCompleto,
@@ -222,12 +238,12 @@ const handlePagoEnLineaConTarjeta = async (e) => {
       const selectedCurso = cursos.find(
         (curso) => curso.nombre + "/" + curso.costo === cursoSeleccionado
       );
-
-      if (!selectedCurso) {
-        setCodigoValido(false);
+  
+      if (!selectedCurso || !mostrarCampoCodigo()) {
+        setCodigoValido(true); // Si el curso no requiere código, el código es automáticamente válido
         return;
       }
-
+  
       const response = await fetch("http://localhost:5000/api/validar-codigo", {
         method: "POST",
         headers: {
@@ -238,7 +254,7 @@ const handlePagoEnLineaConTarjeta = async (e) => {
           id: selectedCurso.id,
         }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         setCodigoValido(data.valido);
@@ -250,6 +266,17 @@ const handlePagoEnLineaConTarjeta = async (e) => {
       setCodigoValido(false);
     }
   };
+  const esFormularioValido = () => {
+    const camposRequeridosCompletos = 
+      (!matricula && !rfc && !curp) || 
+      (nombreCompleto && telefono && fechaNacimiento && cursoSeleccionado);
+  
+    const codigoEsValido = codigoValido || !mostrarCampoCodigo();
+  
+    return camposRequeridosCompletos && codigoEsValido && isCursoDisponible();
+  };
+  
+  
 
   const mostrarCampoCodigo = () => {
     // Verifica si el curso seleccionado tiene un código asociado
@@ -443,32 +470,23 @@ const handlePagoEnLineaConTarjeta = async (e) => {
             </div>
 
             <div>
-              {mostrarCampoCodigo() && (
-                <div className="mb-4">
-                  <label
-                    htmlFor="codigoAcceso"
-                    className="block text-md font-medium text-gray-700 mb-2"
-                  >
-                    Código de Acceso
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      name="codigoAcceso"
-                      value={codigoAcceso}
-                      onChange={(e) => setCodigoAcceso(e.target.value)}
-                      onBlur={validarCodigoAcceso}
-                      className="px-4 py-2 lg:w-1/12 w-1/4 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-                    />
-                    {codigoValido === false && (
-                      <IoMdClose size={25} className="text-red-600" />
-                    )}
-                    {codigoValido === true && (
-                      <IoMdCheckmark size={25} className="text-green-600" />
-                    )}
-                  </div>
-                </div>
-              )}
+            {mostrarCampoCodigo() && (
+  <div className="mb-4">
+    <label htmlFor="codigoAcceso" className="block text-md font-medium text-gray-700">
+      Código de Acceso
+    </label>
+    <input
+      type="text"
+      name="codigoAcceso"
+      value={codigoAcceso}
+      onChange={(e) => setCodigoAcceso(e.target.value)}
+      onBlur={validarCodigoAcceso}  // Valida el código cuando se pierde el foco
+      className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+    />
+    {codigoValido === false && <p className="text-red-500">Código de acceso inválido</p>}
+  </div>
+)}
+
             </div>
             <div className="mb-4">
               <label
@@ -501,18 +519,15 @@ const handlePagoEnLineaConTarjeta = async (e) => {
                 Pago en línea
               </button>
               <button
-                className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${
-                  codigoValido
-                    ? isCursoDisponible()
-                      ? "bg-blue-500 hover:bg-blue-600"
-                      : "bg-gray-400 cursor-not-allowed"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-                onClick={handlePagoEnLineaConTarjeta}
-                disabled={!codigoValido || !isCursoDisponible()}
-              >
-                Pago en línea con tarjeta
-              </button>
+  type="submit"
+  onClick={handlePagoEnLineaConTarjeta}
+  disabled={!esFormularioValido()}
+  className={`mt-6 px-4 py-2 w-full ${
+    esFormularioValido() ? "bg-blue-500" : "bg-gray-300"
+  } text-white rounded-md`}
+>
+  Pagar
+</button>
               <button
                 type="button"
                 className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
