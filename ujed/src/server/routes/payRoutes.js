@@ -3,8 +3,8 @@ const router = express.Router();
 const https = require('https'); // Para hacer solicitudes HTTPS
 const db = require('../db'); // Para interactuar con la base de datos
 
-const PRIVATE_API_KEY = ''; // Reemplaza con tu clave API privada
-const MERCHANT_ID = ''; // Reemplaza con tu Merchant ID
+const PRIVATE_API_KEY = 'sk_5dc3b0f5aab6451795796e4698223287'; // Reemplaza con tu clave API privada
+const MERCHANT_ID = 'mubvsyjaue0v90vbd5r8'; // Reemplaza con tu Merchant ID
 
 
 

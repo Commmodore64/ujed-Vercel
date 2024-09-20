@@ -12,6 +12,7 @@ import Queries from "./components/queries/Index";
 import Program from "./components/administrator/program";
 import History from "./components/history/Index";
 import Catalog from "./components/administrator/catalog";
+import Details from "./components/history/details";
 import { Toaster } from 'sonner';
 import { Buffer } from 'buffer';
 import process from 'process';
@@ -38,6 +39,7 @@ function App() {
               <Route path="/queries" element={<Queries />} />
               <Route path="/program" element={<Program />} />
               <Route path="/history" element={<History />} />
+              <Route path="/history/details" element={<Details />} />
               <Route path="/catalog" element={<Catalog />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
             </Routes>

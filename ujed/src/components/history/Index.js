@@ -110,6 +110,11 @@ const Index = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
+              <Link to="/history/details" className="w-full sm:w-auto">
+              <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-3xl w-full sm:w-auto">
+                Detalles de pagos
+              </button>
+            </Link>
             </div>
             <div className="overflow-x-auto">
               <div className="relative w-full">

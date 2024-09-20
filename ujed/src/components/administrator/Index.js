@@ -547,12 +547,12 @@ const Index = () => {
                       ) : (
                         <p className="text-gray-500">No hay inscripciones.</p>
                       )}
-                                        <button
-              className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-2xl mt-5"
-              onClick={() => setShowInscripcionesModal(false)}
-            >
-              Cerrar
-            </button>
+                      <button
+                        className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-2xl mt-5"
+                        onClick={() => setShowInscripcionesModal(false)}
+                      >
+                        Cerrar
+                      </button>
                     </ul>
                   </div>
                 </div>
