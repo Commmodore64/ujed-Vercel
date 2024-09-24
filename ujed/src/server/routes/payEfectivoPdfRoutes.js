@@ -5,7 +5,43 @@ const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 
+let lastRequestTime = 0;
+const requestLimit = 5000; // 5 segundos
+let requestCount = 0; // Contador de solicitudes
+const maxRequests = 1; // Máximo de solicitudes permitidas en el intervalo de tiempo
+let isBlocked = false; // Bandera para verificar si el usuario está bloqueado
+const blockTime = 30000; // 30 segundos de bloqueo
+
 router.post("/generate-pdf-efectivo", (req, res) => {
+  const currentTime = Date.now();
+
+  // Verificar si el usuario está bloqueado
+  if (isBlocked) {
+    return res.status(429).json({ error: "Has sido bloqueado por intentar demasiadas solicitudes. Intenta nuevamente después de un tiempo." });
+  }
+
+  // Verificar si ha pasado el tiempo de espera entre solicitudes
+  if (currentTime - lastRequestTime < requestLimit) {
+    requestCount++; // Incrementar el contador de solicitudes
+
+    // Verificar si se ha superado el número máximo de solicitudes permitidas
+    if (requestCount > maxRequests) {
+      isBlocked = true; // Bloquear al usuario
+      setTimeout(() => {
+        isBlocked = false; // Desbloquear al usuario después del tiempo de bloqueo
+        requestCount = 0; // Reiniciar el contador de solicitudes
+      }, blockTime);
+
+      return res.status(429).json({ error: "Demasiadas solicitudes. Has sido bloqueado temporalmente. Intenta nuevamente después de 30 segundos." });
+    }
+  } else {
+    // Reiniciar contador si ha pasado el tiempo de espera
+    requestCount = 1; // Resetear contador a 1 porque es una nueva solicitud
+  }
+
+  lastRequestTime = currentTime;
+
+  // Desestructurar los datos de la solicitud
   const {
     nombreCompleto,
     telefono,
@@ -85,6 +121,10 @@ router.post("/generate-pdf-efectivo", (req, res) => {
         // Agregar contenido al PDF
         doc.fontSize(20).text(programa, { align: "center" });
         doc.moveDown(1.5);
+        doc.fontSize(12);
+        doc.text("Papeleta de Pago", { align: "center" });
+        doc.fontSize(10);
+        doc.text("Realiza tu pago en cualquier sucursal de BBVA", { align: "center" });
         doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
         doc.moveDown(0.5);
         doc.fontSize(10);
@@ -94,10 +134,11 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
         // Incluir fecha y hora de pago
         doc.moveUp(0.5);
-        doc.text(`Fecha de pago: ${formatDate}`).moveDown(0.5);
-        doc.text(`Hora de pago: ${formatTime}`).moveDown(0.5);
+        const formattedDate = `${fechaActual.getFullYear()}/${String(fechaActual.getMonth() + 1).padStart(2, '0')}/${String(fechaActual.getDate()).padStart(2, '0')}`;
+        doc.text(`Fecha de pago: ${formattedDate}`).moveDown(0.5);
+        const formattedTime = `${String(fechaActual.getHours()).padStart(2, '0')}:${String(fechaActual.getMinutes()).padStart(2, '0')}`;
+        doc.text(`Hora de pago: ${formattedTime}`).moveDown(0.5);
         doc.text(`Concepto: ${catalogo}`).moveDown(0.5);
-        doc.text(`Teléfono: ${telefono}`).moveDown(0.5);
         doc.text(`Curso: ${curso}`).moveDown(0.5);
         doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
         doc.moveDown(0.5);
@@ -111,6 +152,8 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
         // Incluir la referencia en el PDF
         doc.text(`Referencia: ${referencia}`, { align: "left" }); // Mostrar la referencia en el PDF
+
+        doc.moveDown(0.5);
 
         // Mensaje de agradecimiento
         doc.fontSize(10).text("Gracias por su pago.", { align: "center" });
