@@ -145,7 +145,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
         // Método de pago y monto en la misma línea
         doc.text(`Método de pago: Efectivo`, 20);
-        doc.text(`Monto: $${costo}`, 400);
+        doc.text(`Monto: $${costo}.00`, 400);
         doc.moveDown(0.5);
         doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
         doc.moveDown(0.5);
