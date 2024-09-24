@@ -111,7 +111,7 @@ const Index = () => {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between mt-3">
+            <div className="flex justify-between mt-3 hover:text-slate-700">
               <Link
                 to="/courseinfo"
                 className="flex text-gray-900 hover:text-[#B11830] transition duration-300 ease-in-out items-center text-sm m-1 mt-1"

@@ -13,6 +13,7 @@ import Program from "./components/administrator/program";
 import History from "./components/history/Index";
 import Catalog from "./components/administrator/catalog";
 import Details from "./components/history/details";
+import PayPDF from "./components/payments/payPdfRedirect";
 import { Toaster } from 'sonner';
 import { Buffer } from 'buffer';
 import process from 'process';
@@ -41,6 +42,7 @@ function App() {
               <Route path="/history" element={<History />} />
               <Route path="/history/details" element={<Details />} />
               <Route path="/catalog" element={<Catalog />} />
+              <Route path="/paypdf" element={<PayPDF />} />
               {/* <Route path="/settings" element={<Settings />} /> */}
             </Routes>
             <Toaster position="top-right" />

@@ -10,6 +10,8 @@ const codigoRoutes = require('./routes/codigoRoutes');
 const catalogoRoutes = require('./routes/catalogoRoutes');
 const payRoutes = require('./routes/payRoutes');
 const paydetailsRoutes = require('./routes/paydetailsRoutes');
+const payPdfRoutes = require('./routes/payPdfRoutes');
+const payEfectivoPdfRoutes = require('./routes/payEfectivoPdfRoutes');
 
 app.use(cors()); // CORS para todas las rutas
     
@@ -27,6 +29,8 @@ app.use('/api', codigoRoutes); // Rutas de API para codigoRoutes bajo /api
 app.use('/api', catalogoRoutes); // Rutas de API para catalogoRoutes bajo /api
 app.use('/api', payRoutes); // Rutas de API para payRoutes bajo /api
 app.use('/api', paydetailsRoutes); // Rutas de API para paydetailsRoutes bajo /api
+app.use('/api', payPdfRoutes); // Rutas de API para payPdfRoutes bajo /api
+app.use('/api', payEfectivoPdfRoutes); // Rutas de API para payEfectivoPdfRoutes bajo /api
 
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;

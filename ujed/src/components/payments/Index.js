@@ -5,7 +5,6 @@ import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
 import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 
-
 const Index = () => {
   const [cursos, setCursos] = useState([]);
   const [matricula, setMatricula] = useState(
@@ -95,7 +94,7 @@ const Index = () => {
         setVigencia(selectedCurso.vigencia);
         setCupo(selectedCurso.cupo);
         setCatalogo(selectedCurso.catalogo);
-  
+
         if (selectedCurso.codigo) {
           setCodigoValido(false); // Reinicia la validez del código
         } else {
@@ -112,12 +111,10 @@ const Index = () => {
       setCodigoValido(mostrarCampoCodigo() ? false : true); // Si no hay campo de código, el código es válido
     }
   }, [codigoAcceso, cursoSeleccionado]);
-  
-  
-  
 
-  const handlePagoEnLinea = (e) => {
+  const handlePagoEnEfectivo = async (e) => {
     e.preventDefault();
+  
     if (
       (!matricula && !rfc && !curp) ||
       !nombreCompleto ||
@@ -129,70 +126,115 @@ const Index = () => {
     } else if (useAltID && !rfc && !curp) {
       toast.error("Por favor, proporcione RFC o CURP.");
     } else {
-      // Manejar la lógica de pago en línea
+      // Crear el objeto con la información que deseas enviar
+      const pagoEfectivoData = {
+        curso: cursoSeleccionado.split("/")[0],  // Extrae la parte del curso
+        costo: costoSeleccionado,  // Costo del curso
+        catalogo,  // Información del catálogo
+        nombreCompleto,  // Nombre del alumno
+        telefono,  // Número de teléfono
+      };
+  
+      try {
+        // Hacer la petición POST a la API
+        const response = await fetch("http://localhost:5000/api/generate-pdf-efectivo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(pagoEfectivoData),
+        });
+  
+        if (response.ok) {
+          const pdfBlob = await response.blob(); // Recibir el PDF como blob
+          const url = window.URL.createObjectURL(pdfBlob); // Crear URL temporal para descargar
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "recibo_pago_efectivo.pdf"); // Nombre del archivo a descargar
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link); // Eliminar el enlace una vez descargado
+          toast.success("PDF generado con éxito.");
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.error || "Error al generar el PDF.");
+        }
+      } catch (error) {
+        console.error("Error al realizar el pago en efectivo:", error);
+        toast.error("Ocurrió un error al generar el PDF.");
+      }
     }
   };
-
-const handlePagoEnLineaConTarjeta = async (e) => {
-  e.preventDefault();
   
-  // Validación de campos obligatorios
-  if (
-    (!matricula && !rfc && !curp) ||
-    !nombreCompleto ||
-    !telefono ||
-    !fechaNacimiento ||
-    !cursoSeleccionado
-  ) {
-    toast.error("Por favor, complete todos los campos obligatorios.");
-    return;
-  } else if (useAltID && !rfc && !curp) {
-    toast.error("Por favor, proporcione RFC o CURP.");
-    return;
-  }
 
-  try {
-    // Crear el objeto con la información necesaria para la solicitud
-    const response = await fetch("http://localhost:5000/api/create-checkout", {
-      method: "POST",
-      headers: {
-      "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      curso: cursoSeleccionado.split("/")[0],
-      amount: costoSeleccionado,
-      currency: "MXN",
-      newDescription: catalogo,
-      order_id: "order_" + nombreCompleto + "_" + new Date().toLocaleString().replace(/[/\\:*?"<>|,\s]/g, '').replace(/(a\.m\.|p\.m\.)/g, ''),
-      send_email: false,
-      customer: {
-        name: nombreCompleto,
-        phone_number: telefono,
-        email: "email@email.com",
-      },
-      redirect_url: "http://localhost:5000/api/verify-transaction"
-      }),
-    });
+  const handlePagoEnLineaConTarjeta = async (e) => {
+    e.preventDefault();
 
-    if (!response.ok) {
-      throw new Error('Error en la solicitud: ' + response.statusText);
+    // Validación de campos obligatorios
+    if (
+      (!matricula && !rfc && !curp) ||
+      !nombreCompleto ||
+      !telefono ||
+      !fechaNacimiento ||
+      !cursoSeleccionado
+    ) {
+      toast.error("Por favor, complete todos los campos obligatorios.");
+      return;
+    } else if (useAltID && !rfc && !curp) {
+      toast.error("Por favor, proporcione RFC o CURP.");
+      return;
     }
 
-    const data = await response.json();
+    try {
+      // Crear el objeto con la información necesaria para la solicitud
+      const response = await fetch(
+        "http://localhost:5000/api/create-checkout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            curso: cursoSeleccionado.split("/")[0],
+            amount: costoSeleccionado,
+            currency: "MXN",
+            newDescription: catalogo,
+            order_id:
+              "order_" +
+              nombreCompleto +
+              "_" +
+              new Date()
+                .toLocaleString()
+                .replace(/[/\\:*?"<>|,\s]/g, "")
+                .replace(/(a\.m\.|p\.m\.)/g, ""),
+            send_email: false,
+            customer: {
+              name: nombreCompleto,
+              phone_number: telefono,
+              email: "email@email.com",
+            },
+            redirect_url: "http://localhost:5000/api/verify-transaction",
+          }),
+        }
+      );
 
-    if (data.checkout_link) {
-      // Redirigir al usuario a la URL de checkout
-      window.location.href = data.checkout_link;
-    } else {
-      toast.error("No se recibió el enlace de pago.");
+      if (!response.ok) {
+        throw new Error("Error en la solicitud: " + response.statusText);
+      }
+
+      const data = await response.json();
+
+      if (data.checkout_link) {
+        // Redirigir al usuario a la URL de checkout
+        window.location.href = data.checkout_link;
+      } else {
+        toast.error("No se recibió el enlace de pago.");
+      }
+    } catch (error) {
+      console.error("Error al crear la sesión de pago:", error);
+      toast.error("Ocurrió un error al procesar el pago.");
     }
-  } catch (error) {
-    console.error("Error al crear la sesión de pago:", error);
-    toast.error("Ocurrió un error al procesar el pago.");
-  }
-};
-
-  
+  };
 
   const handleLimpiarCampos = () => {
     setMatricula("");
@@ -238,12 +280,12 @@ const handlePagoEnLineaConTarjeta = async (e) => {
       const selectedCurso = cursos.find(
         (curso) => curso.nombre + "/" + curso.costo === cursoSeleccionado
       );
-  
+
       if (!selectedCurso || !mostrarCampoCodigo()) {
         setCodigoValido(true); // Si el curso no requiere código, el código es automáticamente válido
         return;
       }
-  
+
       const response = await fetch("http://localhost:5000/api/validar-codigo", {
         method: "POST",
         headers: {
@@ -254,7 +296,7 @@ const handlePagoEnLineaConTarjeta = async (e) => {
           id: selectedCurso.id,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setCodigoValido(data.valido);
@@ -267,16 +309,14 @@ const handlePagoEnLineaConTarjeta = async (e) => {
     }
   };
   const esFormularioValido = () => {
-    const camposRequeridosCompletos = 
-      (!matricula && !rfc && !curp) || 
+    const camposRequeridosCompletos =
+      (!matricula && !rfc && !curp) ||
       (nombreCompleto && telefono && fechaNacimiento && cursoSeleccionado);
-  
+
     const codigoEsValido = codigoValido || !mostrarCampoCodigo();
-  
+
     return camposRequeridosCompletos && codigoEsValido && isCursoDisponible();
   };
-  
-  
 
   const mostrarCampoCodigo = () => {
     // Verifica si el curso seleccionado tiene un código asociado
@@ -470,23 +510,27 @@ const handlePagoEnLineaConTarjeta = async (e) => {
             </div>
 
             <div>
-            {mostrarCampoCodigo() && (
-  <div className="mb-4">
-    <label htmlFor="codigoAcceso" className="block text-md font-medium text-gray-700">
-      Código de Acceso
-    </label>
-    <input
-      type="text"
-      name="codigoAcceso"
-      value={codigoAcceso}
-      onChange={(e) => setCodigoAcceso(e.target.value)}
-      onBlur={validarCodigoAcceso}  // Valida el código cuando se pierde el foco
-      className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-    />
-    {codigoValido === false && <p className="text-red-500">Código de acceso inválido</p>}
-  </div>
-)}
-
+              {mostrarCampoCodigo() && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="codigoAcceso"
+                    className="block text-md font-medium text-gray-700"
+                  >
+                    Código de Acceso
+                  </label>
+                  <input
+                    type="text"
+                    name="codigoAcceso"
+                    value={codigoAcceso}
+                    onChange={(e) => setCodigoAcceso(e.target.value)}
+                    onBlur={validarCodigoAcceso} // Valida el código cuando se pierde el foco
+                    className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                  />
+                  {codigoValido === false && (
+                    <p className="text-red-500">Código de acceso inválido</p>
+                  )}
+                </div>
+              )}
             </div>
             <div className="mb-4">
               <label
@@ -513,21 +557,21 @@ const handlePagoEnLineaConTarjeta = async (e) => {
                       : "bg-gray-400 cursor-not-allowed"
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
-                onClick={handlePagoEnLinea}
+                onClick={handlePagoEnEfectivo}
                 disabled={!codigoValido || !isCursoDisponible()}
+              >
+                Pago en efectivo
+              </button>
+              <button
+                type="submit"
+                onClick={handlePagoEnLineaConTarjeta}
+                disabled={!esFormularioValido()}
+                className={`mt-6 px-4 py-2 w-full ${
+                  esFormularioValido() ? "bg-blue-500" : "bg-gray-300"
+                } text-white rounded-md`}
               >
                 Pago en línea
               </button>
-              <button
-  type="submit"
-  onClick={handlePagoEnLineaConTarjeta}
-  disabled={!esFormularioValido()}
-  className={`mt-6 px-4 py-2 w-full ${
-    esFormularioValido() ? "bg-blue-500" : "bg-gray-300"
-  } text-white rounded-md`}
->
-  Pagar
-</button>
               <button
                 type="button"
                 className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"

@@ -48,7 +48,7 @@ return (
         <Sidebar />
         <div className="flex flex-col mt-14 lg:mt-16 h-auto m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
             <div className="container mx-auto p-4">
-            <div className="flex flex-row items-center mb-5">
+            <div className="flex flex-row items-center mb-5 hover:text-slate-700">
             <Link to={"/admin"} className="text-lg">
               <IoIosArrowBack className="inline-block" />
             </Link>

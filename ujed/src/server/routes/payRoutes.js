@@ -78,14 +78,14 @@ router.post('/create-checkout', async (req, res) => {
     });
 
     const options = {
-      hostname: 'sandbox-api.openpay.mx',
+      hostname: 'sandbox-api.openpay.mx', //Seteado en sandbox para pruebas 
       port: 443,
       path: `/v1/${MERCHANT_ID}/checkouts`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${Buffer.from(`${PRIVATE_API_KEY}:`).toString('base64')}`,
-        'Content-Length': Buffer.byteLength(postData), // Asegúrate de que el Content-Length es correcto
+        'Content-Length': Buffer.byteLength(postData),
       },
     };
 
@@ -166,6 +166,7 @@ router.get('/verify-transaction', (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, ?)
           `;
           const values = [name, holderName, amount, date, accountNumber, method, description];
+          const courseId = values[6].split('-')[1]?.trim();
 
           db.query(insertQuery, values, (err, result) => {
             if (err) {
@@ -201,8 +202,8 @@ router.get('/verify-transaction', (req, res) => {
 
                 console.log(`Cupo actualizado y reducido en 1 para el curso con ID ${descriptionNumber}`);
                 
-                // Redirigir a la raíz del proyecto
-                res.redirect('http://localhost:3000');
+                // Redirigir a la ruta con los parámetros en la query string
+                res.redirect(`http://localhost:3000/paypdf?name=${encodeURIComponent(name)}&holderName=${encodeURIComponent(holderName)}&amount=${amount}&date=${encodeURIComponent(date)}&accountNumber=${accountNumber}&method=${encodeURIComponent(method)}&description=${encodeURIComponent(description)}&courseId=${courseId}`);
               });
             });
           });

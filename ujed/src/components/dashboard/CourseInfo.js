@@ -40,12 +40,12 @@ const CourseInfo = () => {
   return (
     <>
       <Sidebar />
-      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
-        <div className="flex flex-row items-center mb-5">
+      <div className="flex flex-col mt-16 lg:mt-20 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96 ">
+        <div className="flex flex-row items-center mb-5 hover:text-slate-700">
           <Link to={"/dashboard"} className="text-lg">
-            <IoIosArrowBack className="inline-block" />
-          </Link>
-          <h1 className="text-2xl font-bold pl-1">Cursos</h1>
+            <IoIosArrowBack className="inline-block " />
+            </Link>
+          <h1 className="text-2xl font-bold pl-1">Inicio</h1>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto lg:p-2">
           {cursos.map((curso) => ( 
