@@ -27,5 +27,15 @@ router.get('/inscripciones/:id', (req, res) => {
         res.status(200).json(results);
     });
   });
+router.get('/inscripciones', (req, res) => {
+    const query = 'SELECT * FROM inscripciones';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener las inscripciones:', err);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+        res.status(200).json(results);
+    });
+});
 
   module.exports = router;

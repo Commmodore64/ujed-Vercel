@@ -13,6 +13,7 @@ const paydetailsRoutes = require('./routes/paydetailsRoutes');
 const payPdfRoutes = require('./routes/payPdfRoutes');
 const payEfectivoPdfRoutes = require('./routes/payEfectivoPdfRoutes');
 const uploadcsvRoutes = require('./routes/uploadcsvRoutes');
+const adeudosRoutes = require('./routes/adeudosRoutes');
 
 app.use(cors()); // CORS para todas las rutas
     
@@ -33,6 +34,7 @@ app.use('/api', paydetailsRoutes); // Rutas de API para paydetailsRoutes bajo /a
 app.use('/api', payPdfRoutes); // Rutas de API para payPdfRoutes bajo /api
 app.use('/api', payEfectivoPdfRoutes); // Rutas de API para payEfectivoPdfRoutes bajo /api
 app.use('/api', uploadcsvRoutes); // Rutas de API para uploadcsvRoutes bajo /api
+app.use('/api', adeudosRoutes); // Rutas de API para adeudosRoutes bajo /api
 
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;
