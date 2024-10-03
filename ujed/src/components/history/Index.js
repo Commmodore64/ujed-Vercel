@@ -165,8 +165,8 @@ const Index = () => {
   };
 
   const handleDelete = async (referencia) => {
-    // Eliminar el pago de la base de datos
     try {
+      // Eliminar el pago de la base de datos
       const response = await fetch(
         `http://localhost:5000/api/eliminarpago/${referencia}`,
         {
@@ -176,12 +176,12 @@ const Index = () => {
           },
         }
       );
-
+  
       if (!response.ok) {
         throw new Error("Error al eliminar el pago");
       }
-
-      // Aquí llamas a la API para actualizar el pago a Pagado: 1
+  
+      // Actualizar el pago a Pagado: 1
       const responseUpdate = await fetch(
         "http://localhost:5000/api/actualizarpago",
         {
@@ -191,34 +191,31 @@ const Index = () => {
           },
           body: JSON.stringify({
             Pagado: 1,
-            referencia: selectedReferencia, // Usar la referencia seleccionada
+            referencia: selectedReferencia,
           }),
         }
       );
-
+  
       if (!responseUpdate.ok) {
         throw new Error("Error al actualizar el pago");
       }
-
+  
       const dataUpdate = await responseUpdate.json();
       console.log(dataUpdate.message);
       toast.success("Pago conciliado correctamente");
-
-      // Opcional: Actualiza el estado local o vuelve a cargar los datos
-      // fetchPagos(); // Si tienes una función para obtener los pagos
-
+  
+      // Aquí puedes actualizar el estado local para eliminar el pago de la lista
+      // Suponiendo que tienes una función para obtener los pagos actualizados:
+      fetchInscriptionsData();// Esta función debería volver a cargar los datos actualizados
+  
       // Cierra el modal
       setIsModalOpen(false);
-
-            // Espera 1 segundo antes de recargar la página
-            setTimeout(() => {
-              window.location.reload(); // Recarga la página
-            }, 1000);
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error al conciliar el pago");
     }
   };
+  
 
   const handleFileUpload = async () => {
     if (file) {
