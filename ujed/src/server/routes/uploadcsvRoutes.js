@@ -16,33 +16,49 @@ router.post('/subir-archivo', upload.single('file'), (req, res) => {
     .pipe(csvParser())
     .on('data', (data) => {
       // Formatear la fecha de 'DD-MM-YYYY' a 'YYYY-MM-DD'
-      const fechaPagoFormatted = new Date(data.Dia.split('-').reverse().join('-')).toISOString().split('T')[0]; // Cambia 'Dia' a 'Fecha_Pago'
+      const fechaPagoFormatted = new Date(data.Dia.split('-').reverse().join('-')).toISOString().split('T')[0];
       results.push({
-        fechaPago: fechaPagoFormatted, // Cambiado a 'Dia'
-        referencia: data.Referencia // Asegúrate de que este nombre coincide con la columna en el CSV
+        fechaPago: fechaPagoFormatted, // Fecha de pago formateada
+        referencia: data.Referencia, // Referencia del CSV
+        monto: data.Abono // Captura el campo Monto desde el CSV
       });
+      console.log('Data:', data);
     })
     .on('end', () => {
       // Procesar cada registro del CSV
-      const queries = results.map(({ fechaPago, referencia }) => {
+      const queries = results.map(({ fechaPago, referencia, monto }) => {
         return new Promise((resolve, reject) => {
-          const query = `
+          const queryUpdate = `
             UPDATE adeudos
             SET Fecha_Pago = ?, Pagado = 1
             WHERE referencia = ?
           `;
 
-          connection.query(query, [fechaPago, referencia], (err, results) => {
+          connection.query(queryUpdate, [fechaPago, referencia], (err, updateResults) => {
             if (err) {
               console.error('Error al actualizar el pago:', err);
               return reject(err);
             }
-            console.log(`Ejecutando query: ${query}`);
-            console.log(`Resultados de la consulta: ${JSON.stringify(results)}`); // Log para depuración
-            if (results.affectedRows === 0) {
-              console.log(`Referencia no encontrada: ${referencia}`);
+
+            if (updateResults.affectedRows === 0) {
+              // Si no se encuentra la referencia en adeudos, insertar en pagosnoconciliados
+              const queryInsert = `
+                INSERT INTO pagosnoconciliados (Fecha_Pago, Referencia, Cargo)
+                VALUES (?, ?, ?)
+              `;
+
+              connection.query(queryInsert, [fechaPago, referencia, monto], (err, insertResults) => {
+                if (err) {
+                  console.error('Error al insertar en pagosnoconciliados:', err);
+                  return reject(err);
+                }
+                console.log(`Referencia no encontrada: ${referencia}. Insertada en pagosnoconciliados.`);
+                resolve();
+              });
+            } else {
+              console.log(`Pago actualizado para la referencia: ${referencia}`);
+              resolve();
             }
-            resolve();
           });
         });
       });
@@ -50,7 +66,7 @@ router.post('/subir-archivo', upload.single('file'), (req, res) => {
       // Ejecutar todas las consultas
       Promise.all(queries)
         .then(() => {
-          res.status(200).json({ message: 'Pagos actualizados exitosamente' });
+          res.status(200).json({ message: 'Pagos procesados exitosamente' });
         })
         .catch((error) => {
           res.status(500).json({ error: 'Error al procesar los pagos' });

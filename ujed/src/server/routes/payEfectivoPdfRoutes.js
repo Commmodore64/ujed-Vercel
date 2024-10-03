@@ -85,7 +85,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
       // Insertar el adeudo en la base de datos con la referencia generada
       const adeudoData = {
-        Matricula: '', // O el campo que uses para la matrícula
+        Matricula: curso, // O el campo que uses para la matrícula
         Nombre: nombreCompleto,
         Descripcion: catalogo,
         Monto: costo,
