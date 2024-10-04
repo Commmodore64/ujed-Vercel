@@ -22,10 +22,12 @@ router.get('/pagosnoconciliados', (req, res) => {
 
 // Ruta para actualizar datos de pagos no conciliados
 router.post('/actualizarpago', (req, res) => {
-  const { Pagado, referencia } = req.body; // Solo necesitas Pagado y Referencia
-  const query = 'UPDATE adeudos SET Pagado = ? WHERE referencia = ?';
+  const { Pagado, referencia, Fecha_Pago } = req.body;
+  console.log("Datos actualizar pago: ", req.body);
+  const query = 'UPDATE adeudos SET Pagado = ?, Fecha_Pago = ? WHERE referencia = ?';
 
-  connection.query(query, [Pagado, referencia], (err, results) => {
+  // Asegúrate de pasar los parámetros en el orden correcto
+  connection.query(query, [Pagado, Fecha_Pago, referencia], (err, results) => {
     if (err) {
       console.error('Error al actualizar el pago no conciliado:', err);
       return res.status(500).json({ error: 'Error al actualizar el pago no conciliado' });
@@ -33,6 +35,7 @@ router.post('/actualizarpago', (req, res) => {
     res.status(200).json({ message: 'Pago no conciliado actualizado correctamente' });
   });
 });
+
 
 // Ruta para eliminar un pago no conciliado
 router.delete('/eliminarpago/:referencia', (req, res) => {

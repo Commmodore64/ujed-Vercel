@@ -57,6 +57,7 @@
     "stream": "^0.0.3",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
+    "sweetalert2": "^11.14.1",
     "text-mask-addons": "^3.8.0",
     "url": "^0.11.4",
     "util": "^0.12.5",

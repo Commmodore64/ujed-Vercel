@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import SwitchButton from "../SwitchButton";
 import jsPDF from "jspdf";
 import "jspdf-autotable"; // Importa la extensión para las tablas
+import Swal from "sweetalert2";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,8 +63,6 @@ const Index = () => {
   };
 
   const combineData = () => {
-    console.log("Inscriptions Data:", inscriptionsData);
-    console.log("Courses Data:", coursesData);
     const combined = inscriptionsData.map((inscription) => {
       const course = coursesData.find(
         (course) => course.id === inscription.id_curso
@@ -192,6 +191,7 @@ const Index = () => {
           body: JSON.stringify({
             Pagado: 1,
             referencia: selectedReferencia,
+            Fecha_Pago: new Date().toISOString().split("T")[0],
           }),
         }
       );
@@ -422,6 +422,7 @@ const Index = () => {
                 {isModalOpen && (
                   <Modal onClose={() => setIsModalOpen(false)}>
                     <h2 className="text-xl mb-4">Pagos No Conciliados</h2>
+                    <p className="text-sm text-gray-600 mb-4"> Elimine o consolide los pagos </p>
                     <div className="overflow-x-auto">
                       <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-lg">
                         <thead>
@@ -446,7 +447,11 @@ const Index = () => {
                               key={`${pago.Referencia}-${index}`}
                               className="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200"
                             >
-                              <td className="py-3 px-4">{pago.Fecha_Pago}</td>
+                              <td className="py-3 px-4">
+                                {pago.Fecha_Pago === "1899-11-30T06:36:36.000Z"
+                                  ? "Sin Pago"
+                                  : pago.Fecha_Pago}
+                              </td>
                               <td className="py-3 px-4">{pago.Referencia}</td>
                               <td className="py-3 px-4">$ {pago.Cargo}</td>
                               <td className="py-3 px-4">
@@ -586,7 +591,9 @@ const Index = () => {
                               {item.Fecha_Adeudo}
                             </td>
                             <td className="h-12 px-4 align-middle">
-                              {item.Fecha_Pago}
+                              {item.Fecha_Pago === "1899-11-30T06:36:36.000Z"
+                                ? "Sin Pago"
+                                : item.Fecha_Pago}
                             </td>
                             <td className="h-12 px-4 align-middle">
                               <p
@@ -650,7 +657,7 @@ const Modal = ({ onClose, children }) => {
       <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full transition-transform transform relative">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-red-500 hover:text-red-700 focus:outline-none"
+          className="absolute top-3 right-3 text-3xl text-gray-600 hover:text-gray-900 focus:outline-none"
           aria-label="Cerrar modal"
         >
           &times; {/* Icono de cerrar */}
