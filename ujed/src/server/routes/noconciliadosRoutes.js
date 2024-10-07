@@ -9,7 +9,7 @@ const connection = require('../db');
 
 // Ruta para obtener todos los pagos no conciliados
 router.get('/pagosnoconciliados', (req, res) => {
-  const query = 'SELECT Fecha_Pago, Referencia, Cargo FROM pagosnoconciliados';
+  const query = 'SELECT Fecha_Pago, Referencia, Cargo, is_deleted , deleted_comment FROM pagosnoconciliados';
 
   connection.query(query, (err, results) => {
     if (err) {
@@ -38,13 +38,14 @@ router.post('/actualizarpago', (req, res) => {
 
 
 // Ruta para eliminar un pago no conciliado
-router.delete('/eliminarpago/:referencia', (req, res) => {
+router.post('/eliminarpago/:referencia', (req, res) => {
   const { referencia } = req.params;
-  const query = 'DELETE FROM pagosnoconciliados WHERE Referencia = ?';
+  const { comentario } = req.body;
+  const query = 'UPDATE pagosnoconciliados SET is_deleted = TRUE, deleted_comment = ? WHERE Referencia = ?';
 
-  connection.query(query, [referencia], (err, results) => {
+  connection.query(query, [comentario, referencia], (err, results) => {
     if (err) {
-      console.error('Error al eliminar el pago no conciliado:', err);
+      console.error('Error al eliminar el soft delete del pago no conciliado:', err);
       return res.status(500).json({ error: 'Error al eliminar el pago no conciliado' });
     }
     res.status(200).json({ message: 'Pago no conciliado eliminado correctamente' });

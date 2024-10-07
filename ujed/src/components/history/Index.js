@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import SwitchButton from "../SwitchButton";
 import jsPDF from "jspdf";
 import "jspdf-autotable"; // Importa la extensión para las tablas
-import Swal from "sweetalert2";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +22,10 @@ const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReferencia, setSelectedReferencia] = useState(null);
   const [pagos, setPagos] = useState([]);
+  const [isViewingDeleted, setIsViewingDeleted] = useState(false);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [comment, setComment] = useState("");
+  const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
 
   const fetchCoursesData = async () => {
     const response = await fetch("http://localhost:5000/api/cursos");
@@ -162,24 +165,30 @@ const Index = () => {
     setSelectedReferencia(referencia);
     handleOpenModal();
   };
+  const handleDelete = (referencia) => {
+    // Abre el modal de comentarios y guarda la referencia del pago
+    setSelectedReferencia(referencia);
+    setIsCommentModalOpen(true);
+  };
 
-  const handleDelete = async (referencia) => {
+  const handleConfirmDelete = async () => {
     try {
       // Eliminar el pago de la base de datos
       const response = await fetch(
-        `http://localhost:5000/api/eliminarpago/${referencia}`,
+        `http://localhost:5000/api/eliminarpago/${selectedReferencia}`,
         {
-          method: "DELETE",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({ comentario: comment }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error("Error al eliminar el pago");
       }
-  
+
       // Actualizar el pago a Pagado: 1
       const responseUpdate = await fetch(
         "http://localhost:5000/api/actualizarpago",
@@ -195,27 +204,25 @@ const Index = () => {
           }),
         }
       );
-  
+
       if (!responseUpdate.ok) {
         throw new Error("Error al actualizar el pago");
       }
-  
+
       const dataUpdate = await responseUpdate.json();
       console.log(dataUpdate.message);
       toast.success("Pago conciliado correctamente");
-  
-      // Aquí puedes actualizar el estado local para eliminar el pago de la lista
-      // Suponiendo que tienes una función para obtener los pagos actualizados:
-      fetchInscriptionsData();// Esta función debería volver a cargar los datos actualizados
-  
-      // Cierra el modal
+
+      // Cierra los modales y resetea el comentario
+      setIsCommentModalOpen(false);
       setIsModalOpen(false);
+      setComment("");
+      fetchInscriptionsData(); // Actualiza la lista de pagos
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error al conciliar el pago");
     }
   };
-  
 
   const handleFileUpload = async () => {
     if (file) {
@@ -356,6 +363,14 @@ const Index = () => {
     await fetchPagosNoConciliados();
     setIsModalOpen(true);
   };
+  const handleViewDeletedPaymentsModal = async () => {
+    await fetchPagosNoConciliados(); // Carga los pagos eliminados de la base de datos
+    setIsDeletedModalOpen(true); // Abre el modal
+  };
+
+  const closeDeletedModal = () => {
+    setIsDeletedModalOpen(false); // Cierra el modal
+  };
 
   return (
     <>
@@ -397,7 +412,7 @@ const Index = () => {
             </h1>
           </div>
           <div className="w-full">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-5">
               <div className="flex items-center gap-2 w-full md:w-auto mt-4">
                 <input
                   className="flex h-10 w-full sm:w-96 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -422,7 +437,82 @@ const Index = () => {
                 {isModalOpen && (
                   <Modal onClose={() => setIsModalOpen(false)}>
                     <h2 className="text-xl mb-4">Pagos No Conciliados</h2>
-                    <p className="text-sm text-gray-600 mb-4"> Elimine o consolide los pagos </p>
+                    <div className="flex justify-between items-center mb-4">
+                      <p className="text-sm text-gray-600">
+                        Elimine o consolide los pagos
+                      </p>
+                      <button
+                        onClick={handleViewDeletedPaymentsModal}
+                        className="text-sm text-blue-600 hover:underline"
+                      >
+                        Ver pagos no conciliados eliminados
+                      </button>
+                      {isDeletedModalOpen && (
+                        <Modal onClose={closeDeletedModal}>
+                          <h2 className="text-xl mb-4">
+                            Pagos No Conciliados Eliminados
+                          </h2>
+                          <div className="flex justify-between items-center mb-4">
+                            <p className="text-sm text-gray-600">
+                              Estos son los pagos no conciliados que han sido
+                              eliminados.
+                            </p>
+                            <button
+                              onClick={closeDeletedModal}
+                              className="text-sm text-blue-600 hover:underline"
+                            >
+                              Cerrar
+                            </button>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-lg">
+                              <thead>
+                                <tr className="bg-gray-100 text-gray-700 uppercase text-sm leading-normal">
+                                  <th className="py-3 px-4 border-b border-gray-300 text-left">
+                                    Fecha de Pago
+                                  </th>
+                                  <th className="py-3 px-4 border-b border-gray-300 text-left">
+                                    Referencia
+                                  </th>
+                                  <th className="py-3 px-4 border-b border-gray-300 text-left">
+                                    Monto
+                                  </th>
+                                  <th className="py-3 px-4 border-b border-gray-300 text-left">
+                                    Motivo de conciliación
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="text-red-600 font-semibold text-sm">
+                                {pagos
+                                  .filter((pago) => pago.is_deleted)
+                                  .map((pago, index) => (
+                                    <tr
+                                      key={`${pago.Referencia}-${index}`}
+                                      className="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200"
+                                    >
+                                      <td className="py-3 px-4">
+                                        {pago.Fecha_Pago ===
+                                        "1899-11-30T06:36:36.000Z"
+                                          ? "Sin Pago"
+                                          : pago.Fecha_Pago}
+                                      </td>
+                                      <td className="py-3 px-4">
+                                        {pago.Referencia}
+                                      </td>
+                                      <td className="py-3 px-4">
+                                        $ {pago.Cargo}
+                                      </td>
+                                      <td className="py-3 px-4">
+                                        {pago.deleted_comment}
+                                      </td>
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </Modal>
+                      )}
+                    </div>
                     <div className="overflow-x-auto">
                       <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-lg">
                         <thead>
@@ -441,33 +531,65 @@ const Index = () => {
                             </th>
                           </tr>
                         </thead>
-                        <tbody className="text-gray-600 text-sm font-light">
-                          {pagos.map((pago, index) => (
-                            <tr
-                              key={`${pago.Referencia}-${index}`}
-                              className="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200"
-                            >
-                              <td className="py-3 px-4">
-                                {pago.Fecha_Pago === "1899-11-30T06:36:36.000Z"
-                                  ? "Sin Pago"
-                                  : pago.Fecha_Pago}
-                              </td>
-                              <td className="py-3 px-4">{pago.Referencia}</td>
-                              <td className="py-3 px-4">$ {pago.Cargo}</td>
-                              <td className="py-3 px-4">
-                                <button
-                                  onClick={() => handleDelete(pago.Referencia)}
-                                  className=" flex items-center justify-center ml-4 text-red-500 hover:text-red-700"
-                                >
-                                  <IoIosClose size={35} />
-                                  {/* Cambia esto por el icono que estés usando */}
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
+                        <tbody className="text-gray-600 text-sm font-semibold">
+                          {pagos
+                            .filter((pago) => !pago.is_deleted)
+                            .map((pago, index) => (
+                              <tr
+                                key={`${pago.Referencia}-${index}`}
+                                className="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200"
+                              >
+                                <td className="py-3 px-4">
+                                  {pago.Fecha_Pago ===
+                                  "1899-11-30T06:36:36.000Z"
+                                    ? "Sin Pago"
+                                    : pago.Fecha_Pago}
+                                </td>
+                                <td className="py-3 px-4">{pago.Referencia}</td>
+                                <td className="py-3 px-4">$ {pago.Cargo}</td>
+                                <td className="py-3 px-4">
+                                  <button
+                                    onClick={() =>
+                                      handleDelete(pago.Referencia)
+                                    }
+                                    className="flex items-center justify-center ml-4 text-red-500 hover:text-red-700"
+                                  >
+                                    <IoIosClose size={35} />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
                         </tbody>
                       </table>
                     </div>
+
+                    {/* Modal de comentarios */}
+                    {isCommentModalOpen && (
+                      <Modal onClose={() => setIsCommentModalOpen(false)}>
+                        <h2 className="text-lg mb-4">Agregar Comentario</h2>
+                        <textarea
+                          className="w-full p-2 border border-gray-300 rounded-lg"
+                          rows="4"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          placeholder="Escribe un comentario sobre la eliminación del pago..."
+                        />
+                        <div className="mt-4 flex justify-end">
+                          <button
+                            onClick={() => setIsCommentModalOpen(false)}
+                            className="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={handleConfirmDelete}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                          >
+                            Confirmar Eliminación
+                          </button>
+                        </div>
+                      </Modal>
+                    )}
                   </Modal>
                 )}
 
@@ -654,7 +776,7 @@ const Index = () => {
 const Modal = ({ onClose, children }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full transition-transform transform relative">
+      <div className="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full transition-transform transform relative">
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-3xl text-gray-600 hover:text-gray-900 focus:outline-none"
