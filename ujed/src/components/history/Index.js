@@ -21,6 +21,7 @@ const Index = () => {
   const [isCard, setIsCard] = useState(true); // Switch for Efectivo (false) or Tarjeta (true)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReferencia, setSelectedReferencia] = useState(null);
+  const [referenciaConciliar, setReferenciaConciliar] = useState("");
   const [pagos, setPagos] = useState([]);
   const [isViewingDeleted, setIsViewingDeleted] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
@@ -162,7 +163,7 @@ const Index = () => {
   };
   // Función para conciliar el pago
   const handleConciliar = (referencia) => {
-    setSelectedReferencia(referencia);
+    setReferenciaConciliar(referencia);
     handleOpenModal();
   };
   const handleDelete = (referencia) => {
@@ -199,7 +200,7 @@ const Index = () => {
           },
           body: JSON.stringify({
             Pagado: 1,
-            referencia: selectedReferencia,
+            referencia: referenciaConciliar,
             Fecha_Pago: new Date().toISOString().split("T")[0],
           }),
         }

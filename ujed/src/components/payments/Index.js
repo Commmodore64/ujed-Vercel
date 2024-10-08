@@ -3,9 +3,11 @@ import Sidebar from "../sidebar/Index";
 import { useNavigate } from "react-router-dom";
 import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
+import Swal from "sweetalert2";
 import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 
 const Index = () => {
+  const Swal = require('sweetalert2');
   const [cursos, setCursos] = useState([]);
   const [matricula, setMatricula] = useState(
     localStorage.getItem("matricula") || ""
@@ -155,6 +157,11 @@ const Index = () => {
           link.click();
           document.body.removeChild(link); // Eliminar el enlace una vez descargado
           toast.success("PDF generado con éxito.");
+          Swal.fire({
+            title: "Recuerda introducir la referencia de manera correcta !",
+            icon: "warning",
+            text: "Cuando realices el pago en efectivo, asegúrate de introducir la referencia correctamente para evitar problemas con tu inscripción.",
+          });
         } else {
           const errorData = await response.json();
           toast.error(errorData.error || "Error al generar el PDF.");
