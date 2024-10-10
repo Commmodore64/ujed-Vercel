@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import SwitchButton from "../SwitchButton";
 import jsPDF from "jspdf";
 import "jspdf-autotable"; // Importa la extensión para las tablas
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +29,7 @@ const Index = () => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   const fetchCoursesData = async () => {
     const response = await fetch("http://localhost:5000/api/cursos");
@@ -261,6 +264,7 @@ const Index = () => {
   };
 
   const generateReport = async (combinedData) => {
+    setIsModalOpen(false);
     try {
       // Si combinedData no es un array, mostrar un error y salir
       if (!Array.isArray(combinedData)) {
@@ -299,10 +303,11 @@ const Index = () => {
       doc.autoTable({
         startY: 35,
         head: [
-          ["ID", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"],
+          ["ID", "Matricula", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"],
         ],
         body: adeudosData.map((item) => [
           item.ID_Adeudo,
+          item.Matricula,
           item.Nombre,
           item.Descripcion,
           `$${item.Monto}`,
@@ -371,6 +376,76 @@ const Index = () => {
 
   const closeDeletedModal = () => {
     setIsDeletedModalOpen(false); // Cierra el modal
+  };
+  const generateExcelReport = async (combinedData) => {
+    setIsModalOpen(false);
+    try {
+      // Si combinedData no es un array, mostrar un error y salir
+      if (!Array.isArray(combinedData)) {
+        console.error("combinedData no es un array:", combinedData);
+        return;
+      }
+  
+      // Verificar si los datos de adeudos están presentes
+      let adeudosData = combinedData.filter((item) => item.ID_Adeudo);
+      if (adeudosData.length === 0) {
+        // Si no hay datos de adeudos, hacer fetch a la API
+        const responseAdeudos = await fetch("http://localhost:5000/api/adeudos");
+        adeudosData = await responseAdeudos.json();
+        console.log("Efectivo", adeudosData);
+      }
+  
+      // Verificar si los datos de pagos están presentes
+      let pagosData = combinedData.filter((item) => item.ID_Pago);
+      if (pagosData.length === 0) {
+        // Si no hay datos de pagos, hacer fetch a la API
+        const responsePagos = await fetch("http://localhost:5000/api/pagos");
+        pagosData = await responsePagos.json();
+        console.log("Tarjeta", pagosData);
+      }
+  
+      // Preparar datos para la hoja de "Pagos en Efectivo"
+      const adeudosSheetData = [
+        ["ID", "Matricula", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"],
+        ...adeudosData.map((item) => [
+          item.ID_Adeudo,
+          item.Matricula,
+          item.Nombre,
+          item.Descripcion,
+          `$${item.Monto}`,
+          item.Fecha_Adeudo,
+          item.Pagado ? "Sí" : "No",
+        ]),
+      ];
+  
+      // Preparar datos para la hoja de "Pagos en Tarjeta"
+      const pagosSheetData = [
+        ["ID", "Nombre Usuario", "Nombre", "Monto", "Fecha Pago", "Método de Pago", "Descripción"],
+        ...pagosData.map((item) => [
+          item.ID_Pago,
+          item.Nombre_usuario,
+          item.Nombre,
+          `$${item.Monto}`,
+          item.Fecha_Pago,
+          item.Metodo_Pago,
+          item.Descripcion,
+        ]),
+      ];
+  
+      // Crear el libro de Excel y agregar las hojas
+      const workbook = XLSX.utils.book_new();
+      const adeudosSheet = XLSX.utils.aoa_to_sheet(adeudosSheetData);
+      const pagosSheet = XLSX.utils.aoa_to_sheet(pagosSheetData);
+  
+      // Agregar hojas al libro
+      XLSX.utils.book_append_sheet(workbook, adeudosSheet, "Pagos en Efectivo");
+      XLSX.utils.book_append_sheet(workbook, pagosSheet, "Pagos en Tarjeta");
+  
+      // Exportar el archivo Excel
+      XLSX.writeFile(workbook, "reportes.xlsx");
+    } catch (error) {
+      console.error("Error generando el reporte en Excel:", error);
+    }
   };
 
   return (
@@ -473,7 +548,7 @@ const Index = () => {
                                     Fecha de Pago
                                   </th>
                                   <th className="py-3 px-4 border-b border-gray-300 text-left">
-                                    Referencia
+                                    Referencia No Conciliada
                                   </th>
                                   <th className="py-3 px-4 border-b border-gray-300 text-left">
                                     Monto
@@ -593,18 +668,45 @@ const Index = () => {
                     )}
                   </Modal>
                 )}
-
-                <Link to="/history/details" className="w-full sm:w-auto">
+                <Link to="/history/details">
                   <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded-full max-w-xs">
                     Detalles de pagos con Tarjeta
                   </button>
                 </Link>
                 <button
-                  onClick={() => generateReport(combinedData)}
-                  className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded-full max-w-xs"
-                >
-                  Generar reporte de todos los pagos
-                </button>
+        onClick={() => setIsReportOpen(true)}
+        className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded-full max-w-xs"
+      >
+        Generar reporte de todos los pagos
+      </button>
+
+      {isReportOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
+            <h2 className="text-lg mb-4 text-center font-semibold">Seleccione el formato</h2>
+            <div className="flex justify-between">
+              <button
+                onClick={() => generateReport(combinedData)}
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mr-2"
+              >
+                PDF
+              </button>
+              <button
+                onClick={() => generateExcelReport(combinedData)}
+                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+              >
+                Excel
+              </button>
+            </div>
+            <button
+              onClick={() => setIsReportOpen(false)}
+              className="mt-4 text-gray-500 hover:text-gray-700 underline text-sm w-full text-center"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -700,6 +802,9 @@ const Index = () => {
                           <>
                             <td className="h-12 px-4 align-middle">
                               {item.ID_Adeudo}
+                            </td>
+                            <td className="h-12 px-4 align-middle">
+                              {item.Matricula}
                             </td>
                             <td className="h-12 px-4 align-middle">
                               {item.nombre}

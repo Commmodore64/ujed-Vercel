@@ -160,7 +160,7 @@ const Index = () => {
           Swal.fire({
             title: "Recuerda introducir la referencia de manera correcta !",
             icon: "warning",
-            text: "Cuando realices el pago en efectivo, asegúrate de introducir la referencia correctamente para evitar problemas con tu inscripción.",
+            text: "Cuando realices el pago en efectivo, asegúrate de introducir la referencia correctamente para evitar problemas con tu pago.",
           });
         } else {
           const errorData = await response.json();

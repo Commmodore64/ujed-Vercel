@@ -46,7 +46,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
     nombreCompleto,
     telefono,
     costo,
-    curso, // Este es el nombre del curso
+    curso,
     catalogo,
   } = req.body;
 
@@ -138,7 +138,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
           doc.fontSize(20).text(programa, { align: "center" });
           doc.moveDown(1.5);
           doc.fontSize(12);
-          doc.text("Papeleta de Pago", { align: "center" });
+          doc.text("Papeleta de Pago En Efectivo", { align: "center" });
           doc.fontSize(10);
           doc.text("Realiza tu pago en cualquier sucursal de BBVA", { align: "center" });
           doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
@@ -158,7 +158,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
           doc.text(`Curso: ${curso}`).moveDown(0.5);
           doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
           doc.moveDown(0.5);
-
+          // TODO Agregar Descricion del ingreso
           // Método de pago y monto en la misma línea
           doc.text(`Método de pago: Efectivo`, 20);
           doc.text(`Monto: $${costo}.00`, 400);
