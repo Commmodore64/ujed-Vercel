@@ -155,6 +155,7 @@ router.get('/verify-transaction', (req, res) => {
         const description = transactionData.description;
         const orderId = transactionData.order_id;
         const name = orderId.split('_')[1];
+        const order_id = orderId.split('_')[2];
 
         // Extraer el número después del guion en la descripción
         const descriptionNumber = description.split('-')[1]?.trim();
@@ -201,9 +202,10 @@ router.get('/verify-transaction', (req, res) => {
                 }
 
                 console.log(`Cupo actualizado y reducido en 1 para el curso con ID ${descriptionNumber}`);
+                console.log("order_id: ", order_id);
                 
                 // Redirigir a la ruta con los parámetros en la query string
-                res.redirect(`http://localhost:3000/paypdf?name=${encodeURIComponent(name)}&holderName=${encodeURIComponent(holderName)}&amount=${amount}&date=${encodeURIComponent(date)}&accountNumber=${accountNumber}&method=${encodeURIComponent(method)}&description=${encodeURIComponent(description)}&courseId=${courseId}`);
+                res.redirect(`http://localhost:3000/paypdf?name=${encodeURIComponent(name)}&holderName=${encodeURIComponent(holderName)}&amount=${amount}&date=${encodeURIComponent(date)}&accountNumber=${accountNumber}&method=${encodeURIComponent(method)}&description=${encodeURIComponent(description)}&courseId=${courseId}&order_id=${order_id}`);
               });
             });
           });

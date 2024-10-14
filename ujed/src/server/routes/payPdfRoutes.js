@@ -15,6 +15,8 @@ router.post("/generate-pdf", (req, res) => {
     method,
     description,
     courseId,
+    comentarios,
+    order_id,
   } = req.body;
 
   if (
@@ -25,10 +27,12 @@ router.post("/generate-pdf", (req, res) => {
     !accountNumber ||
     !method ||
     !description ||
-    !courseId
+    !courseId ||
+    !comentarios
   ) {
     return res.status(400).json({ error: "Faltan datos para generar el PDF" });
   }
+  console.log("Comentarios: ", comentarios);
 
   // Buscar el curso por ID
   db.query(
@@ -67,13 +71,14 @@ router.post("/generate-pdf", (req, res) => {
 
       // Agregar contenido al PDF
       doc.fontSize(20).text(programa, { align: "center" });
+      doc.fontSize(15).text("Papeleta de Pago por medio digital", { align: "center" });
       doc.moveDown(1.5); // Espacio reducido entre elementos
       doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke(); // Línea ajustada al ancho de la papeleta
       doc.moveDown(0.5);
       doc.fontSize(10); // Texto reducido para evitar saltos de página
       doc.text(`Nombre del Alumno(a): ${name}`);
       doc.moveDown(0.5);
-      doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
+      doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();  
       doc.moveDown(0.5);
 
       // Formatear fecha y hora
@@ -81,10 +86,15 @@ router.post("/generate-pdf", (req, res) => {
       const formatDate = datePart.replace(/\//g, "/");
       const formatTime = timePart ? timePart.split(".")[0].slice(0, 5) : "";
       doc.text(`Fecha de pago: ${formatDate}`);
+      doc.moveDown(0.5);
       doc.text(`Hora de pago: ${formatTime}`);
+      doc.moveDown(0.5);
       const concepto = description.split("-")[0];
       doc.text(`Concepto: ${concepto}`);
       doc.moveDown(0.5);
+      doc.text(`Descripción de ingreso: ${comentarios}`);
+      doc.moveDown(0.5);
+      doc.text(`Referencia: ${order_id}`);
       doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
       doc.moveDown(0.5);
 
@@ -98,8 +108,10 @@ router.post("/generate-pdf", (req, res) => {
       doc.moveDown(0.5);
 
       // Número de cuenta
-      doc.text(`Número de cuenta: ${accountNumber}`);
+      doc.text(`Número de tarjeta de quien realizo el pago: ${accountNumber}`);
       doc.moveDown(0.5);
+      doc.text("Cuenta: 012190001136163048");
+      doc.text("BBVA Bancomer");
       doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
       doc.moveDown(0.5);
 

@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useLocalStorage } from "react-use";
+
 
 const DownloadPDF = () => {
   const location = useLocation();
@@ -13,6 +15,9 @@ const DownloadPDF = () => {
   const method = query.get("method");
   const description = query.get("description");
   const courseId = query.get("courseId");
+  const comentarios = localStorage.getItem("comentarios");
+  const order_id = query.get("order_id");
+  console.log("Comentarios: " , comentarios);
   console.log(courseId);
 
   useEffect(() => {
@@ -31,6 +36,8 @@ const DownloadPDF = () => {
         method,
         description, // Modifica la descripción
         courseId, // Asegúrate de incluir el id del curso en el cuerpo
+        comentarios,
+        order_id,
       }),
     })
       .then((response) => {

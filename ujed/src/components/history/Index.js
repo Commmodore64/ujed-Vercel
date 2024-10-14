@@ -30,6 +30,8 @@ const Index = () => {
   const [comment, setComment] = useState("");
   const [isDeletedModalOpen, setIsDeletedModalOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const fetchCoursesData = async () => {
     const response = await fetch("http://localhost:5000/api/cursos");
@@ -263,97 +265,110 @@ const Index = () => {
     }
   };
 
-  const generateReport = async (combinedData) => {
+  const generateReport = async () => {
     setIsModalOpen(false);
     try {
-      // Si combinedData no es un array, mostrar un error y salir
-      if (!Array.isArray(combinedData)) {
-        console.error("combinedData no es un array:", combinedData);
+      // Hacer fetch a la API de adeudos
+      const responseAdeudos = await fetch("http://localhost:5000/api/adeudos");
+      const adeudosData = await responseAdeudos.json();
+      console.log("Datos de adeudos:", adeudosData);
+  
+      // Hacer fetch a la API de pagos
+      const responsePagos = await fetch("http://localhost:5000/api/pagos");
+      const pagosData = await responsePagos.json();
+      console.log("Datos de pagos:", pagosData);
+  
+      // Unir ambos conjuntos de datos
+      const combinedData = [...adeudosData, ...pagosData];
+      console.log("Datos combinados:", combinedData);
+  
+      // Filtrar por fechas
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+  
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        console.error("Fechas de inicio o fin inválidas");
         return;
       }
-
-      // Verificar si los datos de adeudos están presentes
-      let adeudosData = combinedData.filter((item) => item.ID_Adeudo);
-      if (adeudosData.length === 0) {
-        // Si no hay datos de adeudos, hacer fetch a la API
-        const responseAdeudos = await fetch(
-          "http://localhost:5000/api/adeudos"
-        );
-        adeudosData = await responseAdeudos.json();
+  
+      const filteredData = combinedData.filter(item => {
+        // Determinar la fecha correcta para cada item
+        const itemDate = item.Fecha_Adeudo ? new Date(item.Fecha_Adeudo) : new Date(item.Fecha_Pago);
+        if (isNaN(itemDate.getTime())) {
+          console.warn("Fecha inválida:", itemDate);
+          return false;
+        }
+        return itemDate >= start && itemDate <= end;
+      });
+  
+      console.log("Datos filtrados:", filteredData);
+  
+      if (filteredData.length === 0) {
+        alert("No se encontraron datos para las fechas seleccionadas");
+        return;
       }
-
-      // Verificar si los datos de pagos están presentes
-      let pagosData = combinedData.filter((item) => item.ID_Pago);
-      if (pagosData.length === 0) {
-        // Si no hay datos de pagos, hacer fetch a la API
-        const responsePagos = await fetch("http://localhost:5000/api/pagos");
-        pagosData = await responsePagos.json();
-      }
-
-      // Crear el PDF
+  
       const doc = new jsPDF();
-
-      // **Reporte de Adeudos (Efectivo)**
-      doc.setFontSize(18);
-      doc.text("Reporte de pagos en Efectivo", 14, 22);
-      doc.setFontSize(12);
-      doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
-
-      // Generar tabla de Adeudos (Efectivo)
-      doc.autoTable({
-        startY: 35,
-        head: [
-          ["ID", "Matricula", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"],
-        ],
-        body: adeudosData.map((item) => [
-          item.ID_Adeudo,
-          item.Matricula,
-          item.Nombre,
-          item.Descripcion,
-          `$${item.Monto}`,
-          item.Fecha_Adeudo,
-          item.Pagado ? "Sí" : "No",
-        ]),
-      });
-
-      // **Reporte de Pagos en Línea**
-      doc.addPage();
-      doc.setFontSize(18);
-      doc.text("Reporte de Pagos en Línea", 14, 22);
-      doc.setFontSize(12);
-      doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
-
-      // Generar tabla de Pagos en Línea
-      doc.autoTable({
-        startY: 35,
-        head: [
-          [
-            "ID",
-            "Nombre Usuario",
-            "Nombre",
-            "Monto",
-            "Fecha Pago",
-            "Método de Pago",
-            "Descripción",
-          ],
-        ],
-        body: pagosData.map((item) => [
-          item.ID_Pago,
-          item.Nombre_usuario,
-          item.Nombre,
-          `$${item.Monto}`,
-          item.Fecha_Pago,
-          item.Metodo_Pago,
-          item.Descripcion,
-        ]),
-      });
-
+  
+      // **Reporte de Adeudos**
+      const adeudos = filteredData.filter(item => item.ID_Adeudo);
+      if (adeudos.length > 0) {
+        doc.setFontSize(18);
+        doc.text("Reporte de Adeudos", 14, 22);
+        doc.setFontSize(12);
+        doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
+  
+        doc.autoTable({
+          startY: 35,
+          head: [["ID", "Matricula", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"]],
+          body: adeudos.map(item => [
+            item.ID_Adeudo,
+            item.Matricula,
+            item.Nombre,
+            item.Descripcion,
+            `$${item.Monto}`,
+            item.Fecha_Adeudo,
+            item.Pagado ? "Sí" : "No",
+          ]),
+        });
+      } else {
+        doc.text("No hay registros de adeudos en el rango de fechas seleccionado.", 14, 35);
+      }
+  
+      // **Reporte de Pagos**
+      const pagos = filteredData.filter(item => item.ID_Pago);
+      if (pagos.length > 0) {
+        doc.addPage();
+        doc.setFontSize(18);
+        doc.text("Reporte de Pagos", 14, 22);
+        doc.setFontSize(12);
+        doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
+  
+        doc.autoTable({
+          startY: 35,
+          head: [["ID", "Nombre Usuario", "Nombre", "Monto", "Fecha Pago", "Método de Pago", "Descripción"]],
+          body: pagos.map(item => [
+            item.ID_Pago,
+            item.Nombre_usuario,
+            item.Nombre,
+            `$${item.Monto}`,
+            item.Fecha_Pago,
+            item.Metodo_Pago,
+            item.Descripcion,
+          ]),
+        });
+      } else {
+        doc.text("No hay registros de pagos en el rango de fechas seleccionado.", 14, 35);
+      }
+  
       // Guardar el PDF
       doc.save("reportes.pdf");
     } catch (error) {
       console.error("Error generando el reporte:", error);
     }
   };
+  
+  
   const fetchPagosNoConciliados = async () => {
     try {
       const response = await fetch(
@@ -698,6 +713,30 @@ const Index = () => {
                 Excel
               </button>
             </div>
+            <div>
+  <label htmlFor="start-date" className="block text-sm font-medium text-gray-700">
+    Fecha de Inicio
+  </label>
+  <input
+    type="date"
+    id="start-date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+  />
+
+  <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mt-4">
+    Fecha de Fin
+  </label>
+  <input
+    type="date"
+    id="end-date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+  />
+</div>
+
             <button
               onClick={() => setIsReportOpen(false)}
               className="mt-4 text-gray-500 hover:text-gray-700 underline text-sm w-full text-center"
