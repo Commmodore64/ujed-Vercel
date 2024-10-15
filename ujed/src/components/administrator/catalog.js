@@ -12,7 +12,7 @@ const Catalog = () => {
   useEffect(() => {
     const fetchCatalogo = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/catalogo", {
+        const response = await fetch("http://192.168.1.20:5000/api/catalogo", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

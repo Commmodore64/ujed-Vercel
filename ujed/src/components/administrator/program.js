@@ -16,7 +16,7 @@ const Program = () => {
   useEffect(() => {
     const fetchProgramas = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/programa", {
+        const response = await fetch("http://192.168.1.20:5000/api/programa", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const Program = () => {
 
   const handleAgregarPrograma = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/programa", {
+      const response = await fetch("http://192.168.1.20:5000/api/programa", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const Program = () => {
 
   const handleEditarPrograma = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
+      const response = await fetch(`http://192.168.1.20:5000/api/programa/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ const Program = () => {
   const handleActualizarPrograma = async () => {
     try {
         const response = await fetch(
-            `http://localhost:5000/api/programa/${programaId}`,
+            `http://192.168.1.20:5000/api/programa/${programaId}`,
             {
                 method: "PUT",
                 headers: {
@@ -134,7 +134,7 @@ const Program = () => {
 
   const handleEliminarPrograma = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
+      const response = await fetch(`http://192.168.1.20:5000/api/programa/${id}`, {
         method: "DELETE",
       });
 
