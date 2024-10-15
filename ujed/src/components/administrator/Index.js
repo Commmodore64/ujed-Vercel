@@ -29,7 +29,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://192.168.1.20:5000/api/cursos", {
+        const response = await fetch("https://192.168.1.20:5000/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const Index = () => {
 
     const fetchProgramas = async () => {
       try {
-        const response = await fetch("http://192.168.1.20:5000/api/programa", {
+        const response = await fetch("https://192.168.1.20:5000/api/programa", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const Index = () => {
     };
     const fetchCatalogo = async () => {
       try {
-        const response = await fetch("http://192.168.1.20:5000/api/catalogo", {
+        const response = await fetch("https://192.168.1.20:5000/api/catalogo", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const Index = () => {
   const handleInscripciones = async (id) => {
     try {
       const response = await fetch(
-        `http://192.168.1.20:5000/api/inscripciones/${id}`,
+        `https://192.168.1.20:5000/api/inscripciones/${id}`,
         {
           method: "GET",
           headers: {
@@ -139,7 +139,7 @@ const Index = () => {
       const fechaISO = vigencia;
       const fechaFormateada = formatFecha(fechaISO);
 
-      const response = await fetch("http://192.168.1.20:5000/api/cursos", {
+      const response = await fetch("https://192.168.1.20:5000/api/cursos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -174,7 +174,7 @@ const Index = () => {
 
   const handleEditarCurso = async (id) => {
     try {
-      const response = await fetch(`http://192.168.1.20:5000/api/cursos/${id}`, {
+      const response = await fetch(`https://192.168.1.20:5000/api/cursos/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +209,7 @@ const Index = () => {
   const handleActualizarCurso = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.20:5000/api/cursos/${cursoId}`,
+        `https://192.168.1.20:5000/api/cursos/${cursoId}`,
         {
           method: "PUT",
           headers: {
@@ -267,7 +267,7 @@ const Index = () => {
 
   const handleEliminarCurso = async (id) => {
     try {
-      const response = await fetch(`http://192.168.1.20:5000/api/cursos/${id}`, {
+      const response = await fetch(`https://192.168.1.20:5000/api/cursos/${id}`, {
         method: "DELETE",
       });
 

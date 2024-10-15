@@ -44,7 +44,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://192.168.1.20:5000/api/cursos", {
+        const response = await fetch("https://192.168.1.20:5000/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -140,7 +140,7 @@ const Index = () => {
   
       try {
         // Hacer la petición POST a la API
-        const response = await fetch("http://192.168.1.20:5000/api/generate-pdf-efectivo", {
+        const response = await fetch("https://192.168.1.20:5000/api/generate-pdf-efectivo", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -196,7 +196,7 @@ const Index = () => {
     try {
       // Crear el objeto con la información necesaria para la solicitud
       const response = await fetch(
-        "http://192.168.1.20:5000/api/create-checkout",
+        "https://192.168.1.20:5000/api/create-checkout",
         {
           method: "POST",
           headers: {
@@ -221,7 +221,7 @@ const Index = () => {
               phone_number: telefono,
               email: "email@email.com",
             },
-            redirect_url: "http://192.168.1.20:5000/api/verify-transaction",
+            redirect_url: "https://192.168.1.20:5000/api/verify-transaction",
           }),
         }
       );
@@ -294,7 +294,7 @@ const Index = () => {
         return;
       }
 
-      const response = await fetch("http://192.168.1.20:5000/api/validar-codigo", {
+      const response = await fetch("https://192.168.1.20:5000/api/validar-codigo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -10,7 +10,7 @@ const Index = () => {
   useEffect(() => {
     const fetchPaymentsData = async () => {
       try {
-        const response = await fetch("http://192.168.1.20:5000/api/pagos"); // Asegúrate de que la URL sea correcta
+        const response = await fetch("https://192.168.1.20:5000/api/pagos"); // Asegúrate de que la URL sea correcta
         if (response.ok) {
           const data = await response.json();
           setPaymentsData(data);

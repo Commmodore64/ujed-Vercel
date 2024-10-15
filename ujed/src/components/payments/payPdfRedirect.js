@@ -22,7 +22,7 @@ const DownloadPDF = () => {
 
   useEffect(() => {
     // Hacer la solicitud al backend para generar y descargar el PDF
-    fetch("http://192.168.1.20:5000/api/generate-pdf", {
+    fetch("https://192.168.1.20:5000/api/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
