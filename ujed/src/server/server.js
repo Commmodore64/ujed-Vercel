@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const fs = require('fs');
 const userRoutes = require('./routes/userRoutes');
 const userdataRoute = require('./routes/userdataRoute');
 const cursosRoutes = require('./routes/cursosRoutes');
@@ -15,6 +16,12 @@ const payEfectivoPdfRoutes = require('./routes/payEfectivoPdfRoutes');
 const uploadcsvRoutes = require('./routes/uploadcsvRoutes');
 const adeudosRoutes = require('./routes/adeudosRoutes');
 const noconciliadosRoutes = require('./routes/noconciliadosRoutes');
+
+// Carga del certificado y la clave
+const options = {
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+};
 
 app.use(cors()); // CORS para todas las rutas
     
@@ -40,6 +47,9 @@ app.use('/api', noconciliadosRoutes); // Rutas de API para noconciliadosRoutes b
 
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+
+// Crear el servidor HTTPS
+const https = require('https');
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Servidor HTTPS corriendo en https://localhost:${PORT}`);
 });
