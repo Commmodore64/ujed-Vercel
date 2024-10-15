@@ -135,6 +135,7 @@ const Index = () => {
         catalogo,  // Información del catálogo
         nombreCompleto,  // Nombre del alumno
         telefono,  // Número de teléfono
+        comentarios: localStorage.getItem("comentarios") || "",
       };
   
       try {

@@ -250,7 +250,7 @@ const Index = () => {
           setUploadSuccess(true); // Cambiar el estado a verdadero
           setTimeout(() => {
             setUploadSuccess(false);
-            location.reload();
+            window.location.reload();
           }, 3200);
         } else {
           console.error("Error al subir el archivo");
@@ -307,8 +307,40 @@ const Index = () => {
         alert("No se encontraron datos para las fechas seleccionadas");
         return;
       }
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
+
+      filteredData.forEach(item => {
+        if (item.Fecha_Adeudo) {
+          item.Fecha_Adeudo = formatDate(item.Fecha_Adeudo);
+        }
+        if (item.Fecha_Pago) {
+          item.Fecha_Pago = formatDate(item.Fecha_Pago);
+        }
+      });
+      const getStoredIdentifier = () => {
+        const matricula = localStorage.getItem("matricula");
+        const curp = localStorage.getItem("curp");
+        const rfc = localStorage.getItem("rfc");
+
+        if (matricula) {
+          return matricula;
+        } else if (curp) {
+          return curp;
+        } else if (rfc) {
+          return rfc;
+        } else {
+          return null;
+        }
+      };
+
+      const storedIdentifier = getStoredIdentifier();
+
+      const descripcion_ingreso = localStorage.getItem("comentarios");
   
-      const doc = new jsPDF();
+      const doc = new jsPDF("l", "pt");
   
       // **Reporte de Adeudos**
       const adeudos = filteredData.filter(item => item.ID_Adeudo);
@@ -316,19 +348,24 @@ const Index = () => {
         doc.setFontSize(18);
         doc.text("Reporte de Adeudos", 14, 22);
         doc.setFontSize(12);
-        doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
+        doc.text("Generado el: " + new Date().toLocaleString(), 14, 40);
   
         doc.autoTable({
-          startY: 35,
-          head: [["ID", "Matricula", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"]],
+          startY: 50,  
+          head: [["ID", "Curso", "Nombre Alumno", "Descripción/Concepto", "Monto", "Fecha Adeudo", "Pagado", "Programa", "Centro de Costo", "Matricula", "Referencia", "Descripción de Ingreso"]],
           body: adeudos.map(item => [
             item.ID_Adeudo,
             item.Matricula,
             item.Nombre,
             item.Descripcion,
             `$${item.Monto}`,
-            item.Fecha_Adeudo,
+            formatDate(item.Fecha_Adeudo),
             item.Pagado ? "Sí" : "No",
+            item.Programa,
+            item.Centro_Costo,
+            storedIdentifier,
+            item.Referencia,
+            descripcion_ingreso,
           ]),
         });
       } else {
@@ -337,15 +374,16 @@ const Index = () => {
   
       // **Reporte de Pagos**
       const pagos = filteredData.filter(item => item.ID_Pago);
+      doc.addPage("l");
       if (pagos.length > 0) {
         doc.addPage();
         doc.setFontSize(18);
         doc.text("Reporte de Pagos", 14, 22);
         doc.setFontSize(12);
-        doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
+        doc.text("Generado el: " + new Date().toLocaleString(), 14, 40);
   
         doc.autoTable({
-          startY: 35,
+          startY: 50,
           head: [["ID", "Nombre Usuario", "Nombre", "Monto", "Fecha Pago", "Método de Pago", "Descripción"]],
           body: pagos.map(item => [
             item.ID_Pago,

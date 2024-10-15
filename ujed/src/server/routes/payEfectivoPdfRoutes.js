@@ -48,10 +48,11 @@ router.post("/generate-pdf-efectivo", (req, res) => {
     costo,
     curso,
     catalogo,
+    comentarios,
   } = req.body;
 
   // Verificar que los datos requeridos están presentes
-  if (!nombreCompleto || !telefono || !costo || !curso || !catalogo) {
+  if (!nombreCompleto || !telefono || !costo || !curso || !catalogo || !comentarios) {
     return res.status(400).json({ error: "Faltan datos para generar el PDF" });
   }
 
@@ -161,6 +162,8 @@ router.post("/generate-pdf-efectivo", (req, res) => {
           // TODO Agregar Descricion del ingreso
           // Método de pago y monto en la misma línea
           doc.text(`Método de pago: Efectivo`, 20);
+          doc.moveDown(0.5);
+          doc.text(`Descripción de ingreso: ${comentarios}`, 20);
           doc.text(`Monto: $${costo}.00`, 400);
           doc.moveDown(0.5);
           doc.moveTo(20, doc.y).lineTo(580, doc.y).stroke();
@@ -168,11 +171,9 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
           // Incluir la referencia en el PDF
           doc.text(`Referencia: ${referencia}`, { align: "left" }); // Mostrar la referencia en el PDF
+          doc.text("Cuenta: Cuenta: 012190001136163048")
 
           doc.moveDown(0.5);
-
-          // Mensaje de agradecimiento
-          doc.fontSize(10).text("Gracias por su pago.", { align: "center" });
 
           // Finalizar el documento
           doc.end();
