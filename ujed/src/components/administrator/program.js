@@ -5,8 +5,11 @@ import Sidebar from "../sidebar/Index";
 import { Link } from "react-router-dom";
 import { MdEdit, MdDeleteForever } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Navigate } from "react-router-dom";
 
 const Program = () => {
+  const { isAuthenticated } = useAuth0();
   const [programas, setProgramas] = useState([]);
   const [nombrePrograma, setNombrePrograma] = useState("");
   const [programaId, setProgramaId] = useState(null);
@@ -16,7 +19,7 @@ const Program = () => {
   useEffect(() => {
     const fetchProgramas = async () => {
       try {
-        const response = await fetch("https://192.168.1.20:5000/api/programa", {
+        const response = await fetch("http://localhost:5000/api/programa", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -36,10 +39,13 @@ const Program = () => {
 
     fetchProgramas();
   }, []);
+  if (!isAuthenticated) {
+    return <Navigate to="/dashboard" />;
+  }
 
   const handleAgregarPrograma = async () => {
     try {
-      const response = await fetch("https://192.168.1.20:5000/api/programa", {
+      const response = await fetch("http://localhost:5000/api/programa", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +73,7 @@ const Program = () => {
 
   const handleEditarPrograma = async (id) => {
     try {
-      const response = await fetch(`https://192.168.1.20:5000/api/programa/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +101,7 @@ const Program = () => {
   const handleActualizarPrograma = async () => {
     try {
         const response = await fetch(
-            `https://192.168.1.20:5000/api/programa/${programaId}`,
+            `http://localhost:5000/api/programa/${programaId}`,
             {
                 method: "PUT",
                 headers: {
@@ -134,7 +140,7 @@ const Program = () => {
 
   const handleEliminarPrograma = async (id) => {
     try {
-      const response = await fetch(`https://192.168.1.20:5000/api/programa/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
         method: "DELETE",
       });
 

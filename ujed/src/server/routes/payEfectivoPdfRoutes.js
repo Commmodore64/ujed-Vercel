@@ -49,6 +49,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
     curso,
     catalogo,
     comentarios,
+    matricula,
   } = req.body;
 
   // Verificar que los datos requeridos están presentes
@@ -57,7 +58,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
   }
 
   // Buscar el programa por nombre del curso y el ID del curso
-  db.query("SELECT id, programa FROM cursos WHERE nombre = ?", [curso], (err, results) => {
+  db.query("SELECT id, programa, centroCosto FROM cursos WHERE nombre = ?", [curso], (err, results) => {
     if (err) {
       console.error("Error al consultar la base de datos:", err);
       return res.status(500).json({ error: "Error al consultar la base de datos" });
@@ -67,7 +68,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
-    const { programa, id: idCurso } = results[0]; // Obtener el programa y el ID del curso
+    const { programa, id: idCurso, centroCosto } = results[0]; // Obtener el programa, el ID del curso y el centro de costo
 
     // Obtener la fecha actual para el adeudo
     const fechaActual = new Date();
@@ -92,7 +93,11 @@ router.post("/generate-pdf-efectivo", (req, res) => {
         Monto: costo,
         Fecha_Adeudo: formatDate,
         Pagado: 0, // 0 significa no pagado
-        Referencia: referencia // Incluir la referencia aquí
+        Referencia: referencia,
+        id_alumno: matricula,
+        centroCosto: centroCosto,
+        programa: programa,
+        descripcionIngreso: comentarios,
       };
 
       db.query("INSERT INTO adeudos SET ?", adeudoData, (err) => {
@@ -137,7 +142,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
           // Agregar contenido al PDF
           doc.fontSize(20).text(programa, { align: "center" });
-          doc.moveDown(1.5);
+          doc.moveDown(1.0);
           doc.fontSize(12);
           doc.text("Papeleta de Pago En Efectivo", { align: "center" });
           doc.fontSize(10);
@@ -171,7 +176,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
 
           // Incluir la referencia en el PDF
           doc.text(`Referencia: ${referencia}`, { align: "left" }); // Mostrar la referencia en el PDF
-          doc.text("Cuenta: Cuenta: 012190001136163048")
+          doc.text("Cuenta: 012190001136163048")
 
           doc.moveDown(0.5);
 

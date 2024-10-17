@@ -3,16 +3,19 @@ import ReactPaginate from "react-paginate";
 import Sidebar from "../sidebar/Index";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Navigate } from "react-router-dom";
 
 const Catalog = () => {
   const [catalogo, setCatalogo] = useState([]);
+  const { isAuthenticated } = useAuth0();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10; // Número de elementos por página
 
   useEffect(() => {
     const fetchCatalogo = async () => {
       try {
-        const response = await fetch("https://192.168.1.20:5000/api/catalogo", {
+        const response = await fetch("http://localhost:5000/api/catalogo", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -32,6 +35,9 @@ const Catalog = () => {
 
     fetchCatalogo();
   }, []);
+  if (!isAuthenticated) {
+    return <Navigate to="/dashboard" />;
+  }
 
   // Obtener los elementos a mostrar en la página actual
   const offset = currentPage * itemsPerPage;

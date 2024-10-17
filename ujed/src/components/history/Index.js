@@ -7,11 +7,14 @@ import { toast } from "sonner";
 import SwitchButton from "../SwitchButton";
 import jsPDF from "jspdf";
 import "jspdf-autotable"; // Importa la extensión para las tablas
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+import { saveAs } from "file-saver";
+import * as XLSX from "xlsx";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Navigate } from "react-router-dom";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { isAuthenticated } = useAuth0();
   const [fieldFilter, setFieldFilter] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [coursesData, setCoursesData] = useState([]);
@@ -34,7 +37,7 @@ const Index = () => {
   const [endDate, setEndDate] = useState("");
 
   const fetchCoursesData = async () => {
-    const response = await fetch("https://192.168.1.20:5000/api/cursos");
+    const response = await fetch("http://localhost:5000/api/cursos");
     const data = await response.json();
     setCoursesData(data);
   };
@@ -46,7 +49,7 @@ const Index = () => {
         // Fetch inscripciones normales si isCard es true
         for (const course of coursesData) {
           const response = await fetch(
-            `https://192.168.1.20:5000/api/inscripciones/${course.id}`
+            `http://localhost:5000/api/inscripciones/${course.id}`
           );
           if (response.ok) {
             const data = await response.json();
@@ -57,7 +60,7 @@ const Index = () => {
         }
       } else {
         // Fetch adeudos si isCard es false
-        const response = await fetch("https://192.168.1.20:5000/api/adeudos");
+        const response = await fetch("http://localhost:5000/api/adeudos");
         if (response.ok) {
           const data = await response.json();
           allInscriptions.push(...data);
@@ -113,6 +116,16 @@ const Index = () => {
       combineData();
     }
   }, [coursesData, inscriptionsData]);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/dashboard" />;
+  }
 
   const filteredData = combinedData.filter((item) => {
     const searchTermLower = searchTerm?.toLowerCase() || "";
@@ -155,13 +168,6 @@ const Index = () => {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   // Manejador para el archivo CSV
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -181,7 +187,7 @@ const Index = () => {
     try {
       // Eliminar el pago de la base de datos
       const response = await fetch(
-        `https://192.168.1.20:5000/api/eliminarpago/${selectedReferencia}`,
+        `http://localhost:5000/api/eliminarpago/${selectedReferencia}`,
         {
           method: "POST",
           headers: {
@@ -197,7 +203,7 @@ const Index = () => {
 
       // Actualizar el pago a Pagado: 1
       const responseUpdate = await fetch(
-        "https://192.168.1.20:5000/api/actualizarpago",
+        "http://localhost:5000/api/actualizarpago",
         {
           method: "POST",
           headers: {
@@ -237,7 +243,7 @@ const Index = () => {
 
       try {
         const response = await fetch(
-          "https://192.168.1.20:5000/api/subir-archivo",
+          "http://localhost:5000/api/subir-archivo",
           {
             method: "POST",
             body: formData,
@@ -269,40 +275,42 @@ const Index = () => {
     setIsModalOpen(false);
     try {
       // Hacer fetch a la API de adeudos
-      const responseAdeudos = await fetch("https://192.168.1.20:5000/api/adeudos");
+      const responseAdeudos = await fetch("http://localhost:5000/api/adeudos");
       const adeudosData = await responseAdeudos.json();
       console.log("Datos de adeudos:", adeudosData);
-  
+
       // Hacer fetch a la API de pagos
-      const responsePagos = await fetch("https://192.168.1.20:5000/api/pagos");
+      const responsePagos = await fetch("http://localhost:5000/api/pagos");
       const pagosData = await responsePagos.json();
       console.log("Datos de pagos:", pagosData);
-  
+
       // Unir ambos conjuntos de datos
       const combinedData = [...adeudosData, ...pagosData];
       console.log("Datos combinados:", combinedData);
-  
+
       // Filtrar por fechas
       const start = new Date(startDate);
       const end = new Date(endDate);
-  
+
       if (isNaN(start.getTime()) || isNaN(end.getTime())) {
         console.error("Fechas de inicio o fin inválidas");
         return;
       }
-  
-      const filteredData = combinedData.filter(item => {
+
+      const filteredData = combinedData.filter((item) => {
         // Determinar la fecha correcta para cada item
-        const itemDate = item.Fecha_Adeudo ? new Date(item.Fecha_Adeudo) : new Date(item.Fecha_Pago);
+        const itemDate = item.Fecha_Adeudo
+          ? new Date(item.Fecha_Adeudo)
+          : new Date(item.Fecha_Pago);
         if (isNaN(itemDate.getTime())) {
           console.warn("Fecha inválida:", itemDate);
           return false;
         }
         return itemDate >= start && itemDate <= end;
       });
-  
+
       console.log("Datos filtrados:", filteredData);
-  
+
       if (filteredData.length === 0) {
         alert("No se encontraron datos para las fechas seleccionadas");
         return;
@@ -312,7 +320,7 @@ const Index = () => {
         return date.toISOString().split("T")[0];
       };
 
-      filteredData.forEach(item => {
+      filteredData.forEach((item) => {
         if (item.Fecha_Adeudo) {
           item.Fecha_Adeudo = formatDate(item.Fecha_Adeudo);
         }
@@ -320,40 +328,36 @@ const Index = () => {
           item.Fecha_Pago = formatDate(item.Fecha_Pago);
         }
       });
-      const getStoredIdentifier = () => {
-        const matricula = localStorage.getItem("matricula");
-        const curp = localStorage.getItem("curp");
-        const rfc = localStorage.getItem("rfc");
 
-        if (matricula) {
-          return matricula;
-        } else if (curp) {
-          return curp;
-        } else if (rfc) {
-          return rfc;
-        } else {
-          return null;
-        }
-      };
-
-      const storedIdentifier = getStoredIdentifier();
-
-      const descripcion_ingreso = localStorage.getItem("comentarios");
-  
       const doc = new jsPDF("l", "pt");
-  
+
       // **Reporte de Adeudos**
-      const adeudos = filteredData.filter(item => item.ID_Adeudo);
+      const adeudos = filteredData.filter((item) => item.ID_Adeudo);
       if (adeudos.length > 0) {
         doc.setFontSize(18);
         doc.text("Reporte de Adeudos", 14, 22);
         doc.setFontSize(12);
         doc.text("Generado el: " + new Date().toLocaleString(), 14, 40);
-  
+
         doc.autoTable({
-          startY: 50,  
-          head: [["ID", "Curso", "Nombre Alumno", "Descripción/Concepto", "Monto", "Fecha Adeudo", "Pagado", "Programa", "Centro de Costo", "Matricula", "Referencia", "Descripción de Ingreso"]],
-          body: adeudos.map(item => [
+          startY: 50,
+          head: [
+            [
+              "ID",
+              "Curso",
+              "Nombre Alumno",
+              "Descripción/Concepto",
+              "Monto",
+              "Fecha Adeudo",
+              "Pagado",
+              "Programa",
+              "Centro de Costo",
+              "Matricula",
+              "Referencia",
+              "Descripción de Ingreso",
+            ],
+          ],
+          body: adeudos.map((item) => [
             item.ID_Adeudo,
             item.Matricula,
             item.Nombre,
@@ -361,19 +365,28 @@ const Index = () => {
             `$${item.Monto}`,
             formatDate(item.Fecha_Adeudo),
             item.Pagado ? "Sí" : "No",
-            item.Programa,
-            item.Centro_Costo,
-            storedIdentifier,
-            item.Referencia,
-            descripcion_ingreso,
+            item.programa,
+            item.centroCosto,
+            item.id_alumno,
+            item.referencia,
+            item.descripcionIngreso,
           ]),
+          margin: { top: 10, right: 10, bottom: 10, left: 10 }, // Reduce los márgenes
+          styles: {
+            fontSize: 10, // Ajusta el tamaño de la fuente si necesitas más espacio
+          },
+          theme: "grid",
         });
       } else {
-        doc.text("No hay registros de adeudos en el rango de fechas seleccionado.", 14, 35);
+        doc.text(
+          "No hay registros de adeudos en el rango de fechas seleccionado.",
+          14,
+          35
+        );
       }
-  
+
       // **Reporte de Pagos**
-      const pagos = filteredData.filter(item => item.ID_Pago);
+      const pagos = filteredData.filter((item) => item.ID_Pago);
       doc.addPage("l");
       if (pagos.length > 0) {
         doc.addPage();
@@ -381,11 +394,21 @@ const Index = () => {
         doc.text("Reporte de Pagos", 14, 22);
         doc.setFontSize(12);
         doc.text("Generado el: " + new Date().toLocaleString(), 14, 40);
-  
+
         doc.autoTable({
           startY: 50,
-          head: [["ID", "Nombre Usuario", "Nombre", "Monto", "Fecha Pago", "Método de Pago", "Descripción"]],
-          body: pagos.map(item => [
+          head: [
+            [
+              "ID",
+              "Nombre Usuario",
+              "Nombre",
+              "Monto",
+              "Fecha Pago",
+              "Método de Pago",
+              "Descripción",
+            ],
+          ],
+          body: pagos.map((item) => [
             item.ID_Pago,
             item.Nombre_usuario,
             item.Nombre,
@@ -394,23 +417,31 @@ const Index = () => {
             item.Metodo_Pago,
             item.Descripcion,
           ]),
+          margin: { top: 10, right: 10, bottom: 10, left: 10 }, // Reduce los márgenes
+          styles: {
+            fontSize: 10, // Ajusta el tamaño de la fuente si necesitas más espacio
+          },
+          theme: "grid",
         });
       } else {
-        doc.text("No hay registros de pagos en el rango de fechas seleccionado.", 14, 35);
+        doc.text(
+          "No hay registros de pagos en el rango de fechas seleccionado.",
+          14,
+          35
+        );
       }
-  
+
       // Guardar el PDF
       doc.save("reportes.pdf");
     } catch (error) {
       console.error("Error generando el reporte:", error);
     }
   };
-  
-  
+
   const fetchPagosNoConciliados = async () => {
     try {
       const response = await fetch(
-        "https://192.168.1.20:5000/api/pagosnoconciliados"
+        "http://localhost:5000/api/pagosnoconciliados"
       ); // Cambia esta URL si es necesario
       const data = await response.json();
       setPagos(data); // Ajusta según la estructura de respuesta de tu API
@@ -438,28 +469,38 @@ const Index = () => {
         console.error("combinedData no es un array:", combinedData);
         return;
       }
-  
+
       // Verificar si los datos de adeudos están presentes
       let adeudosData = combinedData.filter((item) => item.ID_Adeudo);
       if (adeudosData.length === 0) {
         // Si no hay datos de adeudos, hacer fetch a la API
-        const responseAdeudos = await fetch("https://192.168.1.20:5000/api/adeudos");
+        const responseAdeudos = await fetch(
+          "http://localhost:5000/api/adeudos"
+        );
         adeudosData = await responseAdeudos.json();
         console.log("Efectivo", adeudosData);
       }
-  
+
       // Verificar si los datos de pagos están presentes
       let pagosData = combinedData.filter((item) => item.ID_Pago);
       if (pagosData.length === 0) {
         // Si no hay datos de pagos, hacer fetch a la API
-        const responsePagos = await fetch("https://192.168.1.20:5000/api/pagos");
+        const responsePagos = await fetch("http://localhost:5000/api/pagos");
         pagosData = await responsePagos.json();
         console.log("Tarjeta", pagosData);
       }
-  
+
       // Preparar datos para la hoja de "Pagos en Efectivo"
       const adeudosSheetData = [
-        ["ID", "Matricula", "Nombre", "Descripción", "Monto", "Fecha Adeudo", "Pagado"],
+        [
+          "ID",
+          "Matricula",
+          "Nombre",
+          "Descripción",
+          "Monto",
+          "Fecha Adeudo",
+          "Pagado",
+        ],
         ...adeudosData.map((item) => [
           item.ID_Adeudo,
           item.Matricula,
@@ -470,10 +511,18 @@ const Index = () => {
           item.Pagado ? "Sí" : "No",
         ]),
       ];
-  
+
       // Preparar datos para la hoja de "Pagos en Tarjeta"
       const pagosSheetData = [
-        ["ID", "Nombre Usuario", "Nombre", "Monto", "Fecha Pago", "Método de Pago", "Descripción"],
+        [
+          "ID",
+          "Nombre Usuario",
+          "Nombre",
+          "Monto",
+          "Fecha Pago",
+          "Método de Pago",
+          "Descripción",
+        ],
         ...pagosData.map((item) => [
           item.ID_Pago,
           item.Nombre_usuario,
@@ -484,16 +533,16 @@ const Index = () => {
           item.Descripcion,
         ]),
       ];
-  
+
       // Crear el libro de Excel y agregar las hojas
       const workbook = XLSX.utils.book_new();
       const adeudosSheet = XLSX.utils.aoa_to_sheet(adeudosSheetData);
       const pagosSheet = XLSX.utils.aoa_to_sheet(pagosSheetData);
-  
+
       // Agregar hojas al libro
       XLSX.utils.book_append_sheet(workbook, adeudosSheet, "Pagos en Efectivo");
       XLSX.utils.book_append_sheet(workbook, pagosSheet, "Pagos en Tarjeta");
-  
+
       // Exportar el archivo Excel
       XLSX.writeFile(workbook, "reportes.xlsx");
     } catch (error) {
@@ -727,63 +776,71 @@ const Index = () => {
                   </button>
                 </Link>
                 <button
-        onClick={() => setIsReportOpen(true)}
-        className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded-full max-w-xs"
-      >
-        Generar reporte de todos los pagos
-      </button>
+                  onClick={() => setIsReportOpen(true)}
+                  className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded-full max-w-xs"
+                >
+                  Generar reporte de todos los pagos
+                </button>
 
-      {isReportOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
-            <h2 className="text-lg mb-4 text-center font-semibold">Seleccione el formato</h2>
-            <div className="flex justify-between">
-              <button
-                onClick={() => generateReport(combinedData)}
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mr-2"
-              >
-                PDF
-              </button>
-              <button
-                onClick={() => generateExcelReport(combinedData)}
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
-              >
-                Excel
-              </button>
-            </div>
-            <div>
-  <label htmlFor="start-date" className="block text-sm font-medium text-gray-700">
-    Fecha de Inicio
-  </label>
-  <input
-    type="date"
-    id="start-date"
-    value={startDate}
-    onChange={(e) => setStartDate(e.target.value)}
-    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-  />
+                {isReportOpen && (
+                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
+                      <h2 className="text-lg mb-4 text-center font-semibold">
+                        Seleccione el formato
+                      </h2>
+                      <div className="flex justify-between">
+                        <button
+                          onClick={() => generateReport(combinedData)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mr-2"
+                        >
+                          PDF
+                        </button>
+                        <button
+                          onClick={() => generateExcelReport(combinedData)}
+                          className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+                        >
+                          Excel
+                        </button>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="start-date"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Fecha de Inicio
+                        </label>
+                        <input
+                          type="date"
+                          id="start-date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
 
-  <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mt-4">
-    Fecha de Fin
-  </label>
-  <input
-    type="date"
-    id="end-date"
-    value={endDate}
-    onChange={(e) => setEndDate(e.target.value)}
-    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-  />
-</div>
+                        <label
+                          htmlFor="end-date"
+                          className="block text-sm font-medium text-gray-700 mt-4"
+                        >
+                          Fecha de Fin
+                        </label>
+                        <input
+                          type="date"
+                          id="end-date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                      </div>
 
-            <button
-              onClick={() => setIsReportOpen(false)}
-              className="mt-4 text-gray-500 hover:text-gray-700 underline text-sm w-full text-center"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      )}
+                      <button
+                        onClick={() => setIsReportOpen(false)}
+                        className="mt-4 text-gray-500 hover:text-gray-700 underline text-sm w-full text-center"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="overflow-x-auto">

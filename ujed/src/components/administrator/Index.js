@@ -25,11 +25,13 @@ const Index = () => {
   const [inscripciones, setInscripciones] = useState([]);
   const [catalogos, setCatalogos] = useState([]);
   const [catalogoSeleccionado, setCatalogoSeleccionado] = useState("");
+  const [centroCostos, setCentroCostos] = useState([]);
+  const [centroCostoSeleccionado, setCentroCostoSeleccionado] = useState("");
 
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("https://192.168.1.20:5000/api/cursos", {
+        const response = await fetch("http://localhost:5000/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -49,7 +51,7 @@ const Index = () => {
 
     const fetchProgramas = async () => {
       try {
-        const response = await fetch("https://192.168.1.20:5000/api/programa", {
+        const response = await fetch("http://localhost:5000/api/programa", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -68,7 +70,7 @@ const Index = () => {
     };
     const fetchCatalogo = async () => {
       try {
-        const response = await fetch("https://192.168.1.20:5000/api/catalogo", {
+        const response = await fetch("http://localhost:5000/api/catalogo", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -85,16 +87,36 @@ const Index = () => {
         console.error("Error en la solicitud:", error);
       }
     };
+    const fetchCentroCosto = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/centroCosto", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCentroCostos(data);
+        } else {
+          console.error("Error al obtener los centros de costos:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
 
     fetchCursos();
     fetchProgramas();
     fetchCatalogo();
+    fetchCentroCosto();
   }, []);
 
   const handleInscripciones = async (id) => {
     try {
       const response = await fetch(
-        `https://192.168.1.20:5000/api/inscripciones/${id}`,
+        `http://localhost:5000/api/inscripciones/${id}`,
         {
           method: "GET",
           headers: {
@@ -139,7 +161,7 @@ const Index = () => {
       const fechaISO = vigencia;
       const fechaFormateada = formatFecha(fechaISO);
 
-      const response = await fetch("https://192.168.1.20:5000/api/cursos", {
+      const response = await fetch("http://localhost:5000/api/cursos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,6 +175,7 @@ const Index = () => {
           cupo: cupo,
           codigo: codigo,
           catalogo: catalogoSeleccionado,
+          centroCosto: centroCostoSeleccionado,
         }),
       });
 
@@ -174,7 +197,7 @@ const Index = () => {
 
   const handleEditarCurso = async (id) => {
     try {
-      const response = await fetch(`https://192.168.1.20:5000/api/cursos/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/cursos/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -193,6 +216,7 @@ const Index = () => {
         setCodigo(curso.codigo);
         setShowModal(true);
         setCatalogoSeleccionado(curso.catalogo);
+        setCentroCostoSeleccionado(curso.centroCosto);
       } else {
         console.error(
           "Error al obtener el curso para editar:",
@@ -209,7 +233,7 @@ const Index = () => {
   const handleActualizarCurso = async () => {
     try {
       const response = await fetch(
-        `https://192.168.1.20:5000/api/cursos/${cursoId}`,
+        `http://localhost:5000/api/cursos/${cursoId}`,
         {
           method: "PUT",
           headers: {
@@ -224,6 +248,7 @@ const Index = () => {
             cupo: cupo,
             codigo: codigo,
             catalogo: catalogoSeleccionado,
+            centroCosto: centroCostoSeleccionado,
           }),
         }
       );
@@ -267,7 +292,7 @@ const Index = () => {
 
   const handleEliminarCurso = async (id) => {
     try {
-      const response = await fetch(`https://192.168.1.20:5000/api/cursos/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/cursos/${id}`, {
         method: "DELETE",
       });
 
@@ -355,6 +380,9 @@ const Index = () => {
                 <p className="text-sm text-gray-500 my-3">
                   Concepto de pago: {curso.catalogo || "Sin concepto"}
                 </p>
+                <p className="text-sm text-gray-500 my-3">
+                  Centro de Costo: {curso.centroCosto || "Sin Centro de Costo"}
+                </p>
                 <button
                   className="flex bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-3xl"
                   onClick={() => handleInscripciones(curso.id)}
@@ -435,6 +463,23 @@ const Index = () => {
                 {catalogos.map((catalogo) => (
                   <option key={catalogo.id} value={catalogo.concepto}>
                     {catalogo.concepto}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-600">
+                Centro de Costo
+              </label>
+              <select
+                className="w-full border border-gray-300 p-2 rounded"
+                value={centroCostoSeleccionado}
+                onChange={(e) => setCentroCostoSeleccionado(e.target.value)}
+              >
+                <option value="">Seleccione un centro de costo</option>
+                {centroCostos.map((centroCosto) => (
+                  <option key={centroCosto.id} value={centroCosto.nombre}>
+                    {centroCosto.nombre}
                   </option>
                 ))}
               </select>
