@@ -128,6 +128,10 @@ const Index = () => {
     } else if (useAltID && !rfc && !curp) {
       toast.error("Por favor, proporcione RFC o CURP.");
     } else {
+      // Identificar cuál de los tres datos tiene información
+      const identificador = matricula || rfc || curp;
+      console.log("Identificador:", identificador);
+
       // Crear el objeto con la información que deseas enviar
       const pagoEfectivoData = {
         curso: cursoSeleccionado.split("/")[0],  // Extrae la parte del curso
@@ -136,9 +140,7 @@ const Index = () => {
         nombreCompleto,  // Nombre del alumno
         telefono,  // Número de teléfono
         comentarios: localStorage.getItem("comentarios") || "",
-        matricula: matricula || "",
-        rfc: rfc || "",
-        curp: curp || "",
+        identificador,  // Identificador (matricula, rfc o curp)
       };
   
       try {

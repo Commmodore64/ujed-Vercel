@@ -49,11 +49,11 @@ router.post("/generate-pdf-efectivo", (req, res) => {
     curso,
     catalogo,
     comentarios,
-    matricula,
+    identificador,
   } = req.body;
 
   // Verificar que los datos requeridos están presentes
-  if (!nombreCompleto || !telefono || !costo || !curso || !catalogo || !comentarios) {
+  if (!nombreCompleto || !telefono || !costo || !curso || !catalogo || !comentarios || !identificador) {
     return res.status(400).json({ error: "Faltan datos para generar el PDF" });
   }
 
@@ -94,7 +94,7 @@ router.post("/generate-pdf-efectivo", (req, res) => {
         Fecha_Adeudo: formatDate,
         Pagado: 0, // 0 significa no pagado
         Referencia: referencia,
-        id_alumno: matricula,
+        id_alumno: identificador,
         centroCosto: centroCosto,
         programa: programa,
         descripcionIngreso: comentarios,

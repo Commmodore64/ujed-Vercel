@@ -100,6 +100,11 @@ const Index = () => {
     });
     setCombinedData(combined);
   };
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
 
   useEffect(() => {
     fetchCoursesData();
@@ -160,12 +165,6 @@ const Index = () => {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsDropdownOpen(false);
-    }
   };
 
   // Manejador para el archivo CSV
@@ -869,10 +868,13 @@ const Index = () => {
                             ID Adeudo
                           </th>
                           <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                            Curso
+                          </th>
+                          <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                             Nombre
                           </th>
                           <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                            Descripción
+                            Concepto
                           </th>
                           <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                             Monto
