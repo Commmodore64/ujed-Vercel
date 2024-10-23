@@ -1,17 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const https = require('https'); // Para hacer solicitudes HTTPS
-const db = require('../db'); // Para interactuar con la base de datos
+const https = require("https"); // Para hacer solicitudes HTTPS
+const db = require("../db"); // Para interactuar con la base de datos
+const { redirect } = require("react-router-dom");
 
-const PRIVATE_API_KEY = 'sk_5dc3b0f5aab6451795796e4698223287'; // Reemplaza con tu clave API privada
-const MERCHANT_ID = 'mubvsyjaue0v90vbd5r8'; // Reemplaza con tu Merchant ID
-
-
+const PRIVATE_API_KEY = "sk_5dc3b0f5aab6451795796e4698223287"; // Reemplaza con tu clave API privada
+const MERCHANT_ID = "mubvsyjaue0v90vbd5r8"; // Reemplaza con tu Merchant ID
 
 // Función para obtener el id del curso basado en el nombre del curso
 const getCursoIdByName = (curso) => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT id FROM cursos WHERE nombre = ?';
+    const query = "SELECT id FROM cursos WHERE nombre = ?";
     db.query(query, [curso], (error, results) => {
       if (error) return reject(error);
       if (results.length > 0) {
@@ -26,22 +25,47 @@ const getCursoIdByName = (curso) => {
 // Función para insertar un registro en la tabla inscripciones
 const insertInscripcion = (idCurso, nombre, fechaInscripcion, estadoPago) => {
   return new Promise((resolve, reject) => {
-    const query = 'INSERT INTO inscripciones (id_curso, nombre, fecha_inscripcion, estado_pago) VALUES (?, ?, ?, ?)';
-    const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' '); // Formato YYYY-MM-DD HH:MM:SS
-    db.query(query, [idCurso, nombre, fechaActual, estadoPago], (error, results) => {
-      if (error) return reject(error);
-      resolve(results);
-    });
+    const query =
+      "INSERT INTO inscripciones (id_curso, nombre, fecha_inscripcion, estado_pago) VALUES (?, ?, ?, ?)";
+    const fechaActual = new Date().toISOString().slice(0, 19).replace("T", " "); // Formato YYYY-MM-DD HH:MM:SS
+    db.query(
+      query,
+      [idCurso, nombre, fechaActual, estadoPago],
+      (error, results) => {
+        if (error) return reject(error);
+        resolve(results);
+      }
+    );
   });
 };
 
 // Endpoint para crear un checkout
-router.post('/create-checkout', async (req, res) => {
-  const { amount, currency, newDescription, order_id, send_email, customer, redirect_url, curso } = req.body;
+router.post("/create-checkout", async (req, res) => {
+  const {
+    amount,
+    currency,
+    newDescription,
+    order_id,
+    send_email,
+    customer,
+    redirect_url,
+    curso,
+    comentarios,
+  } = req.body;
 
   // Verificar que todos los campos requeridos están presentes
-  if (!amount || !currency || !newDescription || !order_id || !redirect_url || !customer || !curso) {
-    return res.status(400).json({ error: 'Todos los campos requeridos deben ser proporcionados' });
+  if (
+    !amount ||
+    !currency ||
+    !newDescription ||
+    !order_id ||
+    !redirect_url ||
+    !customer ||
+    !curso
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Todos los campos requeridos deben ser proporcionados" });
   }
 
   try {
@@ -49,17 +73,33 @@ router.post('/create-checkout', async (req, res) => {
     const cursoId = await getCursoIdByName(curso);
 
     if (!cursoId) {
-      return res.status(404).json({ error: 'Curso no encontrado' });
+      return res.status(404).json({ error: "Curso no encontrado" });
     }
 
     // Log del id del curso para corroborar
-    console.log('ID del curso:', cursoId);
+    console.log("ID del curso:", cursoId);
+
+    // Llamar a la API /api/cursos para obtener los datos del curso
+    const cursoResponse = await fetch(`http://localhost:5000/api/cursos/${cursoId}`);
+    const cursoData = await cursoResponse.json();
+
+    if (!cursoResponse.ok) {
+      return res.status(500).json({ error: "Error al obtener datos del curso" });
+    }
+
+    const { programa, centroCosto } = cursoData;
+    console.log("Programa y centro de costo:", programa, centroCosto);
 
     // Crear el nombre completo del cliente
     const nombreCompleto = `${customer.name}`;
 
     // Insertar en la tabla inscripciones
-    await insertInscripcion(cursoId, nombreCompleto, new Date().toISOString().slice(0, 19).replace('T', ' '), 'Pendiente');
+    await insertInscripcion(
+      cursoId,
+      nombreCompleto,
+      new Date().toISOString().slice(0, 19).replace("T", " "),
+      "Pendiente"
+    );
 
     const description = `${newDescription}-${cursoId}`;
 
@@ -76,46 +116,83 @@ router.post('/create-checkout', async (req, res) => {
       },
       redirect_url,
     });
+    console.log("Datos generales openpay: ", postData);
+    // Extraer el id_alumno del order_id
+    const idAlumno = order_id.split('_')[3];
+
+    // Insertar en la tabla adeudos
+    const insertAdeudoQuery = `
+      INSERT INTO adeudos (id_alumno, monto, descripcion, fecha_adeudo, descripcionIngreso, Matricula, programa, centroCosto) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const adeudoValues = [idAlumno, amount, description, new Date().toISOString().slice(0, 19).replace("T", " "), comentarios, curso, programa, centroCosto];
+
+    db.query(insertAdeudoQuery, adeudoValues, (err, result) => {
+      if (err) {
+      console.error('Error al insertar en la tabla de adeudos:', err);
+      return res.status(500).json({ error: 'Error al insertar en la tabla de adeudos' });
+      }
+      console.log('Adeudo insertado correctamente');
+    });
 
     const options = {
-      hostname: 'sandbox-api.openpay.mx', //Seteado en sandbox para pruebas 
+      hostname: "sandbox-api.openpay.mx", //Seteado en sandbox para pruebas
       port: 443,
       path: `/v1/${MERCHANT_ID}/checkouts`,
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${Buffer.from(`${PRIVATE_API_KEY}:`).toString('base64')}`,
-        'Content-Length': Buffer.byteLength(postData),
+        "Content-Type": "application/json",
+        Authorization: `Basic ${Buffer.from(`${PRIVATE_API_KEY}:`).toString(
+          "base64"
+        )}`,
+        "Content-Length": Buffer.byteLength(postData),
       },
     };
 
     const request = https.request(options, (response) => {
-      let data = '';
+      let data = "";
 
-      response.on('data', (chunk) => {
+      response.on("data", (chunk) => {
         data += chunk;
       });
 
-      response.on('end', () => {
+      response.on("end", async () => {
         if (response.statusCode === 200) {
-          res.json(JSON.parse(data));
+          try {
+            const parsedData = JSON.parse(data);
+            res.json(parsedData);
+          } catch (parseError) {
+            console.error("Error al parsear la respuesta JSON:", parseError);
+            res.status(500).json({ error: "Error al parsear la respuesta JSON" });
+          }
         } else {
-          res.status(response.statusCode).json(JSON.parse(data));
+          try {
+            const parsedData = JSON.parse(data);
+            res.status(response.statusCode).json(parsedData);
+          } catch (parseError) {
+            console.error("Error al parsear la respuesta JSON:", parseError);
+            res.status(500).json({ error: "Error al parsear la respuesta JSON" });
+          }
         }
       });
     });
 
-    request.on('error', (e) => {
-      console.error('Error al crear el checkout:', e);
-      res.status(500).json({ error: 'Error al crear el checkout' });
+    request.on("error", (e) => {
+      console.error("Error al crear el checkout:", e);
+      res.status(500).json({ error: "Error al crear el checkout" });
     });
 
     request.write(postData);
-    console.log(postData);
+    console.log("Datos generales openpay: ", postData);
     request.end();
   } catch (error) {
-    console.error('Error al obtener id del curso o insertar inscripción:', error);
-    res.status(500).json({ error: 'Error al obtener id del curso o insertar inscripción' });
+    console.error(
+      "Error al obtener id del curso o insertar inscripción:",
+      error
+    );
+    res
+      .status(500)
+      .json({ error: "Error al obtener id del curso o insertar inscripción" });
   }
 });
 // Nueva ruta para verificar una transacción y guardarla en la base de datos
@@ -230,9 +307,5 @@ router.get('/verify-transaction', (req, res) => {
 
   request.end();
 });
-
-
-
-
 
 module.exports = router;

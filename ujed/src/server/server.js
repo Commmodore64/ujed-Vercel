@@ -16,6 +16,8 @@ const uploadcsvRoutes = require('./routes/uploadcsvRoutes');
 const adeudosRoutes = require('./routes/adeudosRoutes');
 const noconciliadosRoutes = require('./routes/noconciliadosRoutes');
 const centroCostoRoutes = require('./routes/centroCostoRoutes');
+const paynetVerification = require('./routes/paynetVerification');
+const webhooksRoutes = require('./routes/webhookPagos');
 
 app.use(cors()); // CORS para todas las rutas
     
@@ -39,6 +41,8 @@ app.use('/api', uploadcsvRoutes); // Rutas de API para uploadcsvRoutes bajo /api
 app.use('/api', adeudosRoutes); // Rutas de API para adeudosRoutes bajo /api
 app.use('/api', noconciliadosRoutes); // Rutas de API para noconciliadosRoutes bajo /api
 app.use('/api', centroCostoRoutes); // Rutas de API para centroCostoRoutes bajo /api
+app.use('/api', paynetVerification); // Rutas de API para paynetVerification bajo /api
+app.use('/api', webhooksRoutes); // Rutas de API para webhooksRoutes bajo /api
 
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;

@@ -219,7 +219,9 @@ const Index = () => {
               new Date()
                 .toLocaleString()
                 .replace(/[/\\:*?"<>|,\s]/g, "")
-                .replace(/(a\.m\.|p\.m\.)/g, ""),
+                .replace(/(a\.m\.|p\.m\.)/g, "") +
+          "_" +
+          (matricula || curp || rfc),
             send_email: false,
             customer: {
               name: nombreCompleto,
@@ -227,6 +229,7 @@ const Index = () => {
               email: "email@email.com",
             },
             redirect_url: "http://localhost:5000/api/verify-transaction",
+            comentarios: localStorage.getItem("comentarios") || "",
           }),
         }
       );
