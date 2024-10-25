@@ -61,7 +61,8 @@ router.post("/create-checkout", async (req, res) => {
     !order_id ||
     !redirect_url ||
     !customer ||
-    !curso
+    !curso ||
+    !comentarios
   ) {
     return res
       .status(400)
@@ -107,6 +108,7 @@ router.post("/create-checkout", async (req, res) => {
       amount,
       currency,
       description,
+      
       order_id,
       send_email,
       customer: {
