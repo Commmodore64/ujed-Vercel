@@ -8,8 +8,9 @@ import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 import { OpenPay } from "openpay-js";
 
 const Index = () => {
-  const Swal = require('sweetalert2');
+  const Swal = require("sweetalert2");
   const [deviceSessionId, setDeviceSessionId] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [cursos, setCursos] = useState([]);
   const [matricula, setMatricula] = useState(
     localStorage.getItem("matricula") || ""
@@ -118,7 +119,7 @@ const Index = () => {
 
   const handlePagoEnEfectivo = async (e) => {
     e.preventDefault();
-  
+
     if (
       (!matricula && !rfc && !curp) ||
       !nombreCompleto ||
@@ -136,25 +137,28 @@ const Index = () => {
 
       // Crear el objeto con la información que deseas enviar
       const pagoEfectivoData = {
-        curso: cursoSeleccionado.split("/")[0],  // Extrae la parte del curso
-        costo: costoSeleccionado,  // Costo del curso
-        catalogo,  // Información del catálogo
-        nombreCompleto,  // Nombre del alumno
-        telefono,  // Número de teléfono
+        curso: cursoSeleccionado.split("/")[0], // Extrae la parte del curso
+        costo: costoSeleccionado, // Costo del curso
+        catalogo, // Información del catálogo
+        nombreCompleto, // Nombre del alumno
+        telefono, // Número de teléfono
         comentarios: localStorage.getItem("comentarios") || "",
-        identificador,  // Identificador (matricula, rfc o curp)
+        identificador, // Identificador (matricula, rfc o curp)
       };
-  
+
       try {
         // Hacer la petición POST a la API
-        const response = await fetch("http://localhost:5000/api/generate-pdf-efectivo", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(pagoEfectivoData),
-        });
-  
+        const response = await fetch(
+          "http://localhost:5000/api/generate-pdf-efectivo",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(pagoEfectivoData),
+          }
+        );
+
         if (response.ok) {
           const pdfBlob = await response.blob(); // Recibir el PDF como blob
           const url = window.URL.createObjectURL(pdfBlob); // Crear URL temporal para descargar
@@ -180,7 +184,6 @@ const Index = () => {
       }
     }
   };
-  
 
   const handlePagoEnLineaConTarjeta = async (e) => {
     e.preventDefault();
@@ -199,12 +202,10 @@ const Index = () => {
       toast.error("Por favor, proporcione RFC o CURP.");
       return;
     }
-    // OpenPay.setSandboxMode(true);
-    // var deviceDataId = OpenPay.deviceData.setup(matricula);
-    // console.log(deviceDataId);
+
+    setIsProcessing(true); // Deshabilita el botón
 
     try {
-      // Crear el objeto con la información necesaria para la solicitud
       const response = await fetch(
         "http://localhost:5000/api/create-checkout",
         {
@@ -217,7 +218,6 @@ const Index = () => {
             amount: costoSeleccionado,
             currency: "MXN",
             newDescription: catalogo,
-            // source_id: deviceDataId,
             order_id:
               "order_" +
               nombreCompleto +
@@ -226,8 +226,8 @@ const Index = () => {
                 .toLocaleString()
                 .replace(/[/\\:*?"<>|,\s]/g, "")
                 .replace(/(a\.m\.|p\.m\.)/g, "") +
-          "_" +
-          (matricula || curp || rfc),
+              "_" +
+              (matricula || curp || rfc),
             send_email: false,
             customer: {
               name: nombreCompleto,
@@ -247,14 +247,15 @@ const Index = () => {
       const data = await response.json();
 
       if (data.checkout_link) {
-        // Redirigir al usuario a la URL de checkout
-        window.location.href = data.checkout_link;
+        window.location.href = data.checkout_link; // Redirige al usuario
       } else {
         toast.error("No se recibió el enlace de pago.");
+        setIsProcessing(false); // Reactiva el botón si no hay enlace
       }
     } catch (error) {
       console.error("Error al crear la sesión de pago:", error);
       toast.error("Ocurrió un error al procesar el pago.");
+      setIsProcessing(false); // Reactiva el botón si hay un error
     }
   };
 
@@ -587,13 +588,14 @@ const Index = () => {
               <button
                 type="submit"
                 onClick={handlePagoEnLineaConTarjeta}
-                disabled={!esFormularioValido()}
+                disabled={isProcessing || !esFormularioValido()} // Deshabilita si está procesando o el formulario no es válido
                 className={`mt-6 px-4 py-2 w-full ${
                   esFormularioValido() ? "bg-blue-500" : "bg-gray-300"
                 } text-white rounded-md`}
               >
-                Pago en línea
+                {isProcessing ? "Procesando..." : "Pago en línea"}
               </button>
+
               <button
                 type="button"
                 className="px-2 mt-2 lg:px-4 mx-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
