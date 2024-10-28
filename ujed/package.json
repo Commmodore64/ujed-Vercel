@@ -32,6 +32,7 @@
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.10.2",
     "npm": "^10.8.2",
+    "openpay": "^1.0.5",
     "openpay-js": "^1.0.0",
     "os-browserify": "^0.3.0",
     "path": "^0.12.7",

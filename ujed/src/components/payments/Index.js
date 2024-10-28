@@ -5,9 +5,11 @@ import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import { IoMdCheckmark, IoMdClose } from "react-icons/io";
+import { OpenPay } from "openpay-js";
 
 const Index = () => {
   const Swal = require('sweetalert2');
+  const [deviceSessionId, setDeviceSessionId] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [matricula, setMatricula] = useState(
     localStorage.getItem("matricula") || ""
@@ -197,6 +199,9 @@ const Index = () => {
       toast.error("Por favor, proporcione RFC o CURP.");
       return;
     }
+    // OpenPay.setSandboxMode(true);
+    // var deviceDataId = OpenPay.deviceData.setup(matricula);
+    // console.log(deviceDataId);
 
     try {
       // Crear el objeto con la información necesaria para la solicitud
@@ -212,6 +217,7 @@ const Index = () => {
             amount: costoSeleccionado,
             currency: "MXN",
             newDescription: catalogo,
+            // source_id: deviceDataId,
             order_id:
               "order_" +
               nombreCompleto +
