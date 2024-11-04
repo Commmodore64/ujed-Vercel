@@ -3,13 +3,9 @@ import Sidebar from "../sidebar/Index";
 import { useNavigate } from "react-router-dom";
 import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
-import Swal from "sweetalert2";
-import { IoMdCheckmark, IoMdClose } from "react-icons/io";
-import { OpenPay } from "openpay-js";
 
 const Index = () => {
   const Swal = require("sweetalert2");
-  const [deviceSessionId, setDeviceSessionId] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [cursos, setCursos] = useState([]);
   const [matricula, setMatricula] = useState(
@@ -254,7 +250,7 @@ const Index = () => {
       }
     } catch (error) {
       console.error("Error al crear la sesión de pago:", error);
-      toast.error("Ocurrió un error al procesar el pago.");
+      toast.error("Ocurrió un error al procesar el pago, revisa tu información.");
       setIsProcessing(false); // Reactiva el botón si hay un error
     }
   };
@@ -461,6 +457,7 @@ const Index = () => {
               <MaskedInput
                 mask={phoneMask}
                 guide={false}
+                required={true}
                 type="text"
                 name="telefono"
                 value={telefono}

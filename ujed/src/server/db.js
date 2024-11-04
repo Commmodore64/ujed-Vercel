@@ -3,7 +3,7 @@ require('dotenv').config(); // Importa las variables de entorno desde un archivo
 
 // Configuración de la conexión a la base de datos MySQL
 const connection = mysql.createConnection({
-  host: "localhost",     // Host de la base de datos (generalmente 'localhost' si está en tu máquina)
+  host: "192.168.1.141",     // Host de la base de datos (generalmente 'localhost' si está en tu máquina)
   user: "root",     // Usuario de la base de datos
   port: "3306",     // Puerto de la base de datos (generalmente 3306)
   password: "Hola_123", // Contraseña del usuario de la base de datos
