@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 
-
 const DownloadPDF = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -17,12 +16,12 @@ const DownloadPDF = () => {
   const courseId = query.get("courseId");
   const comentarios = localStorage.getItem("comentarios");
   const order_id = query.get("order_id");
-  console.log("Comentarios: " , comentarios);
+  console.log("Comentarios: ", comentarios);
   console.log(courseId);
 
   useEffect(() => {
     // Hacer la solicitud al backend para generar y descargar el PDF
-    fetch("http://localhost:5000/api/generate-pdf", {
+    fetch("https://200.23.125.118:5000/api/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

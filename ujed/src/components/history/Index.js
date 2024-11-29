@@ -37,7 +37,7 @@ const Index = () => {
   const [endDate, setEndDate] = useState("");
 
   const fetchCoursesData = async () => {
-    const response = await fetch("http://localhost:5000/api/cursos");
+    const response = await fetch("https://200.23.125.118:5000/api/cursos");
     const data = await response.json();
     setCoursesData(data);
   };
@@ -49,7 +49,7 @@ const Index = () => {
         // Fetch inscripciones normales si isCard es true
         for (const course of coursesData) {
           const response = await fetch(
-            `http://localhost:5000/api/inscripciones/${course.id}`
+            `https://200.23.125.118:5000/api/inscripciones/${course.id}`
           );
           if (response.ok) {
             const data = await response.json();
@@ -60,7 +60,7 @@ const Index = () => {
         }
       } else {
         // Fetch adeudos si isCard es false
-        const response = await fetch("http://localhost:5000/api/adeudos");
+        const response = await fetch("https://200.23.125.118:5000/api/adeudos");
         if (response.ok) {
           const data = await response.json();
           allInscriptions.push(...data);
@@ -186,7 +186,7 @@ const Index = () => {
     try {
       // Eliminar el pago de la base de datos
       const response = await fetch(
-        `http://localhost:5000/api/eliminarpago/${selectedReferencia}`,
+        `https://200.23.125.118:5000/api/eliminarpago/${selectedReferencia}`,
         {
           method: "POST",
           headers: {
@@ -202,7 +202,7 @@ const Index = () => {
 
       // Actualizar el pago a Pagado: 1
       const responseUpdate = await fetch(
-        "http://localhost:5000/api/actualizarpago",
+        "https://200.23.125.118:5000/api/actualizarpago",
         {
           method: "POST",
           headers: {
@@ -242,7 +242,7 @@ const Index = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:5000/api/subir-archivo",
+          "https://200.23.125.118:5000/api/subir-archivo",
           {
             method: "POST",
             body: formData,
@@ -274,12 +274,16 @@ const Index = () => {
     setIsModalOpen(false);
     try {
       // Hacer fetch a la API de adeudos
-      const responseAdeudos = await fetch("http://localhost:5000/api/adeudos");
+      const responseAdeudos = await fetch(
+        "https://200.23.125.118:5000/api/adeudos"
+      );
       const adeudosData = await responseAdeudos.json();
       console.log("Datos de adeudos:", adeudosData);
 
       // Hacer fetch a la API de pagos
-      const responsePagos = await fetch("http://localhost:5000/api/pagos");
+      const responsePagos = await fetch(
+        "https://200.23.125.118:5000/api/pagos"
+      );
       const pagosData = await responsePagos.json();
       console.log("Datos de pagos:", pagosData);
 
@@ -440,7 +444,7 @@ const Index = () => {
   const fetchPagosNoConciliados = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/pagosnoconciliados"
+        "https://200.23.125.118:5000/api/pagosnoconciliados"
       ); // Cambia esta URL si es necesario
       const data = await response.json();
       setPagos(data); // Ajusta según la estructura de respuesta de tu API
@@ -474,7 +478,7 @@ const Index = () => {
       if (adeudosData.length === 0) {
         // Si no hay datos de adeudos, hacer fetch a la API
         const responseAdeudos = await fetch(
-          "http://localhost:5000/api/adeudos"
+          "https://200.23.125.118:5000/api/adeudos"
         );
         adeudosData = await responseAdeudos.json();
         console.log("Efectivo", adeudosData);
@@ -484,7 +488,9 @@ const Index = () => {
       let pagosData = combinedData.filter((item) => item.ID_Pago);
       if (pagosData.length === 0) {
         // Si no hay datos de pagos, hacer fetch a la API
-        const responsePagos = await fetch("http://localhost:5000/api/pagos");
+        const responsePagos = await fetch(
+          "https://200.23.125.118:5000/api/pagos"
+        );
         pagosData = await responsePagos.json();
         console.log("Tarjeta", pagosData);
       }

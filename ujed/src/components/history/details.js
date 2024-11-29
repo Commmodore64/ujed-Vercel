@@ -10,7 +10,7 @@ const Index = () => {
   useEffect(() => {
     const fetchPaymentsData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/pagos"); // Asegúrate de que la URL sea correcta
+        const response = await fetch("https://200.23.125.118:5000/api/pagos"); // Asegúrate de que la URL sea correcta
         if (response.ok) {
           const data = await response.json();
           setPaymentsData(data);
@@ -35,7 +35,9 @@ const Index = () => {
             <Link to={"/history"} className="text-lg">
               <IoIosArrowBack className="inline-block" />
             </Link>
-            <h1 className="text-2xl font-bold pl-1">Detalles de pagos con tarjeta</h1>
+            <h1 className="text-2xl font-bold pl-1">
+              Detalles de pagos con tarjeta
+            </h1>
           </div>
           <div className="w-full">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">

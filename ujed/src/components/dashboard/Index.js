@@ -50,7 +50,7 @@ const Index = () => {
     const obtenerDatosAlumno = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/alumnos/${user.sub}`,
+          `https://200.23.125.118:5000/api/alumnos/${user.sub}`,
           {
             method: "GET",
             headers: {
@@ -86,7 +86,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cursos", {
+        const response = await fetch("https://200.23.125.118:5000/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

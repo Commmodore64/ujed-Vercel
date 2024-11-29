@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
-import MaskedInput from 'react-text-mask';
+import MaskedInput from "react-text-mask";
 import Sidebar from "./sidebar/Index";
 
 const Profile = () => {
@@ -20,7 +20,7 @@ const Profile = () => {
     const obtenerDatosAlumno = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/alumnos/${user.sub}`,
+          `https://200.23.125.118:5000/api/alumnos/${user.sub}`,
           {
             method: "GET",
             headers: {
@@ -44,7 +44,10 @@ const Profile = () => {
             });
           }
         } else {
-          console.error("Error al obtener datos del alumno:", response.statusText);
+          console.error(
+            "Error al obtener datos del alumno:",
+            response.statusText
+          );
         }
       } catch (error) {
         console.error("Error en la solicitud:", error);
@@ -103,7 +106,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/userdata", {
+      const response = await fetch("https://200.23.125.118:5000/api/userdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +150,18 @@ const Profile = () => {
   }
 
   const phoneMask = [
-    /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/
+    /[1-9]/,
+    /\d/,
+    /\d/,
+    "-",
+    /\d/,
+    /\d/,
+    /\d/,
+    "-",
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/,
   ];
 
   return (
@@ -185,7 +199,9 @@ const Profile = () => {
 
         <hr className="mt-10 border-gray-400 w-full" />
 
-        <h2 className="text-xl font-semibold mt-10 mb-4">Datos del Administrador</h2>
+        <h2 className="text-xl font-semibold mt-10 mb-4">
+          Datos del Administrador
+        </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <p className="text-gray-700 mb-2">Número de Identificación</p>
