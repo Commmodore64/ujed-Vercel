@@ -10,7 +10,7 @@ const CourseInfo = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("https://200.23.125.118:5000/api/cursos", {
+        const response = await fetch("https://200.23.125.118/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

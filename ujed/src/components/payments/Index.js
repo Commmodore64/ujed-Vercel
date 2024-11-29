@@ -43,7 +43,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("https://200.23.125.118:5000/api/cursos", {
+        const response = await fetch("https://200.23.125.118/api/cursos", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const Index = () => {
       try {
         // Hacer la petición POST a la API
         const response = await fetch(
-          "https://200.23.125.118:5000/api/generate-pdf-efectivo",
+          "https://200.23.125.118/api/generate-pdf-efectivo",
           {
             method: "POST",
             headers: {
@@ -203,7 +203,7 @@ const Index = () => {
 
     try {
       const response = await fetch(
-        "https://200.23.125.118:5000/api/create-checkout",
+        "https://200.23.125.118/api/create-checkout",
         {
           method: "POST",
           headers: {
@@ -230,7 +230,7 @@ const Index = () => {
               phone_number: telefono,
               email: "email@email.com",
             },
-            redirect_url: "https://200.23.125.118:5000/api/verify-transaction",
+            redirect_url: "https://200.23.125.118/api/verify-transaction",
             comentarios: localStorage.getItem("comentarios") || "",
           }),
         }
@@ -308,7 +308,7 @@ const Index = () => {
       }
 
       const response = await fetch(
-        "https://200.23.125.118:5000/api/validar-codigo",
+        "https://200.23.125.118/api/validar-codigo",
         {
           method: "POST",
           headers: {

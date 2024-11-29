@@ -82,7 +82,7 @@ router.post("/create-checkout", async (req, res) => {
 
     // Llamar a la API /api/cursos para obtener los datos del curso
     const cursoResponse = await fetch(
-      `https://200.23.125.118:5000/api/cursos/${cursoId}`
+      `https://200.23.125.118/api/cursos/${cursoId}`
     );
     const cursoData = await cursoResponse.json();
 

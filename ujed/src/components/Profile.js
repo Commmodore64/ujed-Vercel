@@ -20,7 +20,7 @@ const Profile = () => {
     const obtenerDatosAlumno = async () => {
       try {
         const response = await fetch(
-          `https://200.23.125.118:5000/api/alumnos/${user.sub}`,
+          `https://200.23.125.118/api/alumnos/${user.sub}`,
           {
             method: "GET",
             headers: {
@@ -106,7 +106,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch("https://200.23.125.118:5000/api/userdata", {
+      const response = await fetch("https://200.23.125.118/api/userdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
