@@ -267,7 +267,7 @@ router.get("/verify-transaction", (req, res) => {
         // Verificar el método de pago para redirigir
         if (method === "store" || method === "bank_account") {
           // Si el método de pago es 'store' o 'bank_account', redirigir a la página de inicio
-          return res.redirect("http://localhost:3000/");
+          return res.redirect("https://200.23.125.118/");
         }
 
         // Insertar datos en la tabla de pagos si la transacción se completó
@@ -340,7 +340,7 @@ router.get("/verify-transaction", (req, res) => {
 
                     // Redirigir a la ruta con los parámetros en la query string
                     res.redirect(
-                      `http://localhost:3000/paypdf?name=${encodeURIComponent(
+                      `https://200.23.125.118/paypdf?name=${encodeURIComponent(
                         name
                       )}&holderName=${encodeURIComponent(
                         holderName

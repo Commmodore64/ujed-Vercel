@@ -78,10 +78,15 @@ const Index = () => {
       }
     };
 
-    if (isAuthenticated) {
+    // Validar si el usuario está autenticado y si el `user.sub` existe
+    if (isAuthenticated && user?.sub) {
       obtenerDatosAlumno();
+    } else if (!isAuthenticated) {
+      console.log("El usuario no está autenticado");
+    } else if (!user?.sub) {
+      console.log("El usuario autenticado no tiene un 'sub'");
     }
-  }, [isAuthenticated, user.sub]);
+  }, [isAuthenticated, user?.sub]);
 
   useEffect(() => {
     const fetchCursos = async () => {
