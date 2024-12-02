@@ -8,6 +8,9 @@ const connection = mysql.createConnection({
   port: "3306", // Puerto de la base de datos (generalmente 3306)
   password: "K0nT4BL3-F430!!", // Contraseña del usuario de la base de datos
   database: "ujedMysql", // Nombre de la base de datos que quieres usar
+  waitForConnections: true,
+  connectionLimit: 15,
+  queueLimit: 0,
 });
 
 // Conectar a MySQL
