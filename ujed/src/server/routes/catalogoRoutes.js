@@ -1,81 +1,167 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const connection = require('../db');
+const pool = require("../db"); // Cambia `connection` por `pool`
 
-// Crear un nuevo catalogos
-router.post('/catalogo', (req, res) => {
-    //const { nombre, programa, info, costo, vigencia, cupo, codigo } = req.body;
+// Crear un nuevo catálogo
+router.post("/catalogo", async (req, res) => {
+  const {
+    cuenta,
+    nombre_cuenta,
+    subcuenta,
+    tipo_poliza,
+    llave_concepto,
+    concepto,
+  } = req.body;
+  const query =
+    "INSERT INTO catalogo_conceptos (cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto) VALUES (?, ?, ?, ?, ?, ?)";
 
-    const query = 'INSERT INTO catalogo_conceptos (cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    connection.query(query, [cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto], (err, results) => {
-        if (err) {
-            console.error('Error al crear el catalogo:', err);
-            return res.status(500).json({ error: 'Error interno del servidor' });
-        }
-        res.status(201).json({ id: results.insertId, cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto });
-        console.log("Catalogo creado correctamente, datos: ", { id: results.insertId, cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto });
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+
+    const [results] = await connection.query(query, [
+      cuenta,
+      nombre_cuenta,
+      subcuenta,
+      tipo_poliza,
+      llave_concepto,
+      concepto,
+    ]);
+
+    res.status(201).json({
+      id: results.insertId,
+      cuenta,
+      nombre_cuenta,
+      subcuenta,
+      tipo_poliza,
+      llave_concepto,
+      concepto,
     });
+
+    console.log("Catálogo creado correctamente:", {
+      id: results.insertId,
+      cuenta,
+      nombre_cuenta,
+      subcuenta,
+      tipo_poliza,
+      llave_concepto,
+      concepto,
+    });
+  } catch (err) {
+    console.error("Error al crear el catálogo:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
+// Obtener todos los catálogos
+router.get("/catalogo", async (req, res) => {
+  const query = "SELECT * FROM catalogo_conceptos";
 
-// Endpoint para obtener todos los catalogos
-router.get('/catalogo', (req, res) => {
-    connection.query('SELECT * FROM catalogo_conceptos', (err, results) => {
-      if (err) {
-        console.error('Error al obtener el catalogo:', err);
-        return res.status(500).json({ error: 'Error interno del servidor' });
-      }
-      res.status(200).json(results);
-    });
-  });
+  let connection;
 
-// Obtener un curso por ID
-// router.get('/cursos/:id', (req, res) => {
-//     const cursoId = req.params.id;
-//     const query = 'SELECT * FROM cursos WHERE id = ?';
-//     connection.query(query, [cursoId], (err, results) => {
-//         if (err) {
-//             console.error('Error al obtener el curso:', err);
-//             return res.status(500).json({ error: 'Error interno del servidor' });
-//         }
-//         if (results.length > 0) {
-//             res.status(200).json(results[0]);
-//         } else {
-//             res.status(404).json({ error: 'Curso no encontrado' });
-//         }
-//     });
-// });
+  try {
+    connection = await pool.getConnection();
 
-// Actualizar un catalogo por ID
-router.put('/catalogo/:id', (req, res) => {
-    const catalogoId = req.params.id;
-    const { cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto } = req.body;
+    const [results] = await connection.query(query);
 
-    console.log('Datos recibidos:', { cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto });
-
-    const query = 'UPDATE catalogo_conceptos SET cuenta = ?, nombre_cuenta = ?, subcuenta = ?, tipo_poliza = ?, llave_concepto = ?, concepto = ? WHERE id = ?';
-    connection.query(query, [cuenta, nombre_cuenta, subcuenta, tipo_poliza, tipo_poliza, llave_concepto, concepto, catalogoId ], (err, results) => {
-        if (err) {
-            console.error('Error al actualizar del catalogo:', err);
-            return res.status(500).json({ error: 'Error interno del servidor' });
-        }
-        res.status(200).json({ id: cursoId, nombre, info });
-    });
+    res.status(200).json(results);
+  } catch (err) {
+    console.error("Error al obtener el catálogo:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
+// Actualizar un catálogo por ID
+router.put("/catalogo/:id", async (req, res) => {
+  const catalogoId = req.params.id;
+  const {
+    cuenta,
+    nombre_cuenta,
+    subcuenta,
+    tipo_poliza,
+    llave_concepto,
+    concepto,
+  } = req.body;
 
+  const query =
+    "UPDATE catalogo_conceptos SET cuenta = ?, nombre_cuenta = ?, subcuenta = ?, tipo_poliza = ?, llave_concepto = ?, concepto = ? WHERE id = ?";
 
-// Eliminar un curso por ID
-router.delete('/catalogo/:id', (req, res) => {
-    const cursoId = req.params.id;
-    const query = 'DELETE FROM catalogo_conceptos WHERE id = ?';
-    connection.query(query, [cursoId], (err, results) => {
-        if (err) {
-            console.error('Error al eliminar el catalogo:', err);
-            return res.status(500).json({ error: 'Error interno del servidor' });
-        }
-        res.status(204).json({ message: 'Catalogo eliminado' });
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+
+    const [results] = await connection.query(query, [
+      cuenta,
+      nombre_cuenta,
+      subcuenta,
+      tipo_poliza,
+      llave_concepto,
+      concepto,
+      catalogoId,
+    ]);
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Catálogo no encontrado" });
+    }
+
+    res.status(200).json({
+      id: catalogoId,
+      cuenta,
+      nombre_cuenta,
+      subcuenta,
+      tipo_poliza,
+      llave_concepto,
+      concepto,
     });
+
+    console.log("Catálogo actualizado correctamente:", {
+      id: catalogoId,
+      cuenta,
+      nombre_cuenta,
+      subcuenta,
+      tipo_poliza,
+      llave_concepto,
+      concepto,
+    });
+  } catch (err) {
+    console.error("Error al actualizar el catálogo:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+
+// Eliminar un catálogo por ID
+router.delete("/catalogo/:id", async (req, res) => {
+  const catalogoId = req.params.id;
+  const query = "DELETE FROM catalogo_conceptos WHERE id = ?";
+
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+
+    const [results] = await connection.query(query, [catalogoId]);
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Catálogo no encontrado" });
+    }
+
+    res.status(204).send();
+
+    console.log("Catálogo eliminado correctamente, ID:", catalogoId);
+  } catch (err) {
+    console.error("Error al eliminar el catálogo:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
 module.exports = router;

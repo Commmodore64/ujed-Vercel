@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const router = express.Router();
-const connection = require("../db");
+const pool = require("../db"); // Usamos el pool en lugar de connection
 
 // Middleware para parsear JSON
 router.use(bodyParser.json());
@@ -19,7 +19,7 @@ async function guardarDetalles(
   const updateQuery =
     "UPDATE adeudos SET referencia = ?, Nombre = ?, Descripcion = ?, monto = ?, Fecha_Adeudo = ? WHERE id_alumno = ? AND Descripcion = ?";
 
-  connection.query(
+  pool.query(
     updateQuery,
     [
       reference,
@@ -44,7 +44,7 @@ async function guardarDetalles(
         // Si no se actualizó nada, insertamos un nuevo registro
         const insertQuery =
           "INSERT INTO adeudos (referencia, Nombre, Descripcion, monto, Fecha_Adeudo, id_alumno) VALUES (?, ?, ?, ?, ?, ?)";
-        connection.query(
+        pool.query(
           insertQuery,
           [reference, nombre, descripcion, monto, fechaAdeudo, id_alumno],
           (insertErr) => {
@@ -115,31 +115,27 @@ router.post("/webhook/openpay", async (req, res) => {
         // Consulta para buscar en la tabla adeudos
         const query =
           "SELECT * FROM adeudos WHERE id_alumno = ? AND Descripcion = ?";
-        connection.query(
-          query,
-          [id_alumno, description],
-          async (err, results) => {
-            if (err) {
-              console.error("Error al buscar en la tabla adeudos:", err);
-              return res.status(500).send("Error interno al buscar en adeudos");
-            }
-
-            if (results.length > 0) {
-              guardarDetalles(
-                reference,
-                nombre,
-                description,
-                amount,
-                fechaAdeudo,
-                id_alumno
-              );
-              res.status(200).send("Webhook procesado y datos guardados");
-            } else {
-              console.log("No se encontró coincidencia en la tabla adeudos");
-              res.status(400).send("No se encontró el adeudo correspondiente");
-            }
+        pool.query(query, [id_alumno, description], async (err, results) => {
+          if (err) {
+            console.error("Error al buscar en la tabla adeudos:", err);
+            return res.status(500).send("Error interno al buscar en adeudos");
           }
-        );
+
+          if (results.length > 0) {
+            guardarDetalles(
+              reference,
+              nombre,
+              description,
+              amount,
+              fechaAdeudo,
+              id_alumno
+            );
+            res.status(200).send("Webhook procesado y datos guardados");
+          } else {
+            console.log("No se encontró coincidencia en la tabla adeudos");
+            res.status(400).send("No se encontró el adeudo correspondiente");
+          }
+        });
       } else {
         console.log("Referencia o nombre no encontrados en los datos del pago");
         res.status(400).send("Datos incompletos");
@@ -164,7 +160,7 @@ router.post("/webhook/openpay", async (req, res) => {
       const updateQuery =
         "UPDATE adeudos SET Pagado = 1, Fecha_Pago = ? WHERE id_alumno = ? AND Descripcion = ?";
 
-      connection.query(
+      pool.query(
         updateQuery,
         [currentDate, id_alumno, description],
         (updateErr) => {
@@ -187,7 +183,7 @@ router.post("/webhook/openpay", async (req, res) => {
       // Si es pago con tarjeta y el pago se completó, eliminamos el registro en adeudos
       const deleteQuery =
         "DELETE FROM adeudos WHERE id_alumno = ? AND Descripcion = ?";
-      connection.query(deleteQuery, [id_alumno, description], (deleteErr) => {
+      pool.query(deleteQuery, [id_alumno, description], (deleteErr) => {
         if (deleteErr) {
           console.error("Error al eliminar el adeudo:", deleteErr);
           return res.status(500).send("Error al eliminar el adeudo");
@@ -208,7 +204,5 @@ router.post("/webhook/openpay", async (req, res) => {
     res.status(400).send("Evento no manejado");
   }
 });
-
-module.exports = router;
 
 module.exports = router;

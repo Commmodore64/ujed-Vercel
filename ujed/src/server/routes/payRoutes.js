@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const https = require("https"); // Para hacer solicitudes HTTPS
-const db = require("../db"); // Para interactuar con la base de datos
-const { redirect } = require("react-router-dom");
+const dbPool = require("../db"); // Para interactuar con la base de datos
 
 const PRIVATE_API_KEY = "sk_5dc3b0f5aab6451795796e4698223287"; // Reemplaza con tu clave API privada
 const MERCHANT_ID = "mubvsyjaue0v90vbd5r8"; // Reemplaza con tu Merchant ID
@@ -11,12 +10,12 @@ const MERCHANT_ID = "mubvsyjaue0v90vbd5r8"; // Reemplaza con tu Merchant ID
 const getCursoIdByName = (curso) => {
   return new Promise((resolve, reject) => {
     const query = "SELECT id FROM cursos WHERE nombre = ?";
-    db.query(query, [curso], (error, results) => {
+    dbPool.query(query, [curso], (error, results) => {
       if (error) return reject(error);
       if (results.length > 0) {
         resolve(results[0].id);
       } else {
-        resolve(null); // O podrías rechazar la promesa si prefieres
+        resolve(null);
       }
     });
   });
@@ -28,7 +27,7 @@ const insertInscripcion = (idCurso, nombre, fechaInscripcion, estadoPago) => {
     const query =
       "INSERT INTO inscripciones (id_curso, nombre, fecha_inscripcion, estado_pago) VALUES (?, ?, ?, ?)";
     const fechaActual = new Date().toISOString().slice(0, 19).replace("T", " "); // Formato YYYY-MM-DD HH:MM:SS
-    db.query(
+    dbPool.query(
       query,
       [idCurso, nombre, fechaActual, estadoPago],
       (error, results) => {
@@ -77,9 +76,6 @@ router.post("/create-checkout", async (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
-    // Log del id del curso para corroborar
-    console.log("ID del curso:", cursoId);
-
     // Llamar a la API /api/cursos para obtener los datos del curso
     const cursoResponse = await fetch(
       `https://200.23.125.118/api/cursos/${cursoId}`
@@ -93,7 +89,6 @@ router.post("/create-checkout", async (req, res) => {
     }
 
     const { programa, centroCosto } = cursoData;
-    console.log("Programa y centro de costo:", programa, centroCosto);
 
     // Crear el nombre completo del cliente
     const nombreCompleto = `${customer.name}`;
@@ -112,7 +107,6 @@ router.post("/create-checkout", async (req, res) => {
       amount,
       currency,
       description,
-
       order_id,
       send_email,
       customer: {
@@ -122,7 +116,7 @@ router.post("/create-checkout", async (req, res) => {
       },
       redirect_url,
     });
-    console.log("Datos generales openpay: ", postData);
+
     // Extraer el id_alumno del order_id
     const idAlumno = order_id.split("_")[3];
 
@@ -142,7 +136,7 @@ router.post("/create-checkout", async (req, res) => {
       centroCosto,
     ];
 
-    db.query(insertAdeudoQuery, adeudoValues, (err, result) => {
+    dbPool.query(insertAdeudoQuery, adeudoValues, (err, result) => {
       if (err) {
         console.error("Error al insertar en la tabla de adeudos:", err);
         return res
@@ -153,7 +147,7 @@ router.post("/create-checkout", async (req, res) => {
     });
 
     const options = {
-      hostname: "sandbox-api.openpay.mx", //Seteado en sandbox para pruebas
+      hostname: "sandbox-api.openpay.mx",
       port: 443,
       path: `/v1/${MERCHANT_ID}/checkouts`,
       method: "POST",
@@ -204,7 +198,6 @@ router.post("/create-checkout", async (req, res) => {
     });
 
     request.write(postData);
-    console.log("Datos generales openpay: ", postData);
     request.end();
   } catch (error) {
     console.error(
@@ -287,7 +280,7 @@ router.get("/verify-transaction", (req, res) => {
           ];
           const courseId = values[6].split("-")[1]?.trim();
 
-          db.query(insertQuery, values, (err, result) => {
+          dbPool.query(insertQuery, values, (err, result) => {
             if (err) {
               console.error("Error al insertar en la base de datos:", err);
               return res
@@ -303,7 +296,7 @@ router.get("/verify-transaction", (req, res) => {
             `;
             const inscriptionValues = [name, descriptionNumber];
 
-            db.query(
+            dbPool.query(
               updateInscriptionQuery,
               inscriptionValues,
               (err, result) => {
@@ -313,13 +306,14 @@ router.get("/verify-transaction", (req, res) => {
                     .status(500)
                     .json({ error: "Error al actualizar la inscripción" });
                 }
+
                 // Restar un cupo al curso correspondiente
                 const updateCupoQuery = `
                 UPDATE cursos
                 SET cupo = cupo - 1
                 WHERE id = ?
               `;
-                db.query(
+                dbPool.query(
                   updateCupoQuery,
                   [descriptionNumber],
                   (err, result) => {

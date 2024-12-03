@@ -2,7 +2,7 @@ const mysql = require("mysql2");
 require("dotenv").config(); // Importa las variables de entorno desde un archivo .env
 
 // Configuración de la conexión a la base de datos MySQL
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
   host: "localhost", // Host de la base de datos (generalmente 'localhost' si está en tu máquina)
   user: "backend_user", // Usuario de la base de datos
   port: "3306", // Puerto de la base de datos (generalmente 3306)
@@ -14,7 +14,7 @@ const connection = mysql.createConnection({
 });
 
 // Conectar a MySQL
-connection.connect((err) => {
+pool.connect((err) => {
   if (err) {
     console.error("Error al conectar a la base de datos: ", err);
     return;
@@ -22,4 +22,4 @@ connection.connect((err) => {
   console.log("Conectado a la base de datos MySQL");
 });
 
-module.exports = connection;
+module.exports = pool;
