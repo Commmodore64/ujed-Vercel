@@ -13,13 +13,13 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Conectar a MySQL
-pool.connect((err) => {
+// Verificar la conexión al iniciar el servidor
+pool.query("SELECT 1", (err, results) => {
   if (err) {
     console.error("Error al conectar a la base de datos: ", err);
-    return;
+  } else {
+    console.log("Conexión exitosa a la base de datos MySQL");
   }
-  console.log("Conectado a la base de datos MySQL");
 });
 
 module.exports = pool;
