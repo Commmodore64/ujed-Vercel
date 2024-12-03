@@ -56,7 +56,7 @@ const DownloadPDF = () => {
         link.click();
         link.parentNode.removeChild(link);
         // Redirigir después de la descarga
-        window.location.href = "http://localhost:3000/";
+        window.location.href = "https://200.23.125.118/";
       })
       .catch((error) => console.error("Error al generar el PDF:", error));
   }, [

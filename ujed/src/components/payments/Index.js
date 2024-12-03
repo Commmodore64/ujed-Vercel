@@ -366,6 +366,7 @@ const Index = () => {
               </label>
               <input
                 type="text"
+                id="nombreCompleto"
                 name="nombreCompleto"
                 value={nombreCompleto}
                 onChange={(e) => setNombreCompleto(e.target.value)}
@@ -382,6 +383,7 @@ const Index = () => {
                 </label>
                 <input
                   type="text"
+                  id="matricula"
                   name="matricula"
                   value={matricula}
                   onChange={(e) => setMatricula(e.target.value)}
@@ -413,6 +415,7 @@ const Index = () => {
                   </label>
                   <input
                     type="text"
+                    id="rfc"
                     name="rfc"
                     value={rfc}
                     onChange={(e) => setRFC(e.target.value)}
@@ -428,6 +431,7 @@ const Index = () => {
                   </label>
                   <input
                     type="text"
+                    id="curp"
                     name="curp"
                     value={curp}
                     onChange={(e) => setCURP(e.target.value)}
@@ -464,6 +468,7 @@ const Index = () => {
                 guide={false}
                 required={true}
                 type="text"
+                id="telefono"
                 name="telefono"
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
@@ -479,6 +484,7 @@ const Index = () => {
               </label>
               <input
                 type="date"
+                id="fechaNacimiento"
                 name="fechaNacimiento"
                 value={fechaNacimiento}
                 onChange={(e) => setFechaNacimiento(e.target.value)}
@@ -494,6 +500,7 @@ const Index = () => {
               </label>
               <select
                 name="cursoSeleccionado"
+                id="cursoSeleccionado"
                 value={cursoSeleccionado}
                 onChange={(e) => {
                   const selectedValue = e.target.value;
@@ -545,6 +552,7 @@ const Index = () => {
                   </label>
                   <input
                     type="text"
+                    id="codigoAcceso"
                     name="codigoAcceso"
                     value={codigoAcceso}
                     onChange={(e) => setCodigoAcceso(e.target.value)}
@@ -566,6 +574,7 @@ const Index = () => {
               </label>
               <textarea
                 name="comentarios"
+                id="comentarios"
                 value={comentarios}
                 onChange={(e) => setComentarios(e.target.value)}
                 rows="4"
