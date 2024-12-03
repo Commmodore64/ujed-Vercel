@@ -9,10 +9,12 @@ router.get("/alumnos/:id", async (req, res) => {
     // Verificar si el alumno tiene permiso para acceder a estos datos (autenticación y autorización)
 
     // Consultar datos del alumno específico
-    const [results] = await pool.execute(
-      "SELECT matricula, nombre_completo, telefono, fecha_nacimiento FROM alumnos WHERE id = ?",
-      [alumnoId]
-    );
+    const [results] = await pool
+      .promise()
+      .query(
+        "SELECT matricula, nombre_completo, telefono, fecha_nacimiento FROM alumnos WHERE id = ?",
+        [alumnoId]
+      );
 
     if (results.length > 0) {
       const alumnoData = results[0]; // Obtener el primer resultado (debería ser único)

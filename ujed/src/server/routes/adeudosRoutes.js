@@ -7,22 +7,18 @@ router.get("/adeudos/:id", async (req, res) => {
   const ID_Adeudo = req.params.id;
   const query = "SELECT * FROM adeudos WHERE ID_Adeudo = ?";
 
-  let connection;
-
   try {
-    // Obtén una conexión del pool
-    connection = await pool.getConnection();
+    // Ejecuta la consulta directamente sobre el pool
+    const [results] = await pool.promise().query(query, [ID_Adeudo]);
 
-    // Ejecuta la consulta
-    const [results] = await connection.query(query, [ID_Adeudo]);
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Adeudo no encontrado" });
+    }
 
     res.status(200).json(results);
   } catch (err) {
-    console.error("Error al obtener las inscripciones:", err);
+    console.error("Error al obtener el adeudo:", err);
     res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    // Libera la conexión
-    if (connection) connection.release();
   }
 });
 
@@ -30,22 +26,14 @@ router.get("/adeudos/:id", async (req, res) => {
 router.get("/adeudos", async (req, res) => {
   const query = "SELECT * FROM adeudos";
 
-  let connection;
-
   try {
-    // Obtén una conexión del pool
-    connection = await pool.getConnection();
-
-    // Ejecuta la consulta
-    const [results] = await connection.query(query);
+    // Ejecuta la consulta directamente sobre el pool
+    const [results] = await pool.promise().query(query);
 
     res.status(200).json(results);
   } catch (err) {
     console.error("Error al obtener los adeudos:", err);
     res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    // Libera la conexión
-    if (connection) connection.release();
   }
 });
 
