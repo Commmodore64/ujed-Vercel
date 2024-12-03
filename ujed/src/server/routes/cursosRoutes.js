@@ -45,20 +45,18 @@ router.post("/cursos", async (req, res) => {
       centroCosto,
     ]);
 
-    res
-      .status(201)
-      .json({
-        id: results.insertId,
-        nombre,
-        programa,
-        info,
-        costo,
-        vigencia: vigenciaFormat,
-        cupo,
-        codigo,
-        catalogo,
-        centroCosto,
-      });
+    res.status(201).json({
+      id: results.insertId,
+      nombre,
+      programa,
+      info,
+      costo,
+      vigencia: vigenciaFormat,
+      cupo,
+      codigo,
+      catalogo,
+      centroCosto,
+    });
     console.log("Curso creado correctamente, datos: ", {
       id: results.insertId,
       nombre,
@@ -80,19 +78,18 @@ router.post("/cursos", async (req, res) => {
 });
 
 // Endpoint para obtener todos los cursos
-router.get("/cursos", async (req, res) => {
-  let connection;
-
-  try {
-    connection = await pool.getConnection();
-    const [results] = await connection.query("SELECT * FROM cursos");
-    res.status(200).json(results);
-  } catch (err) {
-    console.error("Error al obtener cursos:", err);
-    res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    if (connection) connection.release();
-  }
+router.get("/cursos", (req, res) => {
+  pool.query("SELECT * FROM cursos", (err, results) => {
+    if (err) {
+      console.error("Error al obtener los cursos: ", err);
+      res
+        .status(500)
+        .json({ error: "Error en la consulta a la base de datos" });
+      return;
+    }
+    console.log("Cursos obtenidos: ", results);
+    res.status(200).json(results); // Devuelve los resultados en formato JSON
+  });
 });
 
 // Obtener un curso por ID
