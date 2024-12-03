@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db"); // Cambia `connection` por `pool`
+const pool = require("../db"); // Usamos pool para manejar la conexión
 
 // Crear un nuevo catálogo
 router.post("/catalogo", async (req, res) => {
@@ -12,6 +12,7 @@ router.post("/catalogo", async (req, res) => {
     llave_concepto,
     concepto,
   } = req.body;
+
   const query =
     "INSERT INTO catalogo_conceptos (cuenta, nombre_cuenta, subcuenta, tipo_poliza, llave_concepto, concepto) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -76,6 +77,7 @@ router.put("/catalogo/:id", async (req, res) => {
     llave_concepto,
     concepto,
   } = req.body;
+
   const query =
     "UPDATE catalogo_conceptos SET cuenta = ?, nombre_cuenta = ?, subcuenta = ?, tipo_poliza = ?, llave_concepto = ?, concepto = ? WHERE id = ?";
 

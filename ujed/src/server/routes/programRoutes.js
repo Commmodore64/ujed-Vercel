@@ -8,7 +8,8 @@ router.post("/programa", (req, res) => {
 
   const query = "INSERT INTO programa (nombre) VALUES (?)";
   pool
-    .execute(query, [nombre]) // Usamos pool.execute() en lugar de connection.query()
+    .promise() // Asegúrate de usar pool.promise()
+    .execute(query, [nombre]) // Usamos pool.promise().execute()
     .then(([results]) => {
       res.status(201).json({ id: results.insertId, nombre });
       console.log("Programa creado correctamente, datos: ", {
@@ -25,7 +26,8 @@ router.post("/programa", (req, res) => {
 // Endpoint para obtener todos los programas
 router.get("/programa", (req, res) => {
   pool
-    .execute("SELECT * FROM programa") // Usamos pool.execute()
+    .promise() // Asegúrate de usar pool.promise()
+    .execute("SELECT * FROM programa") // Usamos pool.promise().execute()
     .then(([results]) => {
       res.status(200).json(results);
     })
@@ -40,7 +42,8 @@ router.get("/programa/:id", (req, res) => {
   const programaId = req.params.id;
   const query = "SELECT * FROM programa WHERE id = ?";
   pool
-    .execute(query, [programaId]) // Usamos pool.execute()
+    .promise() // Asegúrate de usar pool.promise()
+    .execute(query, [programaId]) // Usamos pool.promise().execute()
     .then(([results]) => {
       if (results.length > 0) {
         res.status(200).json(results[0]);
@@ -63,7 +66,8 @@ router.put("/programa/:id", (req, res) => {
 
   const query = "UPDATE programa SET nombre = ? WHERE id = ?";
   pool
-    .execute(query, [nombre, programaId]) // Usamos pool.execute()
+    .promise() // Asegúrate de usar pool.promise()
+    .execute(query, [nombre, programaId]) // Usamos pool.promise().execute()
     .then(() => {
       res.status(200).json({ id: programaId, nombre });
     })
@@ -78,7 +82,8 @@ router.delete("/programa/:id", (req, res) => {
   const programaId = req.params.id;
   const query = "DELETE FROM programa WHERE id = ?";
   pool
-    .execute(query, [programaId]) // Usamos pool.execute()
+    .promise() // Asegúrate de usar pool.promise()
+    .execute(query, [programaId]) // Usamos pool.promise().execute()
     .then(() => {
       res.status(204).json({ message: "Programa eliminado" });
     })
