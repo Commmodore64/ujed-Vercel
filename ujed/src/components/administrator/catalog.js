@@ -15,12 +15,15 @@ const Catalog = () => {
   useEffect(() => {
     const fetchCatalogo = async () => {
       try {
-        const response = await fetch("https://200.23.125.118/api/catalogo", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://ujed.solmoviles.com.mx/api/catalogo",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
