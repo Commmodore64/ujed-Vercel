@@ -166,8 +166,12 @@ const Index = () => {
   };
 
   const formatFecha = (fechaISO) => {
+    if (!fechaISO) {
+      console.error("Fecha no válida:", fechaISO);
+      return ""; // Maneja el caso donde fechaISO sea undefined o null
+    }
     const [year, month, day] = fechaISO.split("-");
-    return `${year}-${month}-${day}`; // Aquí se formatea como YYYY-MM-DD
+    return `${day}/${month}/${year}`;
   };
 
   const handleAgregarCurso = async () => {
