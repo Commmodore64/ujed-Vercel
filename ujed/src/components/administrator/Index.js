@@ -267,7 +267,7 @@ const Index = () => {
             costo: costo,
             vigencia: vigencia,
             cupo: cupo,
-            codigo: codigo,
+            codigo: codigo || null,
             catalogo: catalogoSeleccionado,
             centroCosto: centroCostoSeleccionado,
           }),
