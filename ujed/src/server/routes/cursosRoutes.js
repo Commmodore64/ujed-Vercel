@@ -151,7 +151,7 @@ router.put("/cursos/:id", async (req, res) => {
     costo,
     vigencia,
     cupo,
-    codigo,
+    codigo = null,
     catalogo,
     centroCosto,
   } = req.body;
