@@ -4,8 +4,10 @@ const router = express.Router();
 const https = require("https");
 const db = require("../db"); // Reemplaza con la ruta a tu módulo de conexión a la base de datos
 
-const PRIVATE_API_KEY = "sk_5dc3b0f5aab6451795796e4698223287"; // Reemplaza con tu clave API privada
-const MERCHANT_ID = "mubvsyjaue0v90vbd5r8"; // Reemplaza con tu Merchant ID
+require("dotenv").config();
+
+const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY; // Reemplaza con tu clave API privada
+const MERCHANT_ID = process.env.OPENPAY_ID; // Reemplaza con tu Merchant ID
 
 // Ruta para verificar una transacción
 router.get("/verify-payment", (req, res) => {
@@ -21,7 +23,9 @@ router.get("/verify-payment", (req, res) => {
     path: `/v1/${MERCHANT_ID}/charges/${transactionId}`,
     method: "GET",
     headers: {
-      Authorization: `Basic ${Buffer.from(`${PRIVATE_API_KEY}:`).toString("base64")}`,
+      Authorization: `Basic ${Buffer.from(`${PRIVATE_API_KEY}:`).toString(
+        "base64"
+      )}`,
     },
   };
 
@@ -55,7 +59,9 @@ router.get("/verify-payment", (req, res) => {
           db.query(insertQuery, values, (err) => {
             if (err) {
               console.error("Error al insertar en la base de datos:", err);
-              return res.status(500).json({ error: "Error al insertar en la base de datos" });
+              return res
+                .status(500)
+                .json({ error: "Error al insertar en la base de datos" });
             }
 
             console.log("Registro en pagos insertado correctamente");

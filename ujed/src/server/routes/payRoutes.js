@@ -3,8 +3,8 @@ const router = express.Router();
 const https = require("https"); // Para hacer solicitudes HTTPS
 const dbPool = require("../db"); // Para interactuar con la base de datos
 
-const PRIVATE_API_KEY = "sk_5dc3b0f5aab6451795796e4698223287"; // Reemplaza con tu clave API privada
-const MERCHANT_ID = "mubvsyjaue0v90vbd5r8"; // Reemplaza con tu Merchant ID
+const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY; // Reemplaza con tu clave API privada
+const MERCHANT_ID = process.env.OPENPAY_ID; // Reemplaza con tu Merchant ID
 
 // Función para obtener el id del curso basado en el nombre del curso
 const getCursoIdByName = (curso) => {
