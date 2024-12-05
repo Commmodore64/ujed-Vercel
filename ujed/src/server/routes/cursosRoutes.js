@@ -18,9 +18,24 @@ router.post("/cursos", async (req, res) => {
     centroCosto,
   } = req.body;
 
+  // Validar campos obligatorios
+  if (
+    !nombre ||
+    !programa ||
+    !info ||
+    !costo ||
+    !vigencia ||
+    !cupo ||
+    !codigo ||
+    !catalogo ||
+    !centroCosto
+  ) {
+    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+
   // Validar el formato de la fecha (dd/MM/yyyy)
   const [day, month, year] = vigencia.split("/");
-  if (!day || !month || !year) {
+  if (!day || !month || !year || isNaN(new Date(vigencia))) {
     return res.status(400).json({ error: "Formato de fecha incorrecto" });
   }
 
@@ -94,18 +109,15 @@ router.post("/cursos", async (req, res) => {
 });
 
 // Endpoint para obtener todos los cursos
-router.get("/cursos", (req, res) => {
-  pool.query("SELECT * FROM cursos", (err, results) => {
-    if (err) {
-      console.error("Error al obtener los cursos: ", err);
-      res
-        .status(500)
-        .json({ error: "Error en la consulta a la base de datos" });
-      return;
-    }
+router.get("/cursos", async (req, res) => {
+  try {
+    const [results] = await pool.query("SELECT * FROM cursos");
     console.log("Cursos obtenidos: ", results);
     res.status(200).json(results); // Devuelve los resultados en formato JSON
-  });
+  } catch (err) {
+    console.error("Error al obtener los cursos: ", err);
+    res.status(500).json({ error: "Error en la consulta a la base de datos" });
+  }
 });
 
 // Obtener un curso por ID
@@ -113,11 +125,8 @@ router.get("/cursos/:id", async (req, res) => {
   const cursoId = req.params.id;
   const query = "SELECT * FROM cursos WHERE id = ?";
 
-  let connection;
-
   try {
-    connection = await pool.getConnection();
-    const [results] = await connection.query(query, [cursoId]);
+    const [results] = await pool.query(query, [cursoId]);
 
     if (results.length > 0) {
       res.status(200).json(results[0]);
@@ -127,15 +136,13 @@ router.get("/cursos/:id", async (req, res) => {
   } catch (err) {
     console.error("Error al obtener el curso:", err);
     res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    if (connection) connection.release();
   }
 });
 
 // Actualizar un curso por ID
 router.put("/cursos/:id", async (req, res) => {
   const cursoId = req.params.id;
-  const fecha = new Date();
+  const fecha = new Date().toISOString().split("T")[0]; // Consistencia en el formato de la fecha
   const {
     nombre,
     programa,
@@ -147,6 +154,29 @@ router.put("/cursos/:id", async (req, res) => {
     catalogo,
     centroCosto,
   } = req.body;
+
+  // Validar campos obligatorios
+  if (
+    !nombre ||
+    !programa ||
+    !info ||
+    !costo ||
+    !vigencia ||
+    !cupo ||
+    !codigo ||
+    !catalogo ||
+    !centroCosto
+  ) {
+    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+
+  // Validar el formato de la fecha (dd/MM/yyyy)
+  const [day, month, year] = vigencia.split("/");
+  if (!day || !month || !year || isNaN(new Date(vigencia))) {
+    return res.status(400).json({ error: "Formato de fecha incorrecto" });
+  }
+
+  const vigenciaFormat = `${year}-${month}-${day}`;
 
   console.log("Datos recibidos:", {
     nombre,
@@ -163,17 +193,15 @@ router.put("/cursos/:id", async (req, res) => {
   const query =
     "UPDATE cursos SET nombre = ?, programa = ?, info = ?, date = ?, costo = ?, vigencia = ?, cupo = ?, codigo = ?, catalogo = ?, centroCosto = ? WHERE id = ?";
 
-  let connection;
-
   try {
-    connection = await pool.getConnection();
-    await connection.query(query, [
+    // Realiza la consulta correctamente utilizando await
+    await pool.query(query, [
       nombre,
       programa,
       info,
       fecha,
       costo,
-      vigencia,
+      vigenciaFormat,
       cupo,
       codigo,
       catalogo,
@@ -184,8 +212,6 @@ router.put("/cursos/:id", async (req, res) => {
   } catch (err) {
     console.error("Error al actualizar el curso:", err);
     res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    if (connection) connection.release();
   }
 });
 
@@ -194,17 +220,13 @@ router.delete("/cursos/:id", async (req, res) => {
   const cursoId = req.params.id;
   const query = "DELETE FROM cursos WHERE id = ?";
 
-  let connection;
-
   try {
-    connection = await pool.getConnection();
-    await connection.query(query, [cursoId]);
+    // Ejecuta la consulta sin necesidad de almacenar el resultado
+    await pool.query(query, [cursoId]);
     res.status(204).json({ message: "Curso eliminado" });
   } catch (err) {
     console.error("Error al eliminar el curso:", err);
     res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    if (connection) connection.release();
   }
 });
 
