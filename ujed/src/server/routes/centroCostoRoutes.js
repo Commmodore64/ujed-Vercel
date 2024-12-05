@@ -5,7 +5,7 @@ const pool = require("../db"); // Usamos pool en lugar de connection
 // Obtener un centro de costo por ID
 router.get("/centroCosto/:id", async (req, res) => {
   const id = req.params.id;
-  const query = "SELECT * FROM centroCosto WHERE id = ?";
+  const query = "SELECT * FROM centrocosto WHERE id = ?";
 
   try {
     const [results] = await pool.promise().query(query, [id]);
@@ -23,7 +23,7 @@ router.get("/centroCosto/:id", async (req, res) => {
 
 // Obtener todos los centros de costo
 router.get("/centroCosto", async (req, res) => {
-  const query = "SELECT * FROM centroCosto";
+  const query = "SELECT * FROM centrocosto";
 
   try {
     const [results] = await pool.promise().query(query);
