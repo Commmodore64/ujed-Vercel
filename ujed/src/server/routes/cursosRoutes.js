@@ -5,6 +5,7 @@ const pool = require("../db"); // Usamos pool en lugar de connection
 // Crear un nuevo curso
 router.post("/cursos", async (req, res) => {
   console.log("Datos recibidos:", req.body);
+
   const {
     nombre,
     programa,
@@ -44,6 +45,7 @@ router.post("/cursos", async (req, res) => {
     "INSERT INTO cursos (nombre, programa, info, date, costo, vigencia, cupo, codigo, catalogo, centroCosto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   try {
+    // Realiza la consulta correctamente utilizando await
     const [results] = await pool.query(query, [
       nombre,
       programa,
@@ -57,6 +59,7 @@ router.post("/cursos", async (req, res) => {
       centroCosto,
     ]);
 
+    // Retornar la respuesta
     res.status(201).json({
       id: results.insertId,
       nombre,
