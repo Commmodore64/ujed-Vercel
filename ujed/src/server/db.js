@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 require("dotenv").config(); // Importa las variables de entorno desde un archivo .env
 
 // Configuración de la conexión a la base de datos MySQL

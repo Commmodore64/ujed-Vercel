@@ -16,6 +16,7 @@ router.post("/cursos", async (req, res) => {
     centroCosto,
   } = req.body;
 
+  // Validar el formato de la fecha (dd/MM/yyyy)
   const [day, month, year] = vigencia.split("/");
   if (!day || !month || !year) {
     return res.status(400).json({ error: "Formato de fecha incorrecto" });
