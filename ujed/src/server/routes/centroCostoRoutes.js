@@ -8,7 +8,8 @@ router.get("/centroCosto/:id", async (req, res) => {
   const query = "SELECT * FROM centrocosto WHERE id = ?";
 
   try {
-    const [results] = await pool.promise().query(query, [id]);
+    // No es necesario usar .promise(), ya que mysql2 lo maneja automáticamente
+    const [results] = await pool.query(query, [id]);
 
     if (results.length === 0) {
       return res.status(404).json({ error: "Centro de Costo no encontrado" });
@@ -26,7 +27,8 @@ router.get("/centroCosto", async (req, res) => {
   const query = "SELECT * FROM centrocosto";
 
   try {
-    const [results] = await pool.promise().query(query);
+    // Tampoco es necesario usar .promise() aquí
+    const [results] = await pool.query(query);
 
     res.status(200).json(results);
   } catch (err) {
