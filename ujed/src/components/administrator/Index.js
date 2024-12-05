@@ -190,7 +190,7 @@ const Index = () => {
             costo: costo,
             vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
             cupo: cupo,
-            codigo: codigo,
+            codigo: codigo || null,
             catalogo: catalogoSeleccionado,
             centroCosto: centroCostoSeleccionado,
           }),

@@ -13,12 +13,12 @@ router.post("/cursos", async (req, res) => {
     costo,
     vigencia,
     cupo,
-    codigo,
+    codigo = null, // Este valor por defecto asegura que 'codigo' sea null si no se envía
     catalogo,
     centroCosto,
   } = req.body;
 
-  // Validar campos obligatorios
+  // Validar campos obligatorios excepto 'codigo'
   if (
     !nombre ||
     !programa ||
@@ -26,11 +26,12 @@ router.post("/cursos", async (req, res) => {
     !costo ||
     !vigencia ||
     !cupo ||
-    !codigo ||
     !catalogo ||
     !centroCosto
   ) {
-    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    return res
+      .status(400)
+      .json({ error: "Todos los campos son obligatorios excepto el código" });
   }
 
   // Validar el formato de la fecha (dd/MM/yyyy)
@@ -69,7 +70,7 @@ router.post("/cursos", async (req, res) => {
       costo,
       vigenciaFormat,
       cupo,
-      codigo || null,
+      codigo, // Esto será 'null' si no se envía
       catalogo,
       centroCosto,
     ]);
