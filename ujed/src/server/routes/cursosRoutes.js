@@ -23,7 +23,7 @@ router.post("/cursos", async (req, res) => {
   }
 
   const vigenciaFormat = `${year}-${month}-${day}`;
-  const fecha = new Date();
+  const fecha = new Date().toISOString().split("T")[0];
 
   // Imprimir los datos para ver qué estamos enviando
   console.log("Datos a insertar:", [
