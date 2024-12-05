@@ -9,18 +9,22 @@ const MERCHANT_ID = process.env.OPENPAY_ID; // Reemplaza con tu Merchant ID
 // Función para obtener el id del curso basado en el nombre del curso
 const getCursoIdByName = (curso) => {
   return new Promise((resolve, reject) => {
-    console.log(`Buscando curso con nombre: ${curso}`);
+    console.log(`Iniciando búsqueda del curso: ${curso}`);
     const query = "SELECT id FROM cursos WHERE nombre = ?";
     dbPool.query(query, [curso], (error, results) => {
       if (error) {
-        console.error("Error en getCursoIdByName:", error);
+        console.error(
+          `Error al ejecutar la consulta para el curso "${curso}":`,
+          error
+        );
         return reject(error);
       }
+      console.log(`Resultados de la consulta para "${curso}":`, results);
       if (results.length > 0) {
-        console.log(`Curso encontrado con ID: ${results[0].id}`);
+        console.log(`Curso encontrado: ${results[0].id}`);
         resolve(results[0].id);
       } else {
-        console.log(`No se encontró curso con nombre: ${curso}`);
+        console.log(`No se encontró el curso: ${curso}`);
         resolve(null);
       }
     });
