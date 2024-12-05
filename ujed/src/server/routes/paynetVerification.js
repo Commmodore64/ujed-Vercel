@@ -6,7 +6,7 @@ const db = require("../db"); // Reemplaza con la ruta a tu módulo de conexión 
 
 require("dotenv").config();
 
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY; // Reemplaza con tu clave API privada
+const PRIVATE_API_KEY = process.env.OPENPAY_PRIVADA; // Reemplaza con tu clave API privada
 const MERCHANT_ID = process.env.OPENPAY_ID; // Reemplaza con tu Merchant ID
 
 // Ruta para verificar una transacción

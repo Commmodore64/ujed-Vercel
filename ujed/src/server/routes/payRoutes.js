@@ -3,18 +3,24 @@ const router = express.Router();
 const https = require("https"); // Para hacer solicitudes HTTPS
 const dbPool = require("../db"); // Para interactuar con la base de datos
 
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY; // Reemplaza con tu clave API privada
+const PRIVATE_API_KEY = process.env.OPENPAY_PRIVADA; // Reemplaza con tu clave API privada
 const MERCHANT_ID = process.env.OPENPAY_ID; // Reemplaza con tu Merchant ID
 
 // Función para obtener el id del curso basado en el nombre del curso
 const getCursoIdByName = (curso) => {
   return new Promise((resolve, reject) => {
+    console.log(`Buscando curso con nombre: ${curso}`);
     const query = "SELECT id FROM cursos WHERE nombre = ?";
     dbPool.query(query, [curso], (error, results) => {
-      if (error) return reject(error);
+      if (error) {
+        console.error("Error en getCursoIdByName:", error);
+        return reject(error);
+      }
       if (results.length > 0) {
+        console.log(`Curso encontrado con ID: ${results[0].id}`);
         resolve(results[0].id);
       } else {
+        console.log(`No se encontró curso con nombre: ${curso}`);
         resolve(null);
       }
     });
@@ -24,6 +30,9 @@ const getCursoIdByName = (curso) => {
 // Función para insertar un registro en la tabla inscripciones
 const insertInscripcion = (idCurso, nombre, fechaInscripcion, estadoPago) => {
   return new Promise((resolve, reject) => {
+    console.log(
+      `Insertando inscripción para el curso ${idCurso}, nombre: ${nombre}, fecha: ${fechaInscripcion}, estado: ${estadoPago}`
+    );
     const query =
       "INSERT INTO inscripciones (id_curso, nombre, fecha_inscripcion, estado_pago) VALUES (?, ?, ?, ?)";
     const fechaActual = new Date().toISOString().slice(0, 19).replace("T", " "); // Formato YYYY-MM-DD HH:MM:SS
@@ -31,7 +40,11 @@ const insertInscripcion = (idCurso, nombre, fechaInscripcion, estadoPago) => {
       query,
       [idCurso, nombre, fechaActual, estadoPago],
       (error, results) => {
-        if (error) return reject(error);
+        if (error) {
+          console.error("Error al insertar inscripción:", error);
+          return reject(error);
+        }
+        console.log("Inscripción insertada correctamente.");
         resolve(results);
       }
     );
@@ -40,6 +53,7 @@ const insertInscripcion = (idCurso, nombre, fechaInscripcion, estadoPago) => {
 
 // Endpoint para crear un checkout
 router.post("/create-checkout", async (req, res) => {
+  console.log("Llamada al endpoint /create-checkout");
   const {
     amount,
     currency,
@@ -52,6 +66,8 @@ router.post("/create-checkout", async (req, res) => {
     comentarios,
   } = req.body;
 
+  console.log("Datos recibidos en el body:", req.body);
+
   // Verificar que todos los campos requeridos están presentes
   if (
     !amount ||
@@ -63,6 +79,7 @@ router.post("/create-checkout", async (req, res) => {
     !curso ||
     !comentarios
   ) {
+    console.error("Faltan campos requeridos en la solicitud.");
     return res
       .status(400)
       .json({ error: "Todos los campos requeridos deben ser proporcionados" });
@@ -73,25 +90,29 @@ router.post("/create-checkout", async (req, res) => {
     const cursoId = await getCursoIdByName(curso);
 
     if (!cursoId) {
+      console.error("Curso no encontrado.");
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
-    // Llamar a la API /api/cursos para obtener los datos del curso
+    console.log(`Obteniendo datos del curso con ID: ${cursoId}`);
     const cursoResponse = await fetch(
       `https://ujed.solmoviles.com.mx/api/cursos/${cursoId}`
     );
     const cursoData = await cursoResponse.json();
 
     if (!cursoResponse.ok) {
+      console.error("Error al obtener datos del curso desde la API.");
       return res
         .status(500)
         .json({ error: "Error al obtener datos del curso" });
     }
 
     const { programa, centroCosto } = cursoData;
+    console.log(`Datos del curso obtenidos:`, cursoData);
 
     // Crear el nombre completo del cliente
     const nombreCompleto = `${customer.name}`;
+    console.log(`Nombre completo del cliente: ${nombreCompleto}`);
 
     // Insertar en la tabla inscripciones
     await insertInscripcion(
@@ -102,6 +123,7 @@ router.post("/create-checkout", async (req, res) => {
     );
 
     const description = `${newDescription}-${cursoId}`;
+    console.log(`Descripción generada: ${description}`);
 
     const postData = JSON.stringify({
       amount,
@@ -117,8 +139,11 @@ router.post("/create-checkout", async (req, res) => {
       redirect_url,
     });
 
+    console.log("Datos del POST a OpenPay:", postData);
+
     // Extraer el id_alumno del order_id
     const idAlumno = order_id.split("_")[3];
+    console.log(`ID del alumno extraído: ${idAlumno}`);
 
     // Insertar en la tabla adeudos
     const insertAdeudoQuery = `
@@ -136,6 +161,8 @@ router.post("/create-checkout", async (req, res) => {
       centroCosto,
     ];
 
+    console.log("Insertando en la tabla de adeudos:", adeudoValues);
+
     dbPool.query(insertAdeudoQuery, adeudoValues, (err, result) => {
       if (err) {
         console.error("Error al insertar en la tabla de adeudos:", err);
@@ -143,7 +170,7 @@ router.post("/create-checkout", async (req, res) => {
           .status(500)
           .json({ error: "Error al insertar en la tabla de adeudos" });
       }
-      console.log("Adeudo insertado correctamente");
+      console.log("Adeudo insertado correctamente.");
     });
 
     const options = {
@@ -160,7 +187,12 @@ router.post("/create-checkout", async (req, res) => {
       },
     };
 
+    console.log("Opciones para la solicitud HTTPS:", options);
+
     const request = https.request(options, (response) => {
+      console.log(
+        `Respuesta del servidor OpenPay con código: ${response.statusCode}`
+      );
       let data = "";
 
       response.on("data", (chunk) => {
@@ -168,9 +200,11 @@ router.post("/create-checkout", async (req, res) => {
       });
 
       response.on("end", async () => {
+        console.log("Datos recibidos de OpenPay:", data);
         if (response.statusCode === 200) {
           try {
             const parsedData = JSON.parse(data);
+            console.log("Datos parseados correctamente:", parsedData);
             res.json(parsedData);
           } catch (parseError) {
             console.error("Error al parsear la respuesta JSON:", parseError);
@@ -181,6 +215,7 @@ router.post("/create-checkout", async (req, res) => {
         } else {
           try {
             const parsedData = JSON.parse(data);
+            console.log("Error en OpenPay:", parsedData);
             res.status(response.statusCode).json(parsedData);
           } catch (parseError) {
             console.error("Error al parsear la respuesta JSON:", parseError);
