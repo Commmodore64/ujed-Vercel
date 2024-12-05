@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link } from "react-router-dom";
-import  logo  from "../../img/logo-banner-red.png";
+import logo from "../../img/logo-banner-red.png";
 
 const Index = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -19,7 +19,7 @@ const Index = () => {
     const obtenerDatosAlumno = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/alumnos/${user.sub}`,
+          `http://ujed.solmoviles.com.mx/api/alumnos/${user.sub}`,
           {
             method: "GET",
             headers: {
@@ -55,12 +55,15 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cursos", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://ujed.solmoviles.com.mx/api/cursos",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -159,7 +162,9 @@ const Index = () => {
               <br />
               Durango, Dgo. México.
             </p>
-            <p className="text-md text-gray-800 mt-4 mb-1">Datos de contacto:</p>
+            <p className="text-md text-gray-800 mt-4 mb-1">
+              Datos de contacto:
+            </p>
             <p className="text-sm text-gray-700 ">
               Tel. (618) 827 13 70.
               <br />

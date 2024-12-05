@@ -19,12 +19,15 @@ const Program = () => {
   useEffect(() => {
     const fetchProgramas = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/programa", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://ujed.solmoviles.com.mx/api/programa",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -45,15 +48,18 @@ const Program = () => {
 
   const handleAgregarPrograma = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/programa", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombre: nombrePrograma,
-        }),
-      });
+      const response = await fetch(
+        "http://ujed.solmoviles.com.mx/api/programa",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nombre: nombrePrograma,
+          }),
+        }
+      );
 
       if (response.ok) {
         const nuevoPrograma = await response.json();
@@ -73,12 +79,15 @@ const Program = () => {
 
   const handleEditarPrograma = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://ujed.solmoviles.com.mx/api/programa/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         const programa = await response.json();
@@ -100,49 +109,51 @@ const Program = () => {
 
   const handleActualizarPrograma = async () => {
     try {
-        const response = await fetch(
-            `http://localhost:5000/api/programa/${programaId}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    nombre: nombrePrograma,
-                }),
-            }
-        );
-
-        if (response.ok) {
-            const programaActualizado = await response.json();
-            toast.success("Programa actualizado correctamente");
-            const updatedProgramas = programas.map((programa) =>
-                programa.id === programaId
-                    ? {
-                        ...programa,
-                        nombre: programaActualizado.nombre,
-                    }
-                    : programa
-            );
-            setProgramas(updatedProgramas);
-            setShowModal(false);
-            limpiarCampos();
-        } else {
-            console.error("Error al actualizar el programa:", response.statusText);
-            toast.error("Error al actualizar el programa");
+      const response = await fetch(
+        `http://ujed.solmoviles.com.mx/api/programa/${programaId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nombre: nombrePrograma,
+          }),
         }
-    } catch (error) {
-        console.error("Error en la solicitud:", error);
-        toast.error("Error al actualizar el programa");
-    }
-};
+      );
 
+      if (response.ok) {
+        const programaActualizado = await response.json();
+        toast.success("Programa actualizado correctamente");
+        const updatedProgramas = programas.map((programa) =>
+          programa.id === programaId
+            ? {
+                ...programa,
+                nombre: programaActualizado.nombre,
+              }
+            : programa
+        );
+        setProgramas(updatedProgramas);
+        setShowModal(false);
+        limpiarCampos();
+      } else {
+        console.error("Error al actualizar el programa:", response.statusText);
+        toast.error("Error al actualizar el programa");
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      toast.error("Error al actualizar el programa");
+    }
+  };
 
   const handleEliminarPrograma = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://ujed.solmoviles.com.mx/api/programa/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         toast.info("Programa eliminado correctamente");

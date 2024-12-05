@@ -47,12 +47,15 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cursos", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://ujed.solmoviles.com.mx/api/cursos",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -149,7 +152,7 @@ const Index = () => {
       try {
         // Hacer la petición POST a la API
         const response = await fetch(
-          "http://localhost:5000/api/generate-pdf-efectivo",
+          "http://ujed.solmoviles.com.mx/api/generate-pdf-efectivo",
           {
             method: "POST",
             headers: {
@@ -207,7 +210,7 @@ const Index = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/create-checkout",
+        "http://ujed.solmoviles.com.mx/api/create-checkout",
         {
           method: "POST",
           headers: {
@@ -234,7 +237,8 @@ const Index = () => {
               phone_number: telefono,
               email: "email@email.com",
             },
-            redirect_url: "http://localhost:5000/api/verify-transaction",
+            redirect_url:
+              "http://ujed.solmoviles.com.mx/api/verify-transaction",
             comentarios: localStorage.getItem("comentarios") || "",
           }),
         }
@@ -309,16 +313,19 @@ const Index = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/validar-codigo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          codigo: codigoAcceso,
-          id: selectedCurso.id,
-        }),
-      });
+      const response = await fetch(
+        "http://ujed.solmoviles.com.mx/api/validar-codigo",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            codigo: codigoAcceso,
+            id: selectedCurso.id,
+          }),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();

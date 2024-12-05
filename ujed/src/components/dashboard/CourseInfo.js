@@ -10,12 +10,15 @@ const CourseInfo = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cursos", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://ujed.solmoviles.com.mx/api/cursos",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -44,11 +47,11 @@ const CourseInfo = () => {
         <div className="flex flex-row items-center mb-5 hover:text-slate-700">
           <Link to={"/dashboard"} className="text-lg">
             <IoIosArrowBack className="inline-block " />
-            </Link>
+          </Link>
           <h1 className="text-2xl font-bold pl-1">Inicio</h1>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto lg:p-2">
-          {cursos.map((curso) => ( 
+          {cursos.map((curso) => (
             <div
               key={curso.id}
               className="rounded-lg border shadow-md bg-gray-50 text-gray-800 flex flex-col justify-between"
@@ -64,7 +67,7 @@ const CourseInfo = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 mb-4">
-                    Vigencia: {curso.vigencia.split('T')[0]}
+                    Vigencia: {curso.vigencia.split("T")[0]}
                   </p>
                   <p className="text-sm text-gray-600 mb-4">
                     Cupo: {curso.cupo}
