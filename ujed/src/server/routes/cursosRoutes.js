@@ -16,7 +16,6 @@ router.post("/cursos", async (req, res) => {
     centroCosto,
   } = req.body;
 
-  // Verifica si vigencia está en el formato esperado dd/MM/yyyy
   const [day, month, year] = vigencia.split("/");
   if (!day || !month || !year) {
     return res.status(400).json({ error: "Formato de fecha incorrecto" });
@@ -28,11 +27,8 @@ router.post("/cursos", async (req, res) => {
   const query =
     "INSERT INTO cursos (nombre, programa, info, date, costo, vigencia, cupo, codigo, catalogo, centroCosto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-  let connection;
-
   try {
-    connection = await pool.getConnection();
-    const [results] = await connection.query(query, [
+    const [results] = await pool.query(query, [
       nombre,
       programa,
       info,
@@ -57,7 +53,8 @@ router.post("/cursos", async (req, res) => {
       catalogo,
       centroCosto,
     });
-    console.log("Curso creado correctamente, datos: ", {
+
+    console.log("Curso creado correctamente:", {
       id: results.insertId,
       nombre,
       programa,
@@ -72,8 +69,6 @@ router.post("/cursos", async (req, res) => {
   } catch (err) {
     console.error("Error al crear el curso:", err);
     res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    if (connection) connection.release();
   }
 });
 
