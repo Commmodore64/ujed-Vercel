@@ -36,7 +36,9 @@ router.post("/cursos", async (req, res) => {
 
   // Validar el formato de la fecha (dd/MM/yyyy)
   const [day, month, year] = vigencia.split("/");
-  if (!day || !month || !year || isNaN(new Date(vigencia))) {
+  const fechaFormateada = `${year}-${month}-${day}`;
+  const fechaValida = Date.parse(fechaFormateada);
+  if (isNaN(fechaValida)) {
     return res.status(400).json({ error: "Formato de fecha incorrecto" });
   }
 
@@ -151,7 +153,7 @@ router.put("/cursos/:id", async (req, res) => {
     costo,
     vigencia,
     cupo,
-    codigo = null,
+    codigo,
     catalogo,
     centroCosto,
   } = req.body;

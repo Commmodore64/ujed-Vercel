@@ -167,14 +167,14 @@ const Index = () => {
 
   const formatFecha = (fechaISO) => {
     const [year, month, day] = fechaISO.split("-");
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`; // Aquí se formatea como YYYY-MM-DD
   };
 
   const handleAgregarCurso = async () => {
     try {
       // Asume que la fecha está en formato ISO (YYYY-MM-DD)
-      const fechaISO = vigencia;
-      const fechaFormateada = formatFecha(fechaISO);
+      const fechaISO = vigencia; // Asegúrate de que 'vigencia' ya está en formato YYYY-MM-DD
+      const fechaFormateada = formatFecha(fechaISO); // Asegúrate de que la fecha esté en formato adecuado
 
       const response = await fetch(
         "https://ujed.solmoviles.com.mx/api/cursos",
@@ -188,7 +188,7 @@ const Index = () => {
             programa: programaSeleccionado,
             info: infoCurso,
             costo: costo,
-            vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
+            vigencia: fechaFormateada, // Fecha en formato YYYY-MM-DD
             cupo: cupo,
             codigo: codigo || null,
             catalogo: catalogoSeleccionado,
