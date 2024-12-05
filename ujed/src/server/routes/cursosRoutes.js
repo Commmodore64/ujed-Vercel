@@ -25,6 +25,20 @@ router.post("/cursos", async (req, res) => {
   const vigenciaFormat = `${year}-${month}-${day}`;
   const fecha = new Date();
 
+  // Imprimir los datos para ver qué estamos enviando
+  console.log("Datos a insertar:", [
+    nombre,
+    programa,
+    info,
+    fecha,
+    costo,
+    vigenciaFormat,
+    cupo,
+    codigo,
+    catalogo,
+    centroCosto,
+  ]);
+
   const query =
     "INSERT INTO cursos (nombre, programa, info, date, costo, vigencia, cupo, codigo, catalogo, centroCosto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -69,7 +83,9 @@ router.post("/cursos", async (req, res) => {
     });
   } catch (err) {
     console.error("Error al crear el curso:", err);
-    res.status(500).json({ error: "Error interno del servidor" });
+    res
+      .status(500)
+      .json({ error: "Error interno del servidor", details: err.message });
   }
 });
 
