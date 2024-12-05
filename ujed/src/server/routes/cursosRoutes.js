@@ -69,7 +69,7 @@ router.post("/cursos", async (req, res) => {
       costo,
       vigenciaFormat,
       cupo,
-      codigo,
+      codigo || null,
       catalogo,
       centroCosto,
     ]);
@@ -163,7 +163,6 @@ router.put("/cursos/:id", async (req, res) => {
     !costo ||
     !vigencia ||
     !cupo ||
-    !codigo ||
     !catalogo ||
     !centroCosto
   ) {
@@ -203,7 +202,7 @@ router.put("/cursos/:id", async (req, res) => {
       costo,
       vigenciaFormat,
       cupo,
-      codigo,
+      codigo || null,
       catalogo,
       centroCosto,
       cursoId,
