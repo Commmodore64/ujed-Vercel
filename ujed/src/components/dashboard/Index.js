@@ -19,7 +19,7 @@ const Index = () => {
     const obtenerDatosAlumno = async () => {
       try {
         const response = await fetch(
-          `http://ujed.solmoviles.com.mx/api/alumnos/${user.sub}`,
+          `https://ujed.solmoviles.com.mx/api/alumnos/${user.sub}`,
           {
             method: "GET",
             headers: {
@@ -56,7 +56,7 @@ const Index = () => {
     const fetchCursos = async () => {
       try {
         const response = await fetch(
-          "http://ujed.solmoviles.com.mx/api/cursos",
+          "https://ujed.solmoviles.com.mx/api/cursos",
           {
             method: "GET",
             headers: {

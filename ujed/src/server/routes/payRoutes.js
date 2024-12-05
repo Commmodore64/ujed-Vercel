@@ -82,7 +82,7 @@ router.post("/create-checkout", async (req, res) => {
 
     // Llamar a la API /api/cursos para obtener los datos del curso
     const cursoResponse = await fetch(
-      `http://ujed.solmoviles.com.mx/api/cursos/${cursoId}`
+      `https://ujed.solmoviles.com.mx/api/cursos/${cursoId}`
     );
     const cursoData = await cursoResponse.json();
 

@@ -48,7 +48,7 @@ const Index = () => {
     const fetchCursos = async () => {
       try {
         const response = await fetch(
-          "http://ujed.solmoviles.com.mx/api/cursos",
+          "https://ujed.solmoviles.com.mx/api/cursos",
           {
             method: "GET",
             headers: {
@@ -152,7 +152,7 @@ const Index = () => {
       try {
         // Hacer la petición POST a la API
         const response = await fetch(
-          "http://ujed.solmoviles.com.mx/api/generate-pdf-efectivo",
+          "https://ujed.solmoviles.com.mx/api/generate-pdf-efectivo",
           {
             method: "POST",
             headers: {
@@ -210,7 +210,7 @@ const Index = () => {
 
     try {
       const response = await fetch(
-        "http://ujed.solmoviles.com.mx/api/create-checkout",
+        "https://ujed.solmoviles.com.mx/api/create-checkout",
         {
           method: "POST",
           headers: {
@@ -238,7 +238,7 @@ const Index = () => {
               email: "email@email.com",
             },
             redirect_url:
-              "http://ujed.solmoviles.com.mx/api/verify-transaction",
+              "https://ujed.solmoviles.com.mx/api/verify-transaction",
             comentarios: localStorage.getItem("comentarios") || "",
           }),
         }
@@ -314,7 +314,7 @@ const Index = () => {
       }
 
       const response = await fetch(
-        "http://ujed.solmoviles.com.mx/api/validar-codigo",
+        "https://ujed.solmoviles.com.mx/api/validar-codigo",
         {
           method: "POST",
           headers: {
