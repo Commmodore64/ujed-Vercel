@@ -4,6 +4,7 @@ const pool = require("../db"); // Usamos pool en lugar de connection
 
 // Crear un nuevo curso
 router.post("/cursos", async (req, res) => {
+  console.log("Datos recibidos:", req.body);
   const {
     nombre,
     programa,
