@@ -19,7 +19,7 @@ const Index = () => {
     const obtenerDatosAlumno = async () => {
       try {
         const response = await fetch(
-          `https://ujed.solmoviles.com.mx/api/alumnos/${user.sub}`,
+          `http://localhost:5000/api/alumnos/${user.sub}`,
           {
             method: "GET",
             headers: {
@@ -55,15 +55,12 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/cursos",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/cursos", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();

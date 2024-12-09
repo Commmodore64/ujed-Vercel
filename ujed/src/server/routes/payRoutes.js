@@ -4,8 +4,8 @@ const https = require("https"); // Para hacer solicitudes HTTPS
 const db = require("../db"); // Para interactuar con la base de datos
 const { redirect } = require("react-router-dom");
 
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY; // Reemplaza con tu clave API privada
-const MERCHANT_ID = process.env.MERCHANT_ID; // Reemplaza con tu Merchant ID
+const PRIVATE_API_KEY = "sk_31fe8095e02842109854728ad76f2c11"; // Reemplaza con tu clave API privada
+const MERCHANT_ID = "mubvsyjaue0v90vbd5r8"; // Reemplaza con tu Merchant ID
 
 // Función para obtener el id del curso basado en el nombre del curso
 const getCursoIdByName = (curso) => {
@@ -82,7 +82,7 @@ router.post("/create-checkout", async (req, res) => {
 
     // Llamar a la API /api/cursos para obtener los datos del curso
     const cursoResponse = await fetch(
-      `https://ujed.solmoviles.com.mx/api/cursos/${cursoId}`
+      `http://localhost:5000/api/cursos/${cursoId}`
     );
     const cursoData = await cursoResponse.json();
 

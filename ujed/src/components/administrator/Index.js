@@ -31,15 +31,12 @@ const Index = () => {
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/cursos",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/cursos", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -54,15 +51,12 @@ const Index = () => {
 
     const fetchProgramas = async () => {
       try {
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/programa",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/programa", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -76,15 +70,12 @@ const Index = () => {
     };
     const fetchCatalogo = async () => {
       try {
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/catalogo",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/catalogo", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -98,15 +89,12 @@ const Index = () => {
     };
     const fetchCentroCosto = async () => {
       try {
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/centroCosto",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/centroCosto", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -131,7 +119,7 @@ const Index = () => {
   const handleInscripciones = async (id) => {
     try {
       const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/inscripciones/${id}`,
+        `http://localhost:5000/api/inscripciones/${id}`,
         {
           method: "GET",
           headers: {
@@ -176,26 +164,23 @@ const Index = () => {
       const fechaISO = vigencia;
       const fechaFormateada = formatFecha(fechaISO);
 
-      const response = await fetch(
-        "https://ujed.solmoviles.com.mx/api/cursos",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: nombreCurso,
-            programa: programaSeleccionado,
-            info: infoCurso,
-            costo: costo,
-            vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
-            cupo: cupo,
-            codigo: codigo,
-            catalogo: catalogoSeleccionado,
-            centroCosto: centroCostoSeleccionado,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/cursos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: nombreCurso,
+          programa: programaSeleccionado,
+          info: infoCurso,
+          costo: costo,
+          vigencia: fechaFormateada, // Usar formato DD/MM/YYYY
+          cupo: cupo,
+          codigo: codigo,
+          catalogo: catalogoSeleccionado,
+          centroCosto: centroCostoSeleccionado,
+        }),
+      });
 
       if (response.ok) {
         const nuevoCurso = await response.json();
@@ -215,15 +200,12 @@ const Index = () => {
 
   const handleEditarCurso = async (id) => {
     try {
-      const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/cursos/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/cursos/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         const curso = await response.json();
@@ -254,7 +236,7 @@ const Index = () => {
   const handleActualizarCurso = async () => {
     try {
       const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/cursos/${cursoId}`,
+        `http://localhost:5000/api/cursos/${cursoId}`,
         {
           method: "PUT",
           headers: {
@@ -313,12 +295,9 @@ const Index = () => {
 
   const handleEliminarCurso = async (id) => {
     try {
-      const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/cursos/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/cursos/${id}`, {
+        method: "DELETE",
+      });
 
       if (response.ok) {
         toast.info("Curso eliminado correctamente");

@@ -4,7 +4,7 @@ const router = express.Router();
 const https = require("https");
 const db = require("../db"); // Reemplaza con la ruta a tu módulo de conexión a la base de datos
 
-const PRIVATE_API_KEY = process.env.PRIVATE_API_KEY; // Reemplaza con tu clave API privada
+const PRIVATE_API_KEY = "sk_31fe8095e02842109854728ad76f2c11"; // Reemplaza con tu clave API privada
 const MERCHANT_ID = process.env.MERCHANT_ID; // Reemplaza con tu Merchant ID
 
 // Ruta para verificar una transacción

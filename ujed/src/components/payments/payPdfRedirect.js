@@ -21,7 +21,7 @@ const DownloadPDF = () => {
 
   useEffect(() => {
     // Hacer la solicitud al backend para generar y descargar el PDF
-    fetch("https://ujed.solmoviles.com.mx/api/generate-pdf", {
+    fetch("http://localhost:5000/api/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

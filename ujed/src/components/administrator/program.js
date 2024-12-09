@@ -19,15 +19,12 @@ const Program = () => {
   useEffect(() => {
     const fetchProgramas = async () => {
       try {
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/programa",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/programa", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -48,18 +45,15 @@ const Program = () => {
 
   const handleAgregarPrograma = async () => {
     try {
-      const response = await fetch(
-        "https://ujed.solmoviles.com.mx/api/programa",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: nombrePrograma,
-          }),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/programa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: nombrePrograma,
+        }),
+      });
 
       if (response.ok) {
         const nuevoPrograma = await response.json();
@@ -79,15 +73,12 @@ const Program = () => {
 
   const handleEditarPrograma = async (id) => {
     try {
-      const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/programa/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         const programa = await response.json();
@@ -110,7 +101,7 @@ const Program = () => {
   const handleActualizarPrograma = async () => {
     try {
       const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/programa/${programaId}`,
+        `http://localhost:5000/api/programa/${programaId}`,
         {
           method: "PUT",
           headers: {
@@ -148,12 +139,9 @@ const Program = () => {
 
   const handleEliminarPrograma = async (id) => {
     try {
-      const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/programa/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/programa/${id}`, {
+        method: "DELETE",
+      });
 
       if (response.ok) {
         toast.info("Programa eliminado correctamente");
