@@ -21,7 +21,7 @@ const DownloadPDF = () => {
 
   useEffect(() => {
     // Hacer la solicitud al backend para generar y descargar el PDF
-    fetch("https://ujed.solmoviles.com.mx/api/generate-pdf", {
+    fetch("http://66.228.131.58:5000/api/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ const DownloadPDF = () => {
         link.click();
         link.parentNode.removeChild(link);
         // Redirigir después de la descarga
-        window.location.href = "https://ujed.solmoviles.com.mx/";
+        window.location.href = "http://66.228.131.58:5000/";
       })
       .catch((error) => console.error("Error al generar el PDF:", error));
   }, [

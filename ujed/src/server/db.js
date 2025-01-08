@@ -2,7 +2,8 @@ const mysql = require("mysql2/promise");
 require("dotenv").config(); // Importa las variables de entorno desde un archivo .env
 
 const pool = mysql.createPool({
-  host: "localhost",
+  host: "66.228.131.58", // SolMov Server
+  //host: "200.23.125.118", // UJED Server
   user: "backend_user",
   port: "3306",
   password: "K0nT4BL3-F430!!",

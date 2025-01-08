@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Index";
-import { useNavigate } from "react-router-dom";
 import MaskedInput from "react-text-mask";
 import { toast } from "sonner";
 
-const Index = () => {
+const Diversepayments = () => {
   const Swal = require("sweetalert2");
   const [isProcessing, setIsProcessing] = useState(false);
   const [cursos, setCursos] = useState([]);
@@ -26,8 +25,8 @@ const Index = () => {
   const [cursoSeleccionado, setCursoSeleccionado] = useState(
     localStorage.getItem("cursoSeleccionado") || ""
   );
-  const [costoSeleccionado, setCostoSeleccionado] = useState(
-    localStorage.getItem("costoSeleccionado") || ""
+  const [precioSeleccionado, setPrecioSeleccionado] = useState(
+    localStorage.getItem("precioSeleccionado") || ""
   );
   const [vigencia, setVigencia] = useState("");
   const [cupo, setCupo] = useState("");
@@ -38,23 +37,22 @@ const Index = () => {
   const [codigoValido, setCodigoValido] = useState(null);
   const [catalogo, setCatalogo] = useState("");
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchCursos = async () => {
       try {
-        const response = await fetch("http://66.228.131.58:5000/api/cursos", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://66.228.131.58:5000/api/diversepayments",
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
           setCursos(data);
         } else {
-          console.error("Error al obtener los cursos:", response.statusText);
+          console.error("Error al obtener los datos:", response.statusText);
         }
       } catch (error) {
         console.error("Error en la solicitud:", error);
@@ -65,13 +63,14 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    localStorage.removeItem("costoSeleccionado");
     localStorage.setItem("matricula", matricula);
     localStorage.setItem("nombreCompleto", nombreCompleto);
     localStorage.setItem("telefono", telefono);
     localStorage.setItem("fechaNacimiento", fechaNacimiento);
     localStorage.setItem("comentarios", comentarios);
     localStorage.setItem("cursoSeleccionado", cursoSeleccionado);
-    localStorage.setItem("costoSeleccionado", costoSeleccionado);
+    localStorage.setItem("precioSeleccionado", precioSeleccionado);
     localStorage.setItem("rfc", rfc);
     localStorage.setItem("curp", curp);
   }, [
@@ -81,30 +80,32 @@ const Index = () => {
     fechaNacimiento,
     comentarios,
     cursoSeleccionado,
-    costoSeleccionado,
+    precioSeleccionado,
     rfc,
     curp,
   ]);
 
   useEffect(() => {
+    console.log(
+      "Actualizando localStorage con cursoSeleccionado:",
+      cursoSeleccionado
+    );
     if (cursoSeleccionado) {
       const selectedCurso = cursos.find(
-        (curso) => curso.nombre === cursoSeleccionado.split("/")[0]
+        (curso) => `${curso.concepto}/${curso.precio}` === cursoSeleccionado
       );
-      if (selectedCurso) {
-        setVigencia(selectedCurso.vigencia);
-        setCupo(selectedCurso.cupo);
-        setCatalogo(selectedCurso.catalogo);
 
-        if (selectedCurso.codigo) {
-          setCodigoValido(false); // Reinicia la validez del código
+      if (selectedCurso) {
+        const precio = parseFloat(selectedCurso.precio);
+        if (!isNaN(precio)) {
+          setPrecioSeleccionado(`${precio.toFixed(2)}`);
         } else {
-          setCodigoAcceso(""); // Limpia el código si no es necesario
-          setCodigoValido(true); // No se necesita código, automáticamente válido
+          console.error("Precio no es un número:", selectedCurso.precio);
         }
       }
     }
   }, [cursoSeleccionado, cursos]);
+
   useEffect(() => {
     if (mostrarCampoCodigo() && codigoAcceso !== "") {
       validarCodigoAcceso();
@@ -112,6 +113,15 @@ const Index = () => {
       setCodigoValido(mostrarCampoCodigo() ? false : true); // Si no hay campo de código, el código es válido
     }
   }, [codigoAcceso, cursoSeleccionado]);
+  useEffect(() => {
+    console.log(
+      "Actualizando localStorage con precioSeleccionado:",
+      precioSeleccionado
+    );
+    localStorage.setItem("precioSeleccionado", precioSeleccionado);
+  }, [precioSeleccionado]);
+  console.log(localStorage.getItem("precioSeleccionado")); // Debe mostrar el precio
+  console.log("Curso seleccionado:", cursoSeleccionado); // Debugging
 
   const handlePagoEnEfectivo = async (e) => {
     e.preventDefault();
@@ -134,7 +144,7 @@ const Index = () => {
       // Crear el objeto con la información que deseas enviar
       const pagoEfectivoData = {
         curso: cursoSeleccionado.split("/")[0], // Extrae la parte del curso
-        costo: costoSeleccionado, // Costo del curso
+        costo: precioSeleccionado, // Usar precio en lugar de costo
         catalogo, // Información del catálogo
         nombreCompleto, // Nombre del alumno
         telefono, // Número de teléfono
@@ -211,7 +221,7 @@ const Index = () => {
           },
           body: JSON.stringify({
             curso: cursoSeleccionado.split("/")[0],
-            amount: costoSeleccionado,
+            amount: precioSeleccionado,
             currency: "MXN",
             newDescription: catalogo,
             order_id:
@@ -264,7 +274,7 @@ const Index = () => {
     setFechaNacimiento("");
     setComentarios("");
     setCursoSeleccionado("");
-    setCostoSeleccionado("");
+    setPrecioSeleccionado("");
     setRFC("");
     setCURP("");
     setCodigoAcceso("");
@@ -299,7 +309,7 @@ const Index = () => {
     try {
       // Encontrar el ID del curso seleccionado
       const selectedCurso = cursos.find(
-        (curso) => curso.nombre + "/" + curso.costo === cursoSeleccionado
+        (curso) => curso.nombre + "-" + curso.precio === cursoSeleccionado
       );
 
       if (!selectedCurso || !mostrarCampoCodigo()) {
@@ -333,13 +343,7 @@ const Index = () => {
     }
   };
   const esFormularioValido = () => {
-    const camposRequeridosCompletos =
-      (!matricula && !rfc && !curp) ||
-      (nombreCompleto && telefono && fechaNacimiento && cursoSeleccionado);
-
-    const codigoEsValido = codigoValido || !mostrarCampoCodigo();
-
-    return camposRequeridosCompletos && codigoEsValido && isCursoDisponible();
+    return cursoSeleccionado !== "";
   };
 
   const mostrarCampoCodigo = () => {
@@ -355,7 +359,7 @@ const Index = () => {
       <Sidebar />
       <div className="flex flex-col mt-16 lg:mt-20 h-auto m-4 lg:m-8 rounded-xl p-5 text-black lg:mx-20 lg:ml-96">
         <div>
-          <h1 className="text-2xl font-bold">Inscripción</h1>
+          <h1 className="text-2xl font-bold">Pagos diversos</h1>
           <form className="mt-4">
             <div className="mb-4">
               <label
@@ -496,75 +500,28 @@ const Index = () => {
                 htmlFor="cursoSeleccionado"
                 className="block text-md font-medium text-gray-700"
               >
-                Curso Seleccionado
+                Concepto Seleccionado
               </label>
               <select
                 name="cursoSeleccionado"
                 id="cursoSeleccionado"
                 value={cursoSeleccionado}
-                onChange={(e) => {
-                  const selectedValue = e.target.value;
-                  setCursoSeleccionado(selectedValue);
-
-                  const selectedCurso = cursos.find(
-                    (curso) =>
-                      curso.nombre + "/" + curso.costo === selectedValue
-                  );
-
-                  if (selectedCurso) {
-                    setCostoSeleccionado(selectedCurso.costo);
-                  } else {
-                    setCostoSeleccionado("");
-                  }
-
-                  setCodigoAcceso(""); // Limpiar el campo de código de acceso cuando se cambia el curso
-                }}
-                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
+                onChange={(e) => setCursoSeleccionado(e.target.value)}
+                className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none"
+                required
               >
                 <option value="">Selecciona un curso</option>
                 {cursos.map((curso) => (
                   <option
                     key={curso.id}
-                    value={curso.nombre + "/" + curso.costo}
+                    value={`${curso.concepto}/${curso.precio}`}
                   >
-                    {curso.nombre} - ${curso.costo}
+                    {curso.concepto} - ${curso.precio}
                   </option>
                 ))}
               </select>
-              {cursoSeleccionado && (
-                <div className="mt-2 text-sm text-gray-600">
-                  <p>
-                    Vigencia: {new Date(vigencia).toLocaleDateString("es-ES")}
-                  </p>
-                  <p>Cupo: {cupo}</p>
-                </div>
-              )}
             </div>
 
-            <div>
-              {mostrarCampoCodigo() && (
-                <div className="mb-4">
-                  <label
-                    htmlFor="codigoAcceso"
-                    className="block text-md font-medium text-gray-700"
-                  >
-                    Código de Acceso
-                  </label>
-                  <input
-                    type="text"
-                    id="codigoAcceso"
-                    name="codigoAcceso"
-                    value={codigoAcceso}
-                    onChange={(e) => setCodigoAcceso(e.target.value)}
-                    onBlur={validarCodigoAcceso} // Valida el código cuando se pierde el foco
-                    className="mt-1 px-4 py-2 w-full bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 focus:border-gray-400"
-                  />
-                  {codigoValido === false && (
-                    <p className="text-red-500">Código de acceso inválido</p>
-                  )}
-                </div>
-              )}
-            </div>
             <div className="mb-4">
               <label
                 htmlFor="comentarios"
@@ -584,15 +541,8 @@ const Index = () => {
             <div className="flex gap-4">
               <button
                 type="submit"
-                className={`text-white px-2 lg:px-4 mx-2 py-2 rounded-md ${
-                  codigoValido
-                    ? isCursoDisponible()
-                      ? "bg-blue-500 hover:bg-blue-600"
-                      : "bg-gray-400 cursor-not-allowed"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
+                className="text-white px-2 lg:px-4 mx-2 py-2 rounded-md bg-blue-500 hover:bg-blue-600"
                 onClick={handlePagoEnEfectivo}
-                disabled={!codigoValido || !isCursoDisponible()}
               >
                 Pago en efectivo
               </button>
@@ -622,4 +572,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Diversepayments;

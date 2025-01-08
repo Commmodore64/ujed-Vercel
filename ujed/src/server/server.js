@@ -17,6 +17,7 @@ const adeudosRoutes = require("./routes/adeudosRoutes");
 const noconciliadosRoutes = require("./routes/noconciliadosRoutes");
 const centroCostoRoutes = require("./routes/centroCostoRoutes");
 const paynetVerification = require("./routes/paynetVerification");
+const diversePayments = require("./routes/diversePaymentsRoutes");
 const webhooksRoutes = require("./routes/webhookPagos");
 
 app.use(cors()); // CORS para todas las rutas
@@ -42,6 +43,7 @@ app.use("/api", adeudosRoutes); // Rutas de API para adeudosRoutes bajo /api
 app.use("/api", noconciliadosRoutes); // Rutas de API para noconciliadosRoutes bajo /api
 app.use("/api", centroCostoRoutes); // Rutas de API para centroCostoRoutes bajo /api
 app.use("/api", paynetVerification); // Rutas de API para paynetVerification bajo /api
+app.use("/api", diversePayments); // Rutas de API para diversePayments bajo /api
 app.use("/api", webhooksRoutes); // Rutas de API para webhooksRoutes bajo /api
 
 // Puerto del servidor

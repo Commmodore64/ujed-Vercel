@@ -19,10 +19,9 @@ import History from "./components/history/Index";
 import Catalog from "./components/administrator/catalog";
 import Details from "./components/history/details";
 import PayPDF from "./components/payments/payPdfRedirect";
+import DiversePayments from "./components/payments/diversepayments";
 import { Toaster } from "sonner";
 import { PrimeReactProvider } from "primereact/api";
-import { Buffer } from "buffer";
-import process from "process";
 
 function App() {
   const { isAuthenticated } = useAuth0();
@@ -56,6 +55,7 @@ function App() {
                 <Route path="/history/details" element={<Details />} />
                 <Route path="/catalog" element={<Catalog />} />
                 <Route path="/paypdf" element={<PayPDF />} />
+                <Route path="/diversepayments" element={<DiversePayments />} />
               </Routes>
               <Toaster position="top-right" />
             </div>

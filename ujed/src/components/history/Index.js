@@ -37,7 +37,7 @@ const Index = () => {
   const [endDate, setEndDate] = useState("");
 
   const fetchCoursesData = async () => {
-    const response = await fetch("https://ujed.solmoviles.com.mx/api/cursos");
+    const response = await fetch("http://66.228.131.58:5000/api/cursos");
     const data = await response.json();
     setCoursesData(data);
   };
@@ -49,7 +49,7 @@ const Index = () => {
         // Fetch inscripciones normales si isCard es true
         for (const course of coursesData) {
           const response = await fetch(
-            `https://ujed.solmoviles.com.mx/api/inscripciones/${course.id}`
+            `http://66.228.131.58:5000/api/inscripciones/${course.id}`
           );
           if (response.ok) {
             const data = await response.json();
@@ -60,9 +60,7 @@ const Index = () => {
         }
       } else {
         // Fetch adeudos si isCard es false
-        const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/adeudos"
-        );
+        const response = await fetch("http://66.228.131.58:5000/api/adeudos");
         if (response.ok) {
           const data = await response.json();
           allInscriptions.push(...data);
@@ -188,7 +186,7 @@ const Index = () => {
     try {
       // Eliminar el pago de la base de datos
       const response = await fetch(
-        `https://ujed.solmoviles.com.mx/api/eliminarpago/${selectedReferencia}`,
+        `http://66.228.131.58:5000/api/eliminarpago/${selectedReferencia}`,
         {
           method: "POST",
           headers: {
@@ -204,7 +202,7 @@ const Index = () => {
 
       // Actualizar el pago a Pagado: 1
       const responseUpdate = await fetch(
-        "https://ujed.solmoviles.com.mx/api/actualizarpago",
+        "http://66.228.131.58:5000/api/actualizarpago",
         {
           method: "POST",
           headers: {
@@ -244,7 +242,7 @@ const Index = () => {
 
       try {
         const response = await fetch(
-          "https://ujed.solmoviles.com.mx/api/subir-archivo",
+          "http://66.228.131.58:5000/api/subir-archivo",
           {
             method: "POST",
             body: formData,
@@ -277,15 +275,13 @@ const Index = () => {
     try {
       // Hacer fetch a la API de adeudos
       const responseAdeudos = await fetch(
-        "https://ujed.solmoviles.com.mx/api/adeudos"
+        "http://66.228.131.58:5000/api/adeudos"
       );
       const adeudosData = await responseAdeudos.json();
       console.log("Datos de adeudos:", adeudosData);
 
       // Hacer fetch a la API de pagos
-      const responsePagos = await fetch(
-        "https://ujed.solmoviles.com.mx/api/pagos"
-      );
+      const responsePagos = await fetch("http://66.228.131.58:5000/api/pagos");
       const pagosData = await responsePagos.json();
       console.log("Datos de pagos:", pagosData);
 
@@ -446,7 +442,7 @@ const Index = () => {
   const fetchPagosNoConciliados = async () => {
     try {
       const response = await fetch(
-        "https://ujed.solmoviles.com.mx/api/pagosnoconciliados"
+        "http://66.228.131.58:5000/api/pagosnoconciliados"
       ); // Cambia esta URL si es necesario
       const data = await response.json();
       setPagos(data); // Ajusta según la estructura de respuesta de tu API
@@ -480,7 +476,7 @@ const Index = () => {
       if (adeudosData.length === 0) {
         // Si no hay datos de adeudos, hacer fetch a la API
         const responseAdeudos = await fetch(
-          "https://ujed.solmoviles.com.mx/api/adeudos"
+          "http://66.228.131.58:5000/api/adeudos"
         );
         adeudosData = await responseAdeudos.json();
         console.log("Efectivo", adeudosData);
@@ -491,7 +487,7 @@ const Index = () => {
       if (pagosData.length === 0) {
         // Si no hay datos de pagos, hacer fetch a la API
         const responsePagos = await fetch(
-          "https://ujed.solmoviles.com.mx/api/pagos"
+          "http://66.228.131.58:5000/api/pagos"
         );
         pagosData = await responsePagos.json();
         console.log("Tarjeta", pagosData);

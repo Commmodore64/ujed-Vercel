@@ -12,7 +12,7 @@ En caso de que no desee que sus datos personales sean tratados para las finalida
 
 Le informamos que sus datos personales son compartidos con:
 
-- **BBVA en su plataforma Open Pay**
+- **BBVA en su plataforma OpenPay**
 - **Facultad de Enfermería y Obstetricia UJED**: Establecer la comunicación necesaria y suficiente para llevar a cabo el pago del trámite correspondiente. Llevar el historial de pago por cada persona que lleve algún tipo de trámite o pago ante la FAEO.
 
 En caso de que no desee que sus datos personales sean transferidos a los destinatarios antes señalados, usted podrá manifestarlo mediante: **Escrito libre dirigido al correo electrónico** [faeoopenpay@gmail.com](mailto:faeoopenpay@gmail.com) **o al teléfono** 6188271370.

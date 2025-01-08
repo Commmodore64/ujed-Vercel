@@ -100,7 +100,7 @@ router.post("/create-checkout", async (req, res) => {
 
     console.log(`Obteniendo datos del curso con ID: ${cursoId}`);
     const cursoResponse = await fetch(
-      `https://ujed.solmoviles.com.mx/api/cursos/${cursoId}`
+      `http://66.228.131.58:5000/api/cursos/${cursoId}`
     );
     const cursoData = await cursoResponse.json();
 
@@ -299,7 +299,7 @@ router.get("/verify-transaction", (req, res) => {
         // Verificar el método de pago para redirigir
         if (method === "store" || method === "bank_account") {
           // Si el método de pago es 'store' o 'bank_account', redirigir a la página de inicio
-          return res.redirect("https://ujed.solmoviles.com.mx/");
+          return res.redirect("http://66.228.131.58:5000/");
         }
 
         // Insertar datos en la tabla de pagos si la transacción se completó
@@ -373,7 +373,7 @@ router.get("/verify-transaction", (req, res) => {
 
                     // Redirigir a la ruta con los parámetros en la query string
                     res.redirect(
-                      `https://ujed.solmoviles.com.mx/paypdf?name=${encodeURIComponent(
+                      `http://66.228.131.58:5000/paypdf?name=${encodeURIComponent(
                         name
                       )}&holderName=${encodeURIComponent(
                         holderName
